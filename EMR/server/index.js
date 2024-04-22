@@ -152,10 +152,10 @@ app.patch('/tests/orders/:id', async(req, res) => {
 })
 
 // create new test results
-app.post('/tests/results/:id', async (req, res) => {
+app.post('/tests/results', async (req, res) => {
     try {
         const results = new TestResults(req.body);
-        let test = await TestOrder.findById(req.params.id);
+        let test = await TestOrder.findById(req.body.orderID);
         test.results = results;
         await results.save();
         await test.save();
