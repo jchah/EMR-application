@@ -38,7 +38,7 @@ const healthCardSchema = new Schema({
         phone: String,
     },
     cardNumber: {
-        type: Number,
+        type: String,
     }
 });
 
