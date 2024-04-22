@@ -6,8 +6,7 @@ const chartEntrySchema = require("./ChartEntry");
 
 const patientSchema = new Schema({
     healthCard: healthCardSchema,
-    conditions: [conditionSchema],
-    chart: [chartEntrySchema]
+    conditions: [conditionSchema]
 });
 
 const Patient = mongoose.model("Patient", patientSchema);
