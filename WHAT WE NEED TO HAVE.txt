@@ -1,18 +1,19 @@
 Create EMR:
 
-Be able to get Patient information
-Make ability to book appointments for patients
-Provide drug information for disease being treated
-Provide what disease patient has and treatment
-Send reminders for patient appointments
-Book appointments on a calendar
-Ability to order tests
-Make it  so doctors can only access information about their patients
+Make ability to book appointments for patients - ethan
+Provide drug information for disease being treated - marco
+Provide what disease patient has and treatment - marco
+Send reminders for patient appointments - jad
+Book appointments on a calendar - ethan
+Ability to order tests - callum
+Make it  so doctors can only access information about their patients - omer
+Could Make a thing where it gets teh disease and lists possbile treatments based on information from health canada api - jad
 
 
-Have to use authentication and authorization to use EMR
 
-Could make a page where patients could look at their appointments
+Have to use authentication and authorization to use EMR - owen
+
+Could make a page where patients could look at their appointments - marco
 
 Patient Schema is going to have two things
 
