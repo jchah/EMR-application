@@ -1,10 +1,11 @@
 const mongoose = require("mongoose");
 const Schema = mongoose.Schema;
 const TestResults = require('./TestResults')
+const Test = require('./Test')
 
 const testOrderSchema = new Schema({
-    name: {
-        type: String,
+    test: {
+        type: Test,
         required: true,
     },
     dateOrdered: {
