@@ -3,8 +3,8 @@ const Schema = mongoose.Schema;
 const Order = require('./TestOrder');
 
 const testResultsSchema = new Schema({
-    order: {
-        type: Order,
+    orderID: {
+        type: String,
         required: true,
     },
     testDate: {
