@@ -14,6 +14,6 @@ const chartEntrySchema = new Schema({
     }
 });
 
-const ChartEntry = mongoose.model("Condition", chartEntrySchema);
+const ChartEntry = mongoose.model("ChartEntry", chartEntrySchema);
 
 module.exports = ChartEntry;
