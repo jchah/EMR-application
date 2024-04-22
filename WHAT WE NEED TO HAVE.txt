@@ -1,0 +1,21 @@
+Create EMR:
+
+Be able to get Patient information
+Make ability to book appointments for patients
+Provide drug information for disease being treated
+Provide what disease patient has and treatment
+Send reminders for patient appointments
+Book appointments on a calendar
+Ability to order tests
+Make it  so doctors can only access information about their patients
+
+
+Have to use authentication and authorization to use EMR
+
+Could make a page where patients could look at their appointments
+
+Patient Schema is going to have two things
+
+	Health Card Schema (information about patient)
+	Disease Schema(information about disease ( including treatment))
+
