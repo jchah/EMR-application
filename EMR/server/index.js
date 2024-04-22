@@ -70,7 +70,7 @@ app.put("/patients/:id", async (req, res) => {
 // Delete (Remove a patient by ID)
 app.delete("/patients/:id", async (req, res) => {
     try {
-        const deletedPatient = await Patient.findByIdAndRemove(req.params.id);
+        const deletedPatient = await Patient.findByIdAndDelete(req.params.id);
         if (!deletedPatient) {
             return res.status(404).send({ message: "Patient not found" });
         }
