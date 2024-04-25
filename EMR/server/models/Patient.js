@@ -1,7 +1,7 @@
 const mongoose = require("mongoose");
 const Schema = mongoose.Schema;
-const conditionSchema = require("EMR/models/Condition");
-const healthCardSchema = require("EMR/models/HealthCard");
+const conditionSchema = require("./models/Condition");
+const healthCardSchema = require("./models/HealthCard");
 
 const patientSchema = new Schema({
     healthCard: healthCardSchema,
