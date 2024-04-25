@@ -1,6 +1,5 @@
 const mongoose = require("mongoose");
 const Schema = mongoose.Schema;
-const Order = require('./TestOrder');
 
 const testResultsSchema = new Schema({
     orderID: {
@@ -17,8 +16,7 @@ const testResultsSchema = new Schema({
         },
         notes: {
             type: String
-        },
-        required: true
+        }
     }
 });
 

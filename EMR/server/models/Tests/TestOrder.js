@@ -1,11 +1,9 @@
 const mongoose = require("mongoose");
 const Schema = mongoose.Schema;
-const TestResults = require('./TestResults')
-const Test = require('./Test')
 
 const testOrderSchema = new Schema({
     test: {
-        type: Test,
+        type: Object,
         required: true,
     },
     dateOrdered: {
@@ -13,10 +11,10 @@ const testOrderSchema = new Schema({
         required: true,
     },
     results: {
-        type: TestResults
+        type: Object
     }
 });
 
-const TestOrder = mongoose.model("Test", testOrderSchema);
+const TestOrder = mongoose.model("TestOrder", testOrderSchema);
 
 module.exports = TestOrder;
