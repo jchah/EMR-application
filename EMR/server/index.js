@@ -5,6 +5,9 @@ const Patient = require("./models/Patient");
 const HealthCard = require("./models/HealthCard");
 const Condition = require("./models/Condition");
 
+//apointment
+const Appointment = require("./models/Appointment")
+
 // tests
 const Test = require('./models/Tests/Test');
 const TestOrder = require('./models/Tests/TestOrder');
@@ -209,6 +212,65 @@ app.patch('/tests/results/:id', async(req, res) => {
         res.status(500).send({ error: err.message });
     }
 })
+
+
+//get all appointments
+app.get('/calendar/appointments', async(req,res) =>{
+    try {
+        const appointments = await Appointment.find({});
+        res.send(appointments);
+        
+    } catch (error) {
+        res.status(500).send({error: error.message})
+    }
+})
+
+//make an appointment
+app.post('/calendar/appointments', async (req,res) => {
+    try {
+        let appointment = new Appointment(req.body);
+        appointment.id = Math.floor((Math.random()*999999999) + 1)
+        await appointment.save()
+        res.send(appointment)
+        
+    } catch (error) {
+        res.status(500).send({error: error.message})
+    }
+})
+
+//edit appointment
+app.patch('/calendar/edit/:id', async (req,res)=>{
+    try {
+        let appointment = Appointment.find({id: req.params['id']})
+        const values = req.body;
+        if (!appointment) {
+            return res.status(404).send({ error: `no appoints with name ${req.params.id}` });
+        }
+        for (indValue in values) {
+            result[indValue] = values[indValue];
+           //replaces old stuff w/ new stuff
+        }
+        await result.save();
+        return res.status(200).send({ message: `successfully updated results with id ${req.params.id}`, updatedResults: result })
+    } catch (error) {
+        res.status(500).send({error: error.message})
+    }
+})
+
+//delete appointment
+app.delete('/calendar/delete/:id', async (req,res)=>{
+    try {
+        await Appointment.deleteMany({"id": req.params['id']})
+        res.status(200).json({ message: 'Appointment deleted successfully' });
+        
+    } catch (error) {
+        console.error('Error deleting data:', error);
+        res.status(500).json({ message: 'Internal server error' });
+    }
+})
+
+
+
 
 // Start the server
 app.listen(port, () => {
