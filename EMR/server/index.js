@@ -176,5 +176,3 @@ app.get("/patients/:id/conditions", async (req, res) => {
 app.listen(port, () => {
     console.log(`Server is running on http://localhost:${port}`);
 });
-
-// todo add endpoints for health card / conditions
