@@ -2,7 +2,7 @@ const mongoose = require("mongoose");
 const Patient = require("Patient")
 const Schema = mongoose.Schema;
 
-const AppointmentSchema = new Schema({
+const appointmentSchema = new Schema({
     patient:{
         type: Patient,
         required: true
@@ -24,6 +24,6 @@ const AppointmentSchema = new Schema({
     },
 })
 
-const appointment = mongoose.model("Appointment", AppointmentSchema);
+const Appointment = mongoose.model("Appointment", appointmentSchema);
 
-module.exports = appointment;
+module.exports = Appointment;

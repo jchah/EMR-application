@@ -1,42 +1,56 @@
+// Required dependencies
 const express = require("express");
 const mongoose = require("mongoose");
 const bodyParser = require("body-parser");
+const morgan = require("morgan");
+const cors = require("cors");
+const dotenv = require("dotenv");
+
+// Model imports
 const Patient = require("./models/Patient");
+const Appointment = require("./models/Appointment");
+const Condition = require("./models/Condition");
 
+// Initialize express and load environment variables
 const app = express();
-const port = 3000;
+dotenv.config();
 
+// Server configuration
+const port = process.env.PORT || 3000;
 app.use(bodyParser.json());
+app.use(morgan('dev')); // Log all HTTP requests
+app.use(cors()); // Enable CORS for all origins
 
-// Connect to MongoDB
-mongoose.connect("mongodb://localhost:27017/yourDatabaseName", {
+// MongoDB connection
+mongoose.connect(process.env.MONGO_URI, {
     useNewUrlParser: true,
     useUnifiedTopology: true,
 });
 
-// Create (Add new patient)
-app.post("/patients", async (req, res) => {
+// Routes for CRUD operations on "Patients"
+// Create a new patient
+app.post("/patients", async (req, res, next) => {
     try {
         const newPatient = new Patient(req.body);
         await newPatient.save();
         res.status(201).send(newPatient);
     } catch (error) {
-        res.status(400).send({ message: error.message });
+        next(error);
     }
 });
 
-// Read (Get all patients)
-app.get("/patients", async (req, res) => {
+// Read all patients
+app.get("/patients", async (req, res, next) => {
     try {
         const patients = await Patient.find();
         res.status(200).send(patients);
     } catch (error) {
-        res.status(500).send({ message: error.message });
+        next(error);
     }
 });
 
-// Read (Get a single patient by ID)
-app.get("/patients/:id", async (req, res) => {
+// Read a single patient by ID
+app.get("/patients/:id", async (req, res, next) => {
     try {
         const patient = await Patient.findById(req.params.id);
         if (!patient) {
@@ -44,29 +58,25 @@ app.get("/patients/:id", async (req, res) => {
         }
         res.status(200).send(patient);
     } catch (error) {
-        res.status(500).send({ message: error.message });
+        next(error);
     }
 });
 
-// Update (Update a patient by ID)
-app.put("/patients/:id", async (req, res) => {
+// Update a patient by ID
+app.put("/patients/:id", async (req, res, next) => {
     try {
-        const updatedPatient = await Patient.findByIdAndUpdate(
-            req.params.id,
-            req.body,
-            { new: true, runValidators: true }
-        );
+        const updatedPatient = await Patient.findByIdAndUpdate(req.params.id, req.body, { new: true, runValidators: true });
         if (!updatedPatient) {
             return res.status(404).send({ message: "Patient not found" });
         }
         res.status(200).send(updatedPatient);
     } catch (error) {
-        res.status(400).send({ message: error.message });
+        next(error);
     }
 });
 
-// Delete (Remove a patient by ID)
-app.delete("/patients/:id", async (req, res) => {
+// Delete a patient by ID
+app.delete("/patients/:id", async (req, res, next) => {
     try {
         const deletedPatient = await Patient.findByIdAndDelete(req.params.id);
         if (!deletedPatient) {
@@ -74,7 +84,7 @@ app.delete("/patients/:id", async (req, res) => {
         }
         res.status(200).send(deletedPatient);
     } catch (error) {
-        res.status(500).send({ message: error.message });
+        next(error);
     }
 });
 
@@ -170,6 +180,77 @@ app.get("/patients/:id/conditions", async (req, res) => {
     } catch (error) {
         res.status(500).send({ message: error.message });
     }
+});
+
+// Get all appointments
+app.get("/appointments", async (req, res) => {
+    try {
+        const appointments = await Appointment.find();
+        res.status(200).send(appointments);
+    } catch (error) {
+        res.status(500).send({ message: error.message });
+    }
+});
+
+// Add an appointment
+app.post("/appointments", async (req, res) => {
+    try {
+        const newAppointment = new Appointment(req.body);
+        await newAppointment.save()
+        res.status(201).send(newAppointment);
+    } catch (error) {
+        res.status(400).send({ message: error.message });
+    }
+});
+
+// Get a single appointment by id
+app.get("/appointments/:id", async (req, res) => {
+    try {
+        const appointment = await Appointment.findById(req.params.id);
+        if (!appointment) {
+            return res.status(404).send({ message: "Appointment not found" });
+        }
+        res.status(200).send(appointment);
+    } catch (error) {
+        res.status(500).send({ message: error.message });
+    }
+});
+
+// Update an appointment by id
+app.put("/appointments/:id", async (req, res) => {
+    try {
+        const updatedAppointment = await Appointment.findByIdAndUpdate(
+            req.params.id,
+            req.body,
+            { new: true, runValidators: true }
+        );
+        if (!updatedAppointment) {
+            return res.status(404).send({ message: "Appointment not found" });
+        }
+        res.status(200).send(updatedAppointment);
+    } catch (error) {
+        res.status(400).send({ message: error.message });
+    }
+});
+
+// Remove an appointment by id
+app.delete("/appointments/:id", async (req, res) => {
+    try {
+        const deletedAppointment = await Appointment.findByIdAndDelete(req.params.id);
+        if (!deletedAppointment) {
+            return res.status(404).send({ message: "Appointment not found" });
+        }
+        res.status(200).send(deletedAppointment);
+    } catch (error) {
+        res.status(500).send({ message: error.message });
+    }
+});
+
+// Error Handling Middleware
+app.use((err, req, res, next) => {
+    res.status(err.status || 500).send({
+        message: err.message || 'Internal Server Error'
+    });
 });
 
 // Start the server

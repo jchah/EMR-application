@@ -2,9 +2,10 @@
 const mongoose = require("mongoose");
 const healthCardSchema = require("./HealthCard");
 const conditionSchema = require("./Condition");
+const Schema = mongoose.Schema;
 
 // Define the Patient schema with embedded HealthCard and Conditions
-const patientSchema = new mongoose.Schema({
+const patientSchema = new Schema({
     healthCard: {
         type: healthCardSchema,
         required: true,
