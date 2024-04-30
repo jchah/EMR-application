@@ -18,9 +18,6 @@ const AppointmentSchema = new Schema({
     notes:{
         type:String
     },
-    id:{
-        type: Number
-    }
 })
 
 const appointment = mongoose.model("Appointment", AppointmentSchema);
