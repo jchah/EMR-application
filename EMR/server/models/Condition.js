@@ -1,5 +1,6 @@
 const mongoose = require("mongoose");
 const Schema = mongoose.Schema;
+const medicineSchema = require("./MedecineSchema");
 
 const conditionSchema = new Schema({
     name: {
@@ -11,9 +12,7 @@ const conditionSchema = new Schema({
         required: true,
     },
     treatment: {
-        type: String,
-        dosage: String,
-        frequency: String
+        type: [medicineSchema],
     }
 });
 

@@ -14,7 +14,7 @@ const healthCardSchema = new Schema({
         type: Date,
         required: true,
     },
-    gender: {
+    sex: {
         type: String,
         enum: ["Male", "Female"],
         required: true,
