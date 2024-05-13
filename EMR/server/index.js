@@ -1,10 +1,13 @@
 const express = require("express");
 const mongoose = require("mongoose");
 const bodyParser = require("body-parser");
+const cors = require('cors');
 const Patient = require("./models/Patient");
 const Appointment = require("./models/Appointment")
 const app = express();
 const port = 3000;
+
+app.use(cors())
 
 app.use(bodyParser.json());
 
@@ -172,6 +175,7 @@ app.get("/patients/:id/conditions", async (req, res) => {
     }
 });
 
+//gets all appointments
 app.get('/calendar/appointments', async(req,res) =>{
     try {
         const appointments = await Appointment.find({});
@@ -186,7 +190,6 @@ app.get('/calendar/appointments', async(req,res) =>{
 app.post('/calendar/appointments', async (req,res) => {
     try {
         let appointment = new Appointment(req.body);
-        appointment.id = Math.floor((Math.random()*999999999) + 1)
         await appointment.save()
         res.send(appointment)
 
@@ -195,13 +198,13 @@ app.post('/calendar/appointments', async (req,res) => {
     }
 })
 
-//edit appointment
+//edit appointment EDIT FOR LATER TO USE ID
 app.patch('/calendar/edit/:id', async (req,res)=>{
     try {
-        let appointment = Appointment.find({id: req.params['id']})
+        let appointment = Appointment.find({})
         const values = req.body;
         if (!appointment) {
-            return res.status(404).send({ error: `no appoints with name ${req.params.id}` });
+            return res.status(404).send({ error: `no appoints with name ` });
         }
         for (indValue in values) {
             result[indValue] = values[indValue];
@@ -214,10 +217,10 @@ app.patch('/calendar/edit/:id', async (req,res)=>{
     }
 })
 
-//delete appointment
+//delete appointment EDIT FOR LATER TO USE ID
 app.delete('/calendar/delete/:id', async (req,res)=>{
     try {
-        await Appointment.deleteMany({"id": req.params['id']})
+        await Appointment.deleteMany({})
         res.status(200).json({ message: 'Appointment deleted successfully' });
 
     } catch (error) {
