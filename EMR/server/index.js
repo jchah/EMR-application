@@ -182,8 +182,8 @@ app.get("/patients/:id/conditions", async (req, res) => {
     }
 });
 
-// Get all appointments
-app.get("/appointments", async (req, res) => {
+//gets all appointments
+app.get('/calendar/appointments', async(req,res) =>{
     try {
         const appointments = await Appointment.find();
         res.status(200).send(appointments);
@@ -195,9 +195,10 @@ app.get("/appointments", async (req, res) => {
 // Add an appointment
 app.post("/appointments", async (req, res) => {
     try {
-        const newAppointment = new Appointment(req.body);
-        await newAppointment.save()
-        res.status(201).send(newAppointment);
+        let appointment = new Appointment(req.body);
+        await appointment.save()
+        res.send(appointment)
+
     } catch (error) {
         res.status(400).send({ message: error.message });
     }
