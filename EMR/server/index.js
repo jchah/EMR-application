@@ -152,6 +152,7 @@ app.delete("/conditions/:id", async (req, res) => {
 // Add an appointment
 app.post("/appointments", async (req, res) => {
     try {
+        console.log(req.body)
         let appointment = new Appointment(req.body);
         await appointment.save()
         res.send(appointment)
@@ -164,7 +165,8 @@ app.post("/appointments", async (req, res) => {
 // Gets all appointments
 app.get('/calendar/appointments', async(req,res) =>{
     try {
-        const appointments = await Appointment.find();
+        console.log(req.query.date)
+        const appointments = await Appointment.find({ date: req.query.date});
         res.status(200).send(appointments);
     } catch (error) {
         res.status(500).send({ message: error.message });
@@ -204,6 +206,7 @@ app.put("/appointments/:id", async (req, res) => {
 // Remove an appointment by id
 app.delete("/appointments/:id", async (req, res) => {
     try {
+        console.log(req.params.id)
         const deletedAppointment = await Appointment.findByIdAndDelete(req.params.id);
         if (!deletedAppointment) {
             return res.status(404).send({ message: "Appointment not found" });

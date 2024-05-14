@@ -6,6 +6,7 @@ import Header from './components/Navbar.vue';
 </script>
 
 <template>
+   <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bulma@0.9.3/css/bulma.min.css">
   <div id="app">
     <Header></Header>
     <div class="main-layout">

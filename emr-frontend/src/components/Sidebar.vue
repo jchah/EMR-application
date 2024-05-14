@@ -6,7 +6,7 @@ const router = useRouter();
 const menuItems = ref([
   { name: 'Dashboard', route: '/' },
   { name: 'Patients', route: '/patients' },
-  { name: 'Appointments', route: '/appointments' },
+  { name: 'Appointments', route: '/calendar' },
   { name: 'Settings', route: '/settings' }
 ]);
 
