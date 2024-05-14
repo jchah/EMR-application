@@ -1,33 +1,29 @@
-// Required dependencies
 const express = require("express");
 const mongoose = require("mongoose");
 const bodyParser = require("body-parser");
 const morgan = require("morgan");
 const cors = require("cors");
 const dotenv = require("dotenv");
+require('./db')
 
-// Model imports
 const Patient = require("./models/Patient");
 const Appointment = require("./models/Appointment");
 const Condition = require("./models/Condition");
+const Medicine = require('./models/Medicine');
 
-// Initialize express and load environment variables
 const app = express();
 dotenv.config();
 
-// Server configuration
 const port = process.env.PORT || 3000;
 app.use(bodyParser.json());
-app.use(morgan('dev')); // Log all HTTP requests
-app.use(cors()); // Enable CORS for all origins
+app.use(morgan('dev'));
+app.use(cors());
 
-// MongoDB connection
 mongoose.connect(process.env.MONGO_URI, {
     useNewUrlParser: true,
     useUnifiedTopology: true,
 });
 
-// Routes for CRUD operations on "Patients"
 // Create a new patient
 app.post("/patients", async (req, res, next) => {
     try {
@@ -257,4 +253,57 @@ app.use((err, req, res, next) => {
 // Start the server
 app.listen(port, () => {
     console.log(`Server is running on http://localhost:${port}`);
+});
+
+// Get all medicine
+app.get("/medicine", async (req, res) => {
+    try {
+        const medicine = await Medicine.find();
+        res.status(200).send(medicine);
+    } catch (error) {
+        res.status(500).send({ message: error.message });
+    }
+});
+
+// Create a new medicine
+app.post("/medicine", async (req, res) => {
+    try {
+        const newMedicine = new Medicine(req.body);
+        await newMedicine.save();
+        res.status(201).send(newMedicine);
+    } catch (error) {
+        res.status(400).send({ message: error.message });
+    }
+});
+
+
+// Update a medicine by ID
+app.put("/medicine/:id", async (req, res) => {
+    try {
+        const updatedMedicine = await Medicine.findByIdAndUpdate(
+            req.params.id,
+            req.body,
+            { new: true, runValidators: true }
+        );
+        if (!updatedMedicine) {
+            return res.status(404).send({ message: "Medicine not found" });
+        }
+        res.status(200).send(updatedMedicine);
+    } catch (error) {
+        res.status(400).send({ message: error.message });
+    }
+});
+
+
+// Delete a condition by ID
+app.delete("/medicine/:id", async (req, res) => {
+    try {
+        const deletedMedicine = await Medicine.findByIdAndDelete(req.params.id);
+        if (!deletedMedicine) {
+            return res.status(404).send({ message: "Medicine not found" });
+        }
+        res.status(200).send(deletedMedicine);
+    } catch (error) {
+        res.status(500).send({ message: error.message });
+    }
 });

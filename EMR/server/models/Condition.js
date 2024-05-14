@@ -1,6 +1,5 @@
 const mongoose = require("mongoose");
 const Schema = mongoose.Schema;
-const medicineSchema = require("./MedecineSchema");
 
 const conditionSchema = new Schema({
     name: {
@@ -13,7 +12,7 @@ const conditionSchema = new Schema({
     },
     treatment: {
         type: Schema.Types.ObjectId,
-        ref: 'medicineSchema'
+        ref: 'Medicine'
     }
 });
 

@@ -11,29 +11,29 @@ const medicineSchema = new mongoose.Schema({
         type: String,
         required: true,
         validate: {
-            validator: (v) => dosagePattern.test(v), // Ensure dosage matches the pattern
+            validator: (v) => dosagePattern.test(v),
             message: (props) => `${props.value} is not a valid dosage format (e.g., "50mg")`,
         },
     },
     frequency: {
-        type: String, // Frequency of administration (e.g., "Once a day")
+        type: String,
         required: true,
     },
     route: {
-        type: String, // Route of administration (e.g., "Oral", "Intravenous")
+        type: String,
         required: true,
     },
     startDate: {
-        type: Date, // When the medication was prescribed
+        type: Date,
     },
     endDate: {
-        type: Date, // If there's a defined end date for the medication
+        type: Date,
     },
     prescribingPhysician: {
-        type: String, // Name of the prescribing doctor
+        type: String,
     },
     notes: {
-        type: String, // Additional information or special instructions
+        type: String,
     },
 });
 
