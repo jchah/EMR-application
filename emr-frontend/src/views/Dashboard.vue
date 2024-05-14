@@ -25,8 +25,10 @@
 </template>
 
 <style scoped>
+
 .dashboard {
   text-align: center;
+  padding-top: 2%;
 }
 
 .cards {

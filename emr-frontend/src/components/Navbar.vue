@@ -51,10 +51,10 @@
             <div class="navbar-item">
             <div class="buttons">
                 <a class="button has-background-success">
-                Sign up?
+                Sign up
                 </a>
                 <a class="button has-background-warning">
-                Log in?
+                Log in
                 </a>
             </div>
             </div>
