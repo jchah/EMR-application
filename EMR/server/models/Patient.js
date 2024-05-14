@@ -7,11 +7,13 @@ const Schema = mongoose.Schema;
 // Define the Patient schema with embedded HealthCard and Conditions
 const patientSchema = new Schema({
     healthCard: {
-        type: healthCardSchema,
+        type: Schema.Types.ObjectId,
+        ref: 'healthCardSchema',
         required: true,
     },
     conditions: {
-        type: [conditionSchema],
+        type: Schema.Types.ObjectId,
+        ref:'conditionSchema',
         required: false,
     },
 });

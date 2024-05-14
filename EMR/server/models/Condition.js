@@ -12,7 +12,8 @@ const conditionSchema = new Schema({
         required: true,
     },
     treatment: {
-        type: [medicineSchema],
+        type: Schema.Types.ObjectId,
+        ref: 'medicineSchema'
     }
 });
 
