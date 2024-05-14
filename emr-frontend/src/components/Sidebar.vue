@@ -7,6 +7,7 @@ const menuItems = ref([
   { name: 'Dashboard', route: '/' },
   { name: 'Patients', route: '/patients' },
   { name: 'Appointments', route: '/calendar' },
+  { name: 'Test Dashboard', route: '/test-dashboard' },
   { name: 'Settings', route: '/settings' }
 ]);
 
