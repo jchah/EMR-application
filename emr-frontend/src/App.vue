@@ -1,24 +1,51 @@
 <script setup>
-import { RouterLink, RouterView } from 'vue-router'
-import router from './router';
+import { ref } from 'vue';
+import { RouterView } from 'vue-router';
+import Sidebar from './components/Sidebar.vue';
+import Header from './components/Header.vue';
 </script>
 
 <template>
- 
-  <RouterView/>
+  <div id="app">
+    <Header />
+    <div class="main-layout">
+      <Sidebar />
+      <main class="content">
+        <RouterView />
+      </main>
+    </div>
+  </div>
 </template>
 
 <style scoped>
-.logo {
-  height: 6em;
-  padding: 1.5em;
-  will-change: filter;
-  transition: filter 300ms;
+#app {
+  display: flex;
+  flex-direction: column;
+  height: 100vh;
 }
-.logo:hover {
-  filter: drop-shadow(0 0 2em #646cffaa);
+
+.main-layout {
+  display: flex;
+  flex: 1;
 }
-.logo.vue:hover {
-  filter: drop-shadow(0 0 2em #42b883aa);
+
+.content {
+  flex: 1;
+  padding: 20px;
+  overflow-y: auto;
+}
+
+header {
+  background-color: #42b883;
+  color: white;
+  padding: 20px;
+  text-align: center;
+}
+
+.sidebar {
+  width: 250px;
+  background-color: #333;
+  color: white;
+  padding: 20px;
 }
 </style>
