@@ -7,11 +7,11 @@ const patientSchema = new Schema({
         ref: 'healthCardSchema',
         required: true,
     },
-    conditions: {
+    conditions: [{
         type: Schema.Types.ObjectId,
-        ref:'conditionSchema',
-        required: false,
-    },
+        ref: 'Condition',
+        required: false
+    }]
 });
 
 const Patient = mongoose.model("Patient", patientSchema);

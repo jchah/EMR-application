@@ -10,6 +10,7 @@ const Patient = require("./models/Patient");
 const Appointment = require("./models/Appointment");
 const Condition = require("./models/Condition");
 const Medicine = require('./models/Medicine');
+const HealthCard = require("./models/HealthCard");
 
 const app = express();
 dotenv.config();
@@ -84,31 +85,12 @@ app.delete("/patients/:id", async (req, res, next) => {
     }
 });
 
-// Get the health card of a specific patient
-app.get("/patients/:id/healthcard", async (req, res) => {
+// Create a new condition
+app.post("/conditions", async (req, res) => {
     try {
-        const patient = await Patient.findById(req.params.id);
-        if (!patient) {
-            return res.status(404).send({ message: "Patient not found" });
-        }
-        res.status(200).send(patient.healthCard); // Send the health card information
-    } catch (error) {
-        res.status(500).send({ message: error.message });
-    }
-});
-
-// Update the health card of a specific patient
-app.put("/patients/:id/healthcard", async (req, res) => {
-    try {
-        const updatedPatient = await Patient.findByIdAndUpdate(
-            req.params.id,
-            { healthCard: req.body }, // Update health card info
-            { new: true, runValidators: true }
-        );
-        if (!updatedPatient) {
-            return res.status(404).send({ message: "Patient not found" });
-        }
-        res.status(200).send(updatedPatient.healthCard);
+        const newCondition = new Condition(req.body);
+        await newCondition.save();
+        res.status(201).send(newCondition);
     } catch (error) {
         res.status(400).send({ message: error.message });
     }
@@ -124,14 +106,16 @@ app.get("/conditions", async (req, res) => {
     }
 });
 
-// Create a new condition
-app.post("/conditions", async (req, res) => {
+// Get condition by ID
+app.get("/conditions/:id", async (req, res) => {
     try {
-        const newCondition = new Condition(req.body);
-        await newCondition.save();
-        res.status(201).send(newCondition);
+        const condition = await Condition.findById(req.params.id);
+        if (!condition) {
+            return res.status(404).send({ message: "Condition not found" });
+        }
+        res.status(200).send(condition);
     } catch (error) {
-        res.status(400).send({ message: error.message });
+        res.status(500).send({ message: error.message });
     }
 });
 
@@ -165,29 +149,6 @@ app.delete("/conditions/:id", async (req, res) => {
     }
 });
 
-// Get all conditions of a specific patient
-app.get("/patients/:id/conditions", async (req, res) => {
-    try {
-        const patient = await Patient.findById(req.params.id).populate("conditions");
-        if (!patient) {
-            return res.status(404).send({ message: "Patient not found" });
-        }
-        res.status(200).send(patient.conditions);
-    } catch (error) {
-        res.status(500).send({ message: error.message });
-    }
-});
-
-//gets all appointments
-app.get('/calendar/appointments', async(req,res) =>{
-    try {
-        const appointments = await Appointment.find();
-        res.status(200).send(appointments);
-    } catch (error) {
-        res.status(500).send({ message: error.message });
-    }
-});
-
 // Add an appointment
 app.post("/appointments", async (req, res) => {
     try {
@@ -197,6 +158,16 @@ app.post("/appointments", async (req, res) => {
 
     } catch (error) {
         res.status(400).send({ message: error.message });
+    }
+});
+
+// Gets all appointments
+app.get('/calendar/appointments', async(req,res) =>{
+    try {
+        const appointments = await Appointment.find();
+        res.status(200).send(appointments);
+    } catch (error) {
+        res.status(500).send({ message: error.message });
     }
 });
 
@@ -255,54 +226,131 @@ app.listen(port, () => {
     console.log(`Server is running on http://localhost:${port}`);
 });
 
-// Get all medicine
-app.get("/medicine", async (req, res) => {
+
+// Create a new treatment
+app.post("/treatments", async (req, res) => {
     try {
-        const medicine = await Medicine.find();
-        res.status(200).send(medicine);
+        const newTreatment = new Medicine(req.body);
+        await newTreatment.save();
+        res.status(201).send(newTreatment);
+    } catch (error) {
+        res.status(400).send({ message: error.message });
+    }
+});
+
+// Get all treatments
+app.get("/treatments", async (req, res) => {
+    try {
+        const treatments = await Medicine.find();
+        res.status(200).send(treatments);
     } catch (error) {
         res.status(500).send({ message: error.message });
     }
 });
 
-// Create a new medicine
-app.post("/medicine", async (req, res) => {
+// Get treatment by ID
+app.get("/treatments/:id", async (req, res) => {
     try {
-        const newMedicine = new Medicine(req.body);
-        await newMedicine.save();
-        res.status(201).send(newMedicine);
+        const treatment = await Medicine.findById(req.params.id);
+        if (!treatment) {
+            return res.status(404).send({ message: "Treatment not found" });
+        }
+        res.status(200).send(treatment);
     } catch (error) {
-        res.status(400).send({ message: error.message });
+        res.status(500).send({ message: error.message });
     }
 });
 
-
-// Update a medicine by ID
-app.put("/medicine/:id", async (req, res) => {
+// Update a treatment by ID
+app.put("/treatments/:id", async (req, res) => {
     try {
-        const updatedMedicine = await Medicine.findByIdAndUpdate(
+        const updatedTreatment = await Medicine.findByIdAndUpdate(
             req.params.id,
             req.body,
             { new: true, runValidators: true }
         );
-        if (!updatedMedicine) {
-            return res.status(404).send({ message: "Medicine not found" });
+        if (!updatedTreatment) {
+            return res.status(404).send({ message: "Treatment not found" });
         }
-        res.status(200).send(updatedMedicine);
+        res.status(200).send(updatedTreatment);
     } catch (error) {
         res.status(400).send({ message: error.message });
     }
 });
 
+// Delete a condition by ID
+app.delete("/treatments/:id", async (req, res) => {
+    try {
+        const deletedTreatment = await Medicine.findByIdAndDelete(req.params.id);
+        if (!deletedTreatment) {
+            return res.status(404).send({ message: "Treatment not found" });
+        }
+        res.status(200).send(deletedTreatment);
+    } catch (error) {
+        res.status(500).send({ message: error.message });
+    }
+});
+
+// Create a new health card
+app.post('/healthcards', async (req, res) => {
+    try {
+        const newHealthCard = new HealthCard(req.body);
+        await newHealthCard.save();
+        res.status(201).send(newHealthCard);
+    } catch (error) {
+        res.status(400).send({ message: error.message });
+    }
+});
+
+// Get all health cards
+app.get('/healthcards', async (req, res) => {
+    try {
+        const healthCards = await HealthCard.find();
+        res.status(200).send(healthCards);
+    } catch (error) {
+        res.status(500).send({ message: error.message });
+    }
+});
+
+// Get a health card by ID
+app.get('/healthcards/:id', async (req, res) => {
+    try {
+        const healthCard = await HealthCard.findById(req.params.id);
+        if (!healthCard) {
+            return res.status(404).send({message: "Health card not found"});
+        }
+        res.status(200).send(healthCard);
+    } catch (error) {
+        res.status(500).send({message: error.message});
+    }
+});
+
+
+// Update a health card by ID
+app.put("/healthcards/:id", async (req, res) => {
+    try {
+        const updatedHealthCard = await HealthCard.findByIdAndUpdate(
+            req.params.id,
+            req.body,
+            { new: true, runValidators: true }
+        );
+        if (!updatedHealthCard) {
+            return res.status(404).send({ message: "Health card not found" });
+        }
+        res.status(200).send(updatedHealthCard);
+    } catch (error) {
+        res.status(400).send({ message: error.message });
+    }
+});
 
 // Delete a condition by ID
-app.delete("/medicine/:id", async (req, res) => {
+app.delete("/healthcards/:id", async (req, res) => {
     try {
-        const deletedMedicine = await Medicine.findByIdAndDelete(req.params.id);
-        if (!deletedMedicine) {
-            return res.status(404).send({ message: "Medicine not found" });
+        const deletedHealthCard = await Medicine.findByIdAndDelete(req.params.id);
+        if (!deletedHealthCard) {
+            return res.status(404).send({ message: "Health card not found" });
         }
-        res.status(200).send(deletedMedicine);
+        res.status(200).send(deletedHealthCard);
     } catch (error) {
         res.status(500).send({ message: error.message });
     }
