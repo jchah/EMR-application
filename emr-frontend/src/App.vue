@@ -31,7 +31,6 @@ import Header from './components/Navbar.vue';
 
 .content {
   flex: 1;
-  padding: 20px;
   overflow-y: auto;
 }
 
