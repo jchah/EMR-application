@@ -2,7 +2,7 @@
 import { ref } from 'vue';
 import { RouterView } from 'vue-router';
 import Sidebar from './components/Sidebar.vue';
-import Header from './components/Header.vue';
+import Header from './components/Navbar.vue';
 </script>
 
 <template>

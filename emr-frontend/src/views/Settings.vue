@@ -2,10 +2,8 @@
 </script>
 
 <template>
-  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bulma@0.9.3/css/bulma.min.css">
-
   <div class="dashboard">
-    <h1>Welcome to the EMR Application</h1>
+    <h2>Welcome to the EMR Application</h2>
     <p>This is the main dashboard where you can see an overview of the system's status and quick links to various sections.</p>
     <div class="cards">
       <div class="card">
