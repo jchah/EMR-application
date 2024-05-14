@@ -3,7 +3,7 @@
       <section class="section has-background-white-ter">
           <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bulma@0.9.3/css/bulma.min.css">
               <div class="container">
-                  <div class="columns is-centered">
+                  <div v-if="!hasSearched" class="columns is-centered">
                       <div class="column is-half">
                       <h1 class="title">Search For Patient</h1>
                           <div class="box">
@@ -72,7 +72,8 @@ export default {
       dob: '',
       address: '',
       patients: [],
-      filteredPatients 
+      filteredPatients: [],
+      hasSearched: false
     };
   },
   methods: {
@@ -86,6 +87,10 @@ export default {
 
         return firstNameMatch && middleInitialMatch && lastNameMatch && dobMatch && addressMatch;
       });
+
+      if (this.filteredPatients.length >= 1) {
+        this.hasSearched = true
+      }
     },
     resetForm() {
       this.patientFirstName = '';
@@ -98,7 +103,7 @@ export default {
   },
   async mounted() {
     try {
-      const response = await axios.get(`http://localhost:3000/logout`, {
+      const response = await axios.get(`http://localhost:3000/patients`, {
         headers: {
         'Content-Type': 'application/x-www-form-urlencoded'
         }
