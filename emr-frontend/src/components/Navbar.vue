@@ -1,5 +1,5 @@
 <template>
-    <nav class="navbar has-background-primary-dark" role="navigation" aria-label="main navigation">
+    <nav class="navbar has-background-primary-dark" role="navigation" aria-label="main navigation" style="height: 50px">
         <div class="navbar-brand">
        
     
@@ -13,6 +13,9 @@
     
         <div id="navbarBasicExample" class="navbar-menu">
         <div class="navbar-start">
+            <a class="navbar-item navbar-logo">
+                <img src="../assets/LogoCropped.png">
+            </a>
             <a class="navbar-item has-text-link-light">
             Home
             </a>
@@ -47,10 +50,10 @@
         <div class="navbar-end">
             <div class="navbar-item">
             <div class="buttons">
-                <a class="button has-background-success-dark has-text-primary-light">
-                <strong>Sign up?</strong>
+                <a class="button has-background-success">
+                Sign up?
                 </a>
-                <a class="button has-background-warning-dark has-text-link-light">
+                <a class="button has-background-warning">
                 Log in?
                 </a>
             </div>
@@ -59,3 +62,11 @@
         </div>
     </nav>
 </template>
+
+<style scoped> 
+    .navbar-logo  {
+        padding-left: 30px;
+        padding-right: 30px;
+    }
+
+</style>

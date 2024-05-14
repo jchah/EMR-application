@@ -2,24 +2,7 @@
 </script>
 
 <template>
-  <div class="dashboard">
-    <h2>Welcome to the EMR Application</h2>
-    <p>This is the main dashboard where you can see an overview of the system's status and quick links to various sections.</p>
-    <div class="cards">
-      <div class="card">
-        <h3>Patients</h3>
-        <p>View and manage patient records</p>
-      </div>
-      <div class="card">
-        <h3>Appointments</h3>
-        <p>View and manage appointments</p>
-      </div>
-      <div class="card">
-        <h3>Settings</h3>
-        <p>Configure system settings</p>
-      </div>
-    </div>
-  </div>
+    
 </template>
 
 <style scoped>
