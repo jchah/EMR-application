@@ -7,7 +7,7 @@ Send reminders for patient appointments - jad
 Book appointments on a calendar - ethan
 Ability to order tests - callum
 Make it  so doctors can only access information about their patients - omer
-Could Make a thing where it gets teh disease and lists possbile treatments based on information from health canada api - jad
+Could Make a thing where it gets the disease and lists possible treatments based on information from health canada api - jad
 
 
 
