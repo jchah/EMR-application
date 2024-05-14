@@ -7,7 +7,7 @@ import Header from './components/Header.vue';
 
 <template>
   <div id="app">
-    <Header />
+    <Header></Header>
     <div class="main-layout">
       <Sidebar />
       <main class="content">
