@@ -13,6 +13,7 @@ const menuItems = ref([
 function navigate(route) {
   router.push(route);
 }
+
 </script>
 
 <template>
