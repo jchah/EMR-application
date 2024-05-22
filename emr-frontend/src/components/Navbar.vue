@@ -23,6 +23,9 @@
         <RouterLink class="navbar-item" to="/appointments">
           Appointments
         </RouterLink>
+        <RouterLink class="navbar-item" to="/test-dashboard">
+          Tests
+        </RouterLink>
       </div>
 
       <div class="navbar-end">
