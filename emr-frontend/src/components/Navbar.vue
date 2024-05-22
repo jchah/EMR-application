@@ -14,43 +14,26 @@
         <a class="navbar-item navbar-logo">
           <img src="../assets/LogoCropped.png">
         </a>
-        <a class="navbar-item">
+        <RouterLink class="navbar-item" to="/">
           Home
-        </a>
-        <a class="navbar-item">
-          Documentation
-        </a>
-        <div class="navbar-item has-dropdown is-hoverable">
-          <a class="navbar-link">
-            More
-          </a>
-          <div class="navbar-dropdown">
-            <a class="navbar-item">
-              About
-            </a>
-            <a class="navbar-item">
-              Jobs
-            </a>
-            <a class="navbar-item">
-              Contact
-            </a>
-            <hr class="navbar-divider">
-            <a class="navbar-item">
-              Report an issue
-            </a>
-          </div>
-        </div>
+        </RouterLink>
+        <RouterLink class="navbar-item" to="/patients">
+          Patients
+        </RouterLink>
+        <RouterLink class="navbar-item" to="/appointments">
+          Appointments
+        </RouterLink>
       </div>
 
       <div class="navbar-end">
         <div class="navbar-item">
           <div class="buttons">
-            <a class="button has-background-success">
-              Sign up
-            </a>
-            <a class="button has-background-warning">
+            <RouterLink class="button has-background-success" to="/register">
+              Register
+            </RouterLink>
+            <RouterLink class="button has-background-warning" to="/login">
               Log in
-            </a>
+            </RouterLink>
           </div>
         </div>
       </div>
