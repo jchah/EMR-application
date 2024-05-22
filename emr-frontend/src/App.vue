@@ -1,5 +1,4 @@
 <script setup>
-import { ref } from 'vue';
 import { RouterView } from 'vue-router';
 import Sidebar from './components/Sidebar.vue';
 import Header from './components/Navbar.vue';
@@ -40,12 +39,5 @@ header {
   color: white;
   padding: 20px;
   text-align: center;
-}
-
-.sidebar {
-  width: 250px;
-  background-color: #333;
-  color: white;
-  padding: 20px;
 }
 </style>
