@@ -92,10 +92,11 @@ export default {
     //geting appointments
     let appointments = ref();
     watch(date, (newValue, oldValue) =>{
-      appointments.value = getAppointments(date.value);
+      getAppointments(date.value);
     })
 
     onMounted(() => {
+      
       getAppointments(date.value);
     });
 
