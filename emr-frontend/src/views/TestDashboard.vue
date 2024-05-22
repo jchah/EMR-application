@@ -135,11 +135,6 @@ export default {
                 comments: ''
             }
         }
-    },
-    methods: {
-        addRow() {
-            this.labValues.push({name: '', value: ''});
-        }
     }
 }
 </script>
