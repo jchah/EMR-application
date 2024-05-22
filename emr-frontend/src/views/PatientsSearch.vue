@@ -1,6 +1,5 @@
 <template>
   <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bulma@0.9.3/css/bulma.min.css">
-  <div class="custom-container has-background-white-ter">
     <div class="container">
       <div v-if="!hasSearched" class="columns is-centered">
         <div class="column is-half">
@@ -55,7 +54,6 @@
         </div>
       </div>
     </div>
-  </div>
 </template>
 
 
@@ -115,9 +113,6 @@ export default {
 </script>
 
 <style scoped>
-.custom-container {
-  margin-top: 0;
-}
 .container {
   max-width: 400px;
   margin: auto;
