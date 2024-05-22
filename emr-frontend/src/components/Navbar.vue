@@ -80,32 +80,11 @@ export default {
   }
 }
 </script>
-
-<style scoped>
-/* .navbar-logo {
-  padding-left: 30px;
-  padding-right: 30px;
-}
-
-.navbar-menu {
-  transition: all 0.3s ease;
-}
-
-.has-text-white {
-  color: white !important;
-}
-
-.navbar-burger {
-display:none;
-} */
+<style>
 
 @media screen and (max-width: 1024px) {
   .navbar-dropdown {
     display: none;
   }
-}
-
-.show-me {
-  display: block;
 }
 </style>

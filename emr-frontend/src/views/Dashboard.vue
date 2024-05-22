@@ -8,12 +8,11 @@
     <div class="container">
       <div class="content has-text-centered">
         <h1 class="title">Welcome to the EMR Application</h1>
-        <p>This is the main dashboard where you can see an overview of the system's status and quick links to various sections.</p>
       </div>
 
-      <div class="columns is-multiline is-centered">
-        <div class="column is-one-third">
-          <div class="card has-text-centered">
+      <div class="columns is-multiline is-centered is-variable is-8">
+        <div class="column is-narrow">
+          <div class="card has-text-centered" style="width: 300px;">
             <header class="card-header">
               <p class="card-header-title is-centered">Patients</p>
             </header>
@@ -22,8 +21,8 @@
             </div>
           </div>
         </div>
-        <div class="column is-one-third">
-          <div class="card has-text-centered">
+        <div class="column is-narrow">
+          <div class="card has-text-centered" style="width: 300px;">
             <header class="card-header">
               <p class="card-header-title is-centered">Appointments</p>
             </header>
@@ -32,8 +31,8 @@
             </div>
           </div>
         </div>
-        <div class="column is-one-third">
-          <div class="card has-text-centered">
+        <div class="column is-narrow">
+          <div class="card has-text-centered" style="width: 300px;">
             <header class="card-header">
               <p class="card-header-title is-centered">Settings</p>
             </header>
