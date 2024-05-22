@@ -14,14 +14,14 @@
         <a class="navbar-item navbar-logo">
           <img src="../assets/LogoCropped.png">
         </a>
-        <a class="navbar-item has-text-white">
+        <a class="navbar-item">
           Home
         </a>
-        <a class="navbar-item has-text-white">
+        <a class="navbar-item">
           Documentation
         </a>
         <div class="navbar-item has-dropdown is-hoverable">
-          <a class="navbar-link has-text-white">
+          <a class="navbar-link">
             More
           </a>
           <div class="navbar-dropdown">
@@ -64,17 +64,25 @@ export default {
   mounted() {
     const burgerIcon = document.querySelector('.navbar-burger');
     const navbarMenu = document.querySelector('.navbar-menu');
+    const dropdown = document.querySelector('.has-dropdown')
+    const items = document.querySelector('.navbar-dropdown')
 
     burgerIcon.addEventListener('click', () => {
       burgerIcon.classList.toggle('is-active');
       navbarMenu.classList.toggle('is-active');
     });
+
+    dropdown.addEventListener('click', () => {
+      if(document.body.clientWidth <= 1024) {
+        items.classList.toggle('show-me')
+      }
+    })
   }
 }
 </script>
 
 <style scoped>
-.navbar-logo {
+/* .navbar-logo {
   padding-left: 30px;
   padding-right: 30px;
 }
@@ -89,22 +97,15 @@ export default {
 
 .navbar-burger {
 display:none;
+} */
+
+@media screen and (max-width: 1024px) {
+  .navbar-dropdown {
+    display: none;
+  }
 }
 
-@media screen and (max-width: 768px) {
-  .navbar-menu {
-    background-color: white;
-  }
-  .navbar-item,
-  .navbar-link {
-    color: black !important;
-  }
-  .navbar-burger {
-    display: block;
-    color: white;
-  }
-  .navbar-burger span {
-    background-color: white;
-  }
+.show-me {
+  display: block;
 }
 </style>
