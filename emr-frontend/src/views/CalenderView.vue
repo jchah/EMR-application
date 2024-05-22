@@ -3,11 +3,7 @@
   <Suspense>
     <div>
       <div class="container">
-        <DatePicker v-model="date" />
-        <ul v-for="app in appointments" >
-          <li> {{ app.patient }}: {{ app.startTime }} - {{ app.endTime }} ({{ app.notes }}) 
-            <button @click="deleteAppointment(app)" class=""> Delete</button></li>
-        </ul>
+        
       </div>
       
 
@@ -55,6 +51,13 @@
                                   </div>
                                   </div>
                               </form>
+                          </div>
+                          <div class="column is-half">
+                            <DatePicker v-model="date" />
+                            <ul v-for="app in appointments" >
+                              <li> {{ app.patient }}: {{ app.startTime }} - {{ app.endTime }} ({{ app.notes }}) 
+                                <button @click="deleteAppointment(app)" class=""> Delete</button></li>
+                            </ul>
                           </div>
                   </div>
             </div>
