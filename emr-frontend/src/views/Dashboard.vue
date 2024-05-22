@@ -26,6 +26,11 @@
 
 <style scoped>
 .dashboard {
+  margin: auto;
+  padding: 20px;
+}
+
+.dashboard {
   text-align: center;
 }
 

@@ -4,7 +4,7 @@ import Dashboard from '../views/Dashboard.vue';
 import Patients from '../views/PatientsSearch.vue';
 // import Appointments from './views/Appointments.vue';
 import Settings from '../views/Settings.vue';
-import Calendar from '../views/Calender.vue'
+import Calendar from '../views/Calendar.vue'
 
 const routes = [
     { path: '/', component: Dashboard },

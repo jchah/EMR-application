@@ -16,7 +16,7 @@
         <div class="column">
           <div class="columns is-centered">
             <div class="column is-full">
-              <h1 class="title mt-4">Make an Appointment</h1>
+              <h1 class="title">Make an Appointment</h1>
               <div class="box">
                 <form @submit.prevent="makeAppointment(date)">
                   <div class="field">
@@ -141,3 +141,11 @@ export default {
   }
 };
 </script>
+
+<style>
+.container {
+  max-width: 400px;
+  margin: auto;
+  padding: 20px;
+}
+</style>
