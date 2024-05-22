@@ -1,15 +1,20 @@
+<!-- IF YOU ARE ABOUT TO EDIT MY CODE TELL ME SO I CAN DO IT I NEED TO GET MARKS OFF THIS FUCKING PROJECT -->
+
 <template>
   
   <Suspense>
     <div>
-      <div class="container">
-        
-      </div>
-      
-
-      <div class="container">
+      <div class="section">
                   <div class="columns is-centered">
-                      <div class="column is-half">
+                    <div class="column">
+                            <DatePicker v-model="date" mode="date" expanded/>
+                            
+                            <ul>
+                              <li v-for="app in appointments"> {{ app.patient }}: {{ app.startTime }} - {{ app.endTime }} ({{ app.notes }}) 
+                                <button @click="deleteAppointment(app)" class=""> Delete</button></li>
+                            </ul>
+                      </div>
+                      <div class="column is-one-third">
                       <h1 class="title">Make an Appointment</h1>
                           <div class="box">
                               <form @submit.prevent="makeAppointment(date)">
@@ -52,13 +57,7 @@
                                   </div>
                               </form>
                           </div>
-                          <div class="column is-half">
-                            <DatePicker v-model="date" />
-                            <ul v-for="app in appointments" >
-                              <li> {{ app.patient }}: {{ app.startTime }} - {{ app.endTime }} ({{ app.notes }}) 
-                                <button @click="deleteAppointment(app)" class=""> Delete</button></li>
-                            </ul>
-                          </div>
+                         
                   </div>
             </div>
           </div>
@@ -68,19 +67,19 @@
 </template>
 
 <script>
-import { ref, watch } from 'vue';
+import { ref, watch, onMounted } from 'vue';
 import { Calendar, DatePicker } from 'v-calendar';
 import 'v-calendar/style.css';
 import axios from 'axios';
 
 const API_URL = "http://localhost:3000";
 export default {
-  components: {
-    Calendar,
+  components: { 
     DatePicker,
   },
   setup() {
     const date = ref(new Date());
+    
     //making appointment
     let info = ref({
       patientName: '',
@@ -96,12 +95,15 @@ export default {
       appointments.value = getAppointments(date.value);
     })
 
-
+    onMounted(() => {
+      getAppointments(date.value);
+    });
 
     async function getAppointments(date){
 
 
       try {
+        console.log(date.toLocaleDateString())
         const response = await axios.get(`${API_URL}/calendar/appointments`, {
           params:{
             date: date.toLocaleDateString()
@@ -164,5 +166,12 @@ export default {
 };
 </script>
 
+<style scoped>
+/* Scoped styles for this component */
+
+/* Example of targeting v-calendar */
+
+
+</style>
 
 
