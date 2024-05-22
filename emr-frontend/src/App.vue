@@ -9,7 +9,6 @@ import Header from './components/Navbar.vue';
   <div id="app">
     <Header></Header>
     <div class="main-layout">
-      <Sidebar />
       <main class="content">
         <RouterView />
       </main>
