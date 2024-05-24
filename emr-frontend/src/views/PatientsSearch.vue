@@ -9,7 +9,7 @@
               <div class="field">
                 <label class="label">Patient First Name</label>
                 <div class="control">
-                  <input class="input" type="text" v-model="patientFirstName" required>
+                  <input class="input" type="text" v-model="patientFirstName">
                 </div>
               </div>
 
@@ -23,21 +23,21 @@
               <div class="field">
                 <label class="label">Last Name</label>
                 <div class="control">
-                  <input class="input" type="text" v-model="lastName" required>
+                  <input class="input" type="text" v-model="lastName">
                 </div>
               </div>
 
               <div class="field">
                 <label class="label">DOB</label>
                 <div class="control">
-                  <input class="input" type="date" v-model="dob" required>
+                  <input class="input" type="date" v-model="dob">
                 </div>
               </div>
 
               <div class="field">
                 <label class="label">Address</label>
                 <div class="control">
-                  <input class="input" type="text" v-model="address" required>
+                  <input class="input" type="text" v-model="address">
                 </div>
               </div>
 
@@ -99,12 +99,13 @@ export default {
   },
   async mounted() {
     try {
-      const response = await axios.get(`http://localhost:3000/patients`, {
+      const response = await axios.get(`http://localhost:3000/healthcards`, {
         headers: {
         'Content-Type': 'application/x-www-form-urlencoded'
         }
       });
       this.patients = response.data
+      console.log(patients)
     } catch (error) {
       console.log(error)
     }
