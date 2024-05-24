@@ -17,7 +17,7 @@
         <router-link class="navbar-item" to="/">
           Dashboard
         </router-link>
-        <router-link class="navbar-item navbar-item" to="/patients">
+        <router-link class="navbar-item" to="/patients">
           Patients
         </router-link>
         <router-link class="navbar-item" to="/test-dashboard">

@@ -11,7 +11,7 @@
                         <div class="control">
                             <div class="select">
                                 <select name="patient" id="order-patient-select" v-model="this.orderData.patient" required>
-                                    <option v-for="patient in patients">{{ patient.healthCard.firstName }} {{ patient.healthCard.lastName }}</option>
+                                    <option v-for="patient in patients">{{ patient.healthCard }}</option>
                                 </select>
                             </div>
                         </div>
@@ -38,7 +38,7 @@
                         <div class="control">
                             <div class="select">
                                 <select name="" id="test-order-select" v-model="this.resultsData.order" required>
-                                    <option v-for="order in orders">{{ test.test }} - {{ test.patient.healthCard.firstName }} {{ test.patent.healthCard.lastName }}</option>
+                                    <option v-for="order in orders">{{ test.test }} - {{ test.patient.healthCard }}</option>
                                 </select>
                             </div>
                         </div>
@@ -155,7 +155,7 @@ export default {
 }
 </script>
 
-<style>
+<style scoped>
 .column {
     margin: 1%;
     text-align: left;
