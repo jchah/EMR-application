@@ -45,12 +45,12 @@
       <div class="navbar-end">
         <div class="navbar-item">
           <div class="buttons">
-            <a class="button has-background-success">
-              Sign up
-            </a>
-            <a class="button has-background-warning">
+            <RouterLink class="button has-background-success" to="/register">
+              Register
+            </RouterLink>
+            <RouterLink class="button has-background-warning" to="/login">
               Log in
-            </a>
+            </RouterLink>
           </div>
         </div>
       </div>
@@ -87,24 +87,7 @@ export default {
   }
 }
 </script>
-
-<style scoped>
-/* .navbar-logo {
-  padding-left: 30px;
-  padding-right: 30px;
-}
-
-.navbar-menu {
-  transition: all 0.3s ease;
-}
-
-.has-text-white {
-  color: white !important;
-}
-
-.navbar-burger {
-display:none;
-} */
+<style>
 
 .navbar {
   background-color: #333;
