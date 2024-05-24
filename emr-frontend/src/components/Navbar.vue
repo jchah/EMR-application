@@ -1,5 +1,5 @@
 <template>
-  <nav class="navbar" role="navigation" aria-label="main navigation" style="height: 100px; background-color: #555">
+  <nav class="navbar" role="navigation" aria-label="main navigation" style="height: 5rem; background-color: #555">
     <div class="navbar-brand">
       <a role="button" class="navbar-burger" aria-label="menu" aria-expanded="false" data-target="navbarBasicExample">
         <span aria-hidden="true"></span>
@@ -94,21 +94,10 @@ nav {
   padding: 20px;
 }
 
-.item {
-  padding: 20px;
-}
-
-.background-change {
-  background-color: #555;
-}
 
 @media screen and (max-width: 1024px) {
   .navbar-dropdown {
     display: none;
   }
-}
-
-.show-me {
-  display: block;
 }
 </style>
