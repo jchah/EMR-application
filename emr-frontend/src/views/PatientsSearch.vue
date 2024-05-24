@@ -35,6 +35,13 @@
               </div>
 
               <div class="field">
+                <label class="label">Sex</label>
+                <div class="control">
+                  <input class="input" type="date" v-model="sex">
+                </div>
+              </div>
+
+              <div class="field">
                 <label class="label">Address</label>
                 <div class="control">
                   <input class="input" type="text" v-model="address">
@@ -59,6 +66,8 @@
 
 
 <script>
+import axios from 'axios';
+
 export default {
   data() {
     return {
@@ -67,21 +76,23 @@ export default {
       lastName: '',
       dob: '',
       address: '',
-      patients: [],
+      healthCards: [],
       filteredPatients: [],
-      hasSearched: false
+      hasSearched: false,
+      sex: ''
     };
   },
   methods: {
     submitForm() {
-      this.filteredPatients = this.patients.filter(patient => {
+      this.filteredPatients = this.healthCards.filter(patient => {
         const firstNameMatch = this.patientFirstName === '' || patient.firstName.toLowerCase().includes(this.patientFirstName.toLowerCase());
         const middleInitialMatch = this.middleInitial === '' || patient.middleInitial.toLowerCase() === this.middleInitial.toLowerCase();
         const lastNameMatch = this.lastName === '' || patient.lastName.toLowerCase().includes(this.lastName.toLowerCase());
         const dobMatch = this.dob === '' || patient.dob === this.dob;
+        const sexMatch = this.sex === '' || patient.sex === this.sex
         const addressMatch = this.address === '' || patient.address.toLowerCase().includes(this.address.toLowerCase());
 
-        return firstNameMatch && middleInitialMatch && lastNameMatch && dobMatch && addressMatch;
+        return firstNameMatch && middleInitialMatch && lastNameMatch && dobMatch && addressMatch && sexMatch;
       });
 
       if (this.filteredPatients.length >= 1) {
@@ -93,8 +104,8 @@ export default {
       this.middleInitial = '';
       this.lastName = '';
       this.dob = '';
+      this.sex = '';
       this.address = '';
-      
     }
   },
   async mounted() {
@@ -104,8 +115,8 @@ export default {
         'Content-Type': 'application/x-www-form-urlencoded'
         }
       });
-      this.patients = response.data
-      console.log(patients)
+      this.healthCards = response.data
+      console.log(healthCards)
     } catch (error) {
       console.log(error)
     }
