@@ -62,6 +62,9 @@
             </div>
           </div>
     </div>
+    <!-- <ul>
+      <li v-for="patient in patientList">{{ patient }}</li>
+    </ul> -->
   </Suspense>
   
 </template>
@@ -79,6 +82,7 @@ export default {
   },
   setup() {
     const date = ref(new Date());
+    let patientList = ref();
     
     //making appointment
     let info = ref({
@@ -96,7 +100,7 @@ export default {
     })
 
     onMounted(() => {
-      
+      // getPatients();
       getAppointments(date.value);
     });
 
@@ -151,6 +155,16 @@ export default {
       return date.toLocaleDateString(); 
     }
 
+    // async function getPatients(){
+    //   try {
+    //     let response = await axios.get(`${API_URL}/patients`)
+    //     patientList.value = response.data;
+        
+    //   } catch (error) {
+        
+    //   }
+    // }
+
 
 
     return { 
@@ -160,7 +174,8 @@ export default {
       getAppointments,
       makeAppointment,
       appointments,
-      deleteAppointment
+      deleteAppointment,
+     
 
     };
   },
