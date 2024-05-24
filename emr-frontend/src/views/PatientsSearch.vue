@@ -67,7 +67,7 @@
 
 
 <script>
-import axios from 'axios';
+import axios from "axios";
 
 export default {
   data() {
@@ -79,21 +79,33 @@ export default {
       address: '',
       healthCards: [],
       filteredPatients: [],
-      hasSearched: false,
-      sex: ''
+      hasSearched: false
     };
   },
   methods: {
+    async fetchHealthCards() {
+      try {
+        const response = await axios.get(`http://localhost:3000/healthcards`, {
+          headers: {
+            'Content-Type': 'application/x-www-form-urlencoded'
+          }
+        });
+        this.healthCards = response.data
+        console.log(this.healthCards)
+      } catch (error) {
+        console.log(error)
+      }
+    },
+
     submitForm() {
       this.filteredPatients = this.healthCards.filter(patient => {
         const firstNameMatch = this.patientFirstName === '' || patient.firstName.toLowerCase().includes(this.patientFirstName.toLowerCase());
         const middleInitialMatch = this.middleInitial === '' || patient.middleInitial.toLowerCase() === this.middleInitial.toLowerCase();
         const lastNameMatch = this.lastName === '' || patient.lastName.toLowerCase().includes(this.lastName.toLowerCase());
         const dobMatch = this.dob === '' || patient.dob === this.dob;
-        const sexMatch = this.sex === '' || patient.sex === this.sex
         const addressMatch = this.address === '' || patient.address.toLowerCase().includes(this.address.toLowerCase());
 
-        return firstNameMatch && middleInitialMatch && lastNameMatch && dobMatch && addressMatch && sexMatch;
+        return firstNameMatch && middleInitialMatch && lastNameMatch && dobMatch && addressMatch;
       });
 
       if (this.filteredPatients.length >= 1) {
@@ -105,22 +117,12 @@ export default {
       this.middleInitial = '';
       this.lastName = '';
       this.dob = '';
-      this.sex = '';
       this.address = '';
+      
     }
   },
-  async mounted() {
-    try {
-      const response = await axios.get(`http://localhost:3000/healthcards`, {
-        headers: {
-        'Content-Type': 'application/x-www-form-urlencoded'
-        }
-      });
-      this.healthCards = response.data
-      console.log(healthCards)
-    } catch (error) {
-      console.log(error)
-    }
+  created() {
+    this.fetchHealthCards();
   }
 };
 </script>
