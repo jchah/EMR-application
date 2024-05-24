@@ -91,6 +91,7 @@ export default {
 
 .navbar {
   background-color: #333;
+  color: white;
   padding: 20px;
 }
 
@@ -106,5 +107,9 @@ export default {
 
 .show-me {
   display: block;
+}
+
+.grey-background {
+  background-color: #555;
 }
 </style>
