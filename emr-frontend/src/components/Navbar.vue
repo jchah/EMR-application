@@ -1,5 +1,5 @@
 <template>
-  <nav class="navbar has-background-primary-dark" role="navigation" aria-label="main navigation" style="height: 50px">
+  <nav class="navbar" role="navigation" aria-label="main navigation" style="height: 100px">
     <div class="navbar-brand">
       <a role="button" class="navbar-burger" aria-label="menu" aria-expanded="false" data-target="navbarBasicExample">
         <span aria-hidden="true"></span>
@@ -14,25 +14,25 @@
         <a class="navbar-item navbar-logo">
           <img src="../assets/LogoCropped.png">
         </a>
-        <a class="navbar-item">
-          Home
-        </a>
-        <a class="navbar-item">
-          Documentation
-        </a>
-        <div class="navbar-item has-dropdown is-hoverable">
-          <a class="navbar-link">
-            More
+        <router-link class="navbar-item has-text-white" to="/">
+          Dashboard
+        </router-link>
+        <router-link class="navbar-item has-text-white" to="/patients">
+          Patients
+        </router-link>
+        <router-link class="navbar-item has-text-white" to="/calendar">
+          Appointments
+        </router-link>
+        <div class="navbar-item is-hoverable has-dropdown">
+          <a class="navbar-link has-text-white">
+            Settings
           </a>
           <div class="navbar-dropdown">
             <a class="navbar-item">
-              About
+              User
             </a>
             <a class="navbar-item">
-              Jobs
-            </a>
-            <a class="navbar-item">
-              Contact
+              Theme
             </a>
             <hr class="navbar-divider">
             <a class="navbar-item">
@@ -77,6 +77,13 @@ export default {
         items.classList.toggle('show-me')
       }
     })
+
+    dropdown.addEventListener('mouseover', () => {
+      if(document.body.clientWidth > 1024) {
+        dropdown.classList.toggle('grey-background')
+        document.querySelector('.navbar-link').classList.toggle('grey-background')
+      }
+    })
   }
 }
 </script>
@@ -99,6 +106,16 @@ export default {
 display:none;
 } */
 
+.navbar {
+  background-color: #333;
+  color: white;
+  padding: 20px;
+}
+
+.navbar-item:hover {
+  background-color: #555;
+}
+
 @media screen and (max-width: 1024px) {
   .navbar-dropdown {
     display: none;
@@ -107,5 +124,9 @@ display:none;
 
 .show-me {
   display: block;
+}
+
+.grey-background {
+  background-color: #555;
 }
 </style>
