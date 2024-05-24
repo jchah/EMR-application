@@ -10,7 +10,7 @@
                         <label for="order-patient-select" class="label">Patient</label>
                         <div class="control">
                             <div class="select">
-                                <select name="patient" id="order-patient-select" v-model="this.orderData.patient">
+                                <select name="patient" id="order-patient-select" v-model="this.orderData.patient" required>
                                     <option v-for="patient in patients">{{ patient.healthCard.firstName }} {{ patient.healthCard.lastName }}</option>
                                 </select>
                             </div>
@@ -20,7 +20,7 @@
                         <label for="test-type-select" class="label">Test Ordered</label>
                         <div class="control">
                             <div class="select">
-                                <select name="test" id="test-type-select" v-model="this.orderData.test">
+                                <select name="test" id="test-type-select" v-model="this.orderData.test" required>
                                     <option v-for="test in tests">{{ test.name }}</option>
                                 </select>
                             </div>
@@ -37,7 +37,7 @@
                         <label for="test-order-select" class="label">Order</label>
                         <div class="control">
                             <div class="select">
-                                <select name="" id="test-order-select" v-model="this.resultsData.order">
+                                <select name="" id="test-order-select" v-model="this.resultsData.order" required>
                                     <option v-for="order in orders">{{ test.test }} - {{ test.patient.healthCard.firstName }} {{ test.patent.healthCard.lastName }}</option>
                                 </select>
                             </div>
@@ -46,14 +46,14 @@
                     <div class="field" id="date">
                         <label for="test-date" class="label">Date of Test</label>
                         <div class="control">
-                            <input class="input" type="date" name="test-date" id="test-date" v-model="this.resultsData.date">
+                            <input class="input" type="date" name="test-date" id="test-date" v-model="this.resultsData.date" required>
                         </div>
                     </div>
                     <div class="field" id="results">
                         <label for="results-box" class="label">Results</label>
                         <i>If you are inputting lab values, separate each value with a semi-colon.</i>
                         <div class="control">
-                            <textarea class="input" style="resize: vertical" v-model="this.resultsData.results"></textarea>
+                            <textarea class="input" style="resize: vertical" v-model="this.resultsData.results" required></textarea>
                         </div>
                     </div>
                     <div class="field" id="results">
