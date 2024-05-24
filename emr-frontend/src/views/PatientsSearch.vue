@@ -59,6 +59,8 @@
 
 
 <script>
+import axios from "axios";
+
 export default {
   data() {
     return {
@@ -67,14 +69,28 @@ export default {
       lastName: '',
       dob: '',
       address: '',
-      patients: [],
+      healthCards: [],
       filteredPatients: [],
       hasSearched: false
     };
   },
   methods: {
+    async fetchHealthCards() {
+      try {
+        const response = await axios.get(`http://localhost:3000/healthcards`, {
+          headers: {
+            'Content-Type': 'application/x-www-form-urlencoded'
+          }
+        });
+        this.healthCards = response.data
+        console.log(this.healthCards)
+      } catch (error) {
+        console.log(error)
+      }
+    },
+
     submitForm() {
-      this.filteredPatients = this.patients.filter(patient => {
+      this.filteredPatients = this.healthCards.filter(patient => {
         const firstNameMatch = this.patientFirstName === '' || patient.firstName.toLowerCase().includes(this.patientFirstName.toLowerCase());
         const middleInitialMatch = this.middleInitial === '' || patient.middleInitial.toLowerCase() === this.middleInitial.toLowerCase();
         const lastNameMatch = this.lastName === '' || patient.lastName.toLowerCase().includes(this.lastName.toLowerCase());
@@ -97,18 +113,8 @@ export default {
       
     }
   },
-  async mounted() {
-    try {
-      const response = await axios.get(`http://localhost:3000/healthcards`, {
-        headers: {
-        'Content-Type': 'application/x-www-form-urlencoded'
-        }
-      });
-      this.patients = response.data
-      console.log(patients)
-    } catch (error) {
-      console.log(error)
-    }
+  created() {
+    this.fetchHealthCards();
   }
 };
 </script>
