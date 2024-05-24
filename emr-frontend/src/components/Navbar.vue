@@ -11,31 +11,39 @@
     <div id="navbarBasicExample" class="navbar-menu">
 
       <div class="navbar-start">
-        <a class="navbar-item navbar-logo">
+        <a class="navbar-item navbar-logo" href="/">
           <img src="../assets/LogoCropped.png">
         </a>
-        <router-link class="navbar-item has-text-white" to="/">
+        <router-link class="navbar-item" to="/">
           Dashboard
         </router-link>
-        <router-link class="navbar-item has-text-white" to="/patients">
-          Patients
-        </router-link>
-        <router-link class="navbar-item has-text-white" to="/calendar">
+        <div class="navbar-item is-hoverable has-dropdown">
+          <router-link class="navbar-link navbar-item" to="/patients">
+            Patients
+          </router-link>
+          <div class="navbar-dropdown">
+            <router-link class="dropdown-item" to="/test-dashboard">
+              Test Dashboard
+            </router-link>
+          </div>
+        </div>
+        <router-link class="navbar-item" to="/calendar">
           Appointments
         </router-link>
+        
         <div class="navbar-item is-hoverable has-dropdown">
-          <a class="navbar-link has-text-white">
+          <a class="navbar-link navbar-item">
             Settings
           </a>
           <div class="navbar-dropdown">
-            <a class="navbar-item">
+            <a class="dropdown-item">
               User
             </a>
-            <a class="navbar-item">
+            <a class="dropdown-item">
               Theme
             </a>
             <hr class="navbar-divider">
-            <a class="navbar-item">
+            <a class="dropdown-item">
               Report an issue
             </a>
           </div>
@@ -99,5 +107,17 @@ nav {
   .navbar-dropdown {
     display: none;
   }
+}
+
+.navbar-item {
+  color: white!important;
+}
+
+.dropdown-item {
+  color: black;
+}
+
+.navbar-item:hover {
+  color: black!important;
 }
 </style>
