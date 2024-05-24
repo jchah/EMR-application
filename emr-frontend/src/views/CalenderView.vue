@@ -21,10 +21,18 @@
                                   <div class="field">
                                     <label class="label">Selected Date: {{ formatDate(date) }}</label>
                                   </div>
-                                  <div class="field">
+                                 
                                   <label class="label">Patient Name</label>
                                   <div class="control">
-                                      <input class="input" type="text" v-model="info.patientName" required>
+                                      <input class="input" type="text" v-model="inSearchBar" required>
+                                      <div class="control">
+                                        <div class="dropdown is-active">
+                                          <div class="dropdown-menu">
+                                            <div class="dropdown-content">
+                                              <a v-for="option in searchOptions"  @click="selectOption(option)" class="dropdown-item">{{ option }}</a>
+                                            </div>
+                                          </div>
+                                        </div>
                                   </div>
                                   </div>
                         
@@ -62,9 +70,7 @@
             </div>
           </div>
     </div>
-    <!-- <ul>
-      <li v-for="patient in patientList">{{ patient }}</li>
-    </ul> -->
+   
   </Suspense>
   
 </template>
@@ -82,8 +88,10 @@ export default {
   },
   setup() {
     const date = ref(new Date());
-    let patientList = ref();
-    
+    let patientList = ref(null);
+    let searchOptions = ref();
+    let inSearchBar = ref();
+    let selected = ref(false)
     //making appointment
     let info = ref({
       patientName: '',
@@ -94,13 +102,17 @@ export default {
     })
 
     //geting appointments
-    let appointments = ref();
+    let appointments = ref(null);
     watch(date, (newValue, oldValue) =>{
       getAppointments(date.value);
     })
+    watch(inSearchBar, (newValue, oldValue) =>{
+      inSearchBar.value = newValue
+      filterSearch();
+    })
 
     onMounted(() => {
-      // getPatients();
+      getPatients();
       getAppointments(date.value);
     });
 
@@ -155,15 +167,32 @@ export default {
       return date.toLocaleDateString(); 
     }
 
-    // async function getPatients(){
-    //   try {
-    //     let response = await axios.get(`${API_URL}/patients`)
-    //     patientList.value = response.data;
+    async function getPatients(){
+      try {
+      
+        let response = await axios.get(`${API_URL}/healthcards`)
+        patientList.value = response.data;
+        console.log(patientList.value)
+        patientList.value = patientList.value.map((a) =>{
+          return a.firstName + " " + a.lastName
+        })
         
-    //   } catch (error) {
+      } catch (error) {
         
-    //   }
-    // }
+      }
+    }
+
+    function filterSearch(){
+      searchOptions.value = patientList.value.filter((a) => {
+
+        return a.toLowerCase().includes(inSearchBar.value.toLowerCase())
+      })
+      console.log(searchOptions.value)
+    }
+
+    function selectOption(option){
+      inSearchBar.value=option
+    }
 
 
 
@@ -175,6 +204,10 @@ export default {
       makeAppointment,
       appointments,
       deleteAppointment,
+      patientList,
+      selectOption,
+      inSearchBar,
+      searchOptions
      
 
     };
