@@ -1,5 +1,5 @@
 <template>
-  <nav class="navbar" role="navigation" aria-label="main navigation" style="height: 100px">
+  <nav class="navbar" role="navigation" aria-label="main navigation" style="height: 100px; background-color: #555">
     <div class="navbar-brand">
       <a role="button" class="navbar-burger" aria-label="menu" aria-expanded="false" data-target="navbarBasicExample">
         <span aria-hidden="true"></span>
@@ -65,7 +65,7 @@ export default {
     const burgerIcon = document.querySelector('.navbar-burger');
     const navbarMenu = document.querySelector('.navbar-menu');
     const dropdown = document.querySelector('.has-dropdown')
-    const items = document.querySelector('.navbar-dropdown')
+    const dropdownItems = document.querySelector('.navbar-dropdown')
 
     burgerIcon.addEventListener('click', () => {
       burgerIcon.classList.toggle('is-active');
@@ -74,7 +74,7 @@ export default {
 
     dropdown.addEventListener('click', () => {
       if(document.body.clientWidth <= 1024) {
-        items.classList.toggle('show-me')
+        dropdownItems.classList.toggle('show-me')
       }
     })
 
@@ -89,12 +89,16 @@ export default {
 </script>
 <style>
 
-.navbar {
+nav {
   background-color: #333;
   padding: 20px;
 }
 
-.navbar-item:hover {
+.item {
+  padding: 20px;
+}
+
+.background-change {
   background-color: #555;
 }
 
