@@ -17,16 +17,12 @@
         <router-link class="navbar-item" to="/">
           Dashboard
         </router-link>
-        <div class="navbar-item is-hoverable has-dropdown">
-          <router-link class="navbar-link navbar-item" to="/patients">
-            Patients
-          </router-link>
-          <div class="navbar-dropdown">
-            <router-link class="dropdown-item" to="/test-dashboard">
-              Test Dashboard
-            </router-link>
-          </div>
-        </div>
+        <router-link class="navbar-item navbar-item" to="/patients">
+          Patients
+        </router-link>
+        <router-link class="navbar-item" to="/test-dashboard">
+          Test Dashboard
+        </router-link>
         <router-link class="navbar-item" to="/calendar">
           Appointments
         </router-link>
