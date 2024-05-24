@@ -1,5 +1,5 @@
 <template>
-  <nav class="navbar has-background-primary-dark" role="navigation" aria-label="main navigation" style="height: 50px">
+  <nav class="navbar" role="navigation" aria-label="main navigation" style="height: 100px">
     <div class="navbar-brand">
       <a role="button" class="navbar-burger" aria-label="menu" aria-expanded="false" data-target="navbarBasicExample">
         <span aria-hidden="true"></span>
@@ -14,18 +14,32 @@
         <a class="navbar-item navbar-logo">
           <img src="../assets/LogoCropped.png">
         </a>
-        <RouterLink class="navbar-item" to="/">
-          Home
-        </RouterLink>
-        <RouterLink class="navbar-item" to="/patients">
+        <router-link class="navbar-item has-text-white" to="/">
+          Dashboard
+        </router-link>
+        <router-link class="navbar-item has-text-white" to="/patients">
           Patients
-        </RouterLink>
-        <RouterLink class="navbar-item" to="/appointments">
+        </router-link>
+        <router-link class="navbar-item has-text-white" to="/calendar">
           Appointments
-        </RouterLink>
-        <RouterLink class="navbar-item" to="/test-dashboard">
-          Tests
-        </RouterLink>
+        </router-link>
+        <div class="navbar-item is-hoverable has-dropdown">
+          <a class="navbar-link has-text-white">
+            Settings
+          </a>
+          <div class="navbar-dropdown">
+            <a class="navbar-item">
+              User
+            </a>
+            <a class="navbar-item">
+              Theme
+            </a>
+            <hr class="navbar-divider">
+            <a class="navbar-item">
+              Report an issue
+            </a>
+          </div>
+        </div>
       </div>
 
       <div class="navbar-end">
@@ -63,14 +77,34 @@ export default {
         items.classList.toggle('show-me')
       }
     })
+
+    dropdown.addEventListener('mouseover', () => {
+      if(document.body.clientWidth > 1024) {
+        dropdown.classList.toggle('grey-background')
+        document.querySelector('.navbar-link').classList.toggle('grey-background')
+      }
+    })
   }
 }
 </script>
 <style>
 
+.navbar {
+  background-color: #333;
+  padding: 20px;
+}
+
+.navbar-item:hover {
+  background-color: #555;
+}
+
 @media screen and (max-width: 1024px) {
   .navbar-dropdown {
     display: none;
   }
+}
+
+.show-me {
+  display: block;
 }
 </style>
