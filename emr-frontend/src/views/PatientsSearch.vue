@@ -34,6 +34,14 @@
                 </div>
               </div>
 
+              <div class="select is-fullwidth">
+                    <label class="label">Sex</label>
+                    <select v-model="sex">
+                    <option value="Male">Male</option>
+                    <option value="Femals">Female</option>
+                    </select>
+                </div>
+                <br><br><br>
               <div class="field">
                 <label class="label">Address</label>
                 <div class="control">
@@ -43,7 +51,7 @@
 
               <div class="field is-grouped">
                 <div class="control">
-                  <button class="button is-primary" type="submit">Submit</button>
+                  <button class="button is-primary" @click="submitForm">Submit</button>
                 </div>
                 <div class="control">
                   <button class="button is-link" @click="resetForm">Reset</button>
