@@ -26,8 +26,8 @@
                                   <div class="control">
                                       <input class="input" type="text" v-model="inSearchBar" required>
                                       <div class="control">
-                                        <div class="dropdown is-active">
-                                          <div class="dropdown-menu">
+                                        <div class="dropdown is-active" v-if="showOptions()">
+                                          <div class="dropdown-menu" style="position: absolute;">
                                             <div class="dropdown-content">
                                               <a v-for="option in searchOptions"  @click="selectOption(option)" class="dropdown-item">{{ option }}</a>
                                             </div>
@@ -91,7 +91,7 @@ export default {
     let patientList = ref(null);
     let searchOptions = ref();
     let inSearchBar = ref();
-    let selected = ref(false)
+    let isSelected = ref(false);
     //making appointment
     let info = ref({
       patientName: '',
@@ -100,7 +100,21 @@ export default {
       endTime:'',
       notes:'',
     })
+    function showOptions(){
+    
+      try {
+        if((inSearchBar.value.length<=0) || (isSelected.value))
 
+          return false
+        else  
+          return true;
+      
+      } catch (error) {
+
+        return false;
+      }
+      
+    }
     //geting appointments
     let appointments = ref(null);
     watch(date, (newValue, oldValue) =>{
@@ -108,6 +122,13 @@ export default {
     })
     watch(inSearchBar, (newValue, oldValue) =>{
       inSearchBar.value = newValue
+      try {
+        if((inSearchBar.value === searchOptions.value[0]) === false)
+            isSelected.value = false
+      } catch (error) {
+        isSelected.value = false
+      }
+      
       filterSearch();
     })
 
@@ -139,6 +160,7 @@ export default {
 
     async function makeAppointment(date){
         info.value.date = date.toLocaleDateString();
+        info.value.patientName = inSearchBar.value
         try {
           await axios.post(`${API_URL}/appointments`, {
             patient: info.value.patientName,
@@ -183,15 +205,18 @@ export default {
     }
 
     function filterSearch(){
+      console.log("search bar value: " + inSearchBar.value)
       searchOptions.value = patientList.value.filter((a) => {
 
         return a.toLowerCase().includes(inSearchBar.value.toLowerCase())
       })
-      console.log(searchOptions.value)
+      console.log("search options: " + searchOptions.value)
     }
 
     function selectOption(option){
       inSearchBar.value=option
+      isSelected.value = true;
+      
     }
 
 
@@ -207,7 +232,8 @@ export default {
       patientList,
       selectOption,
       inSearchBar,
-      searchOptions
+      searchOptions,
+      showOptions
      
 
     };
@@ -216,9 +242,6 @@ export default {
 </script>
 
 <style scoped>
-/* Scoped styles for this component */
-
-/* Example of targeting v-calendar */
 
 
 </style>
