@@ -7,12 +7,27 @@
       <div class="section">
                   <div class="columns is-centered">
                     <div class="column">
-                            <DatePicker v-model="date" mode="date" expanded/>
+                            <DatePicker v-model="date"  expanded/>
+                            <table class="table">
+                              <thead>
+                                <tr>
+                                  <th>Name</th>
+                                  <th>Start Time</th>
+                                  <th>End Time</th>
+                                  <th>Notes</th>
+                                </tr>
+                              </thead>
+                              <tbody>
+                                  <tr v-for="app in appointments">
+                                    <td>{{ app.patient }}</td>
+                                    <td>{{ app.startTime }}</td>
+                                    <td>{{ app.endTime }}</td>
+                                    <td>{{ app.notes }}</td>
+                                    <td> <button @click="deleteAppointment(app)" class="button is-danger"> Delete</button></td>
+                                  </tr>
+                              </tbody>
                             
-                            <ul>
-                              <li v-for="app in appointments"> {{ app.patient }}: {{ app.startTime }} - {{ app.endTime }} ({{ app.notes }}) 
-                                <button @click="deleteAppointment(app)" class=""> Delete</button></li>
-                            </ul>
+                            </table>
                       </div>
                       <div class="column is-one-third">
                       <h1 class="title">Make an Appointment</h1>
@@ -38,23 +53,22 @@
                         
                           
                                   <div class="field">
-                                  <label class="label">Start Time</label>
-                                  <div class="control">
-                                      <input class="input" type="text" v-model="info.startTime" required>
+                                  <div class="control beside">
+                                    <label class="label">Start Time</label>
+                                    <DatePicker mode="time" v-model="info.startTime"/>
+                                    <label class="label">End Time</label>
+                                    <DatePicker mode="time" v-model="info.endTime"/>
+                                      
                                   </div>
+                                 
                                   </div>
                           
-                                  <div class="field">
-                                  <label class="label">End Time</label>
-                                  <div class="control">
-                                      <input class="input" type="text" v-model="info.endTime" required>
-                                  </div>
-                                  </div>
+                              
                           
                                   <div class="field">
                                   <label class="label">Notes</label>
                                   <div class="control">
-                                      <input class="input" type="text" v-model="info.notes" required>
+                                      <input class="input" type="text" v-model="info.notes">
                                   </div>
                                   </div>
                           
@@ -67,6 +81,9 @@
                           </div>
                          
                   </div>
+                  <div>
+
+            </div>
             </div>
           </div>
     </div>
@@ -88,6 +105,7 @@ export default {
   },
   setup() {
     const date = ref(new Date());
+    
     let patientList = ref(null);
     let searchOptions = ref();
     let inSearchBar = ref();
@@ -96,8 +114,8 @@ export default {
     let info = ref({
       patientName: '',
       date:'',
-      startTime:'',
-      endTime:'',
+      startTime: new Date(),
+      endTime: new Date(),
       notes:'',
     })
     function showOptions(){
@@ -133,6 +151,7 @@ export default {
     })
 
     onMounted(() => {
+      
       getPatients();
       getAppointments(date.value);
     });
@@ -150,12 +169,29 @@ export default {
         });
        
         console.log(appointments.value)
-        return appointments.value = response.data;
+        appointments.value = response.data;
+        sortTimeEariliest();
+
+
         
       } catch (error) {
         console.error("Error getting data from getAppointments", error);
       }
       
+    }
+
+    function sortTimeEariliest(){
+      appointments.value = appointments.value.sort((a, b) =>{
+        const d1 = new Date(`2000-01-01 ${a.startTime}`);
+        const d2 = new Date(`2000-01-01 ${b.startTime}`);
+        if(d1<d2)
+          return -1;
+        else if(d1>d2)
+          return 1;
+        else
+          return 0;
+      })
+
     }
 
     async function makeAppointment(date){
@@ -165,8 +201,8 @@ export default {
           await axios.post(`${API_URL}/appointments`, {
             patient: info.value.patientName,
             date: info.value.date,
-            startTime: info.value.startTime,
-            endTime: info.value.endTime,
+            startTime: info.value.startTime.toLocaleTimeString(),
+            endTime: info.value.endTime.toLocaleTimeString(),
             notes: info.value.notes
           })
           location.reload()
@@ -222,7 +258,7 @@ export default {
 
 
     return { 
-      date, 
+      date,
       formatDate,
       info,
       getAppointments,
@@ -241,8 +277,10 @@ export default {
 };
 </script>
 
-<style scoped>
-
+<style>
+.vc-time-header{
+  display: none;
+}
 
 </style>
 
