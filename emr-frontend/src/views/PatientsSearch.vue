@@ -154,7 +154,7 @@ export default {
 
       this.hasSearched = true;
 
-      console.log(hasSearched);
+      console.log(this.hasSearched);
     },
     showSearch() {
       this.hasSearched = false;
