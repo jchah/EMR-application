@@ -120,7 +120,7 @@ export default {
             .catch((error) => {
                 console.log(error);
             }),
-            axios.get('http://localhost:3000/test-orders', {
+            axios.get('http://localhost:3000/test/orders', {
                 headers: {
                     'Content-Type': 'application/json'
                 }

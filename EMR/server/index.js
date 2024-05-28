@@ -416,6 +416,16 @@ app.get('/tests/results/:testid', async (req,res) => {
     }
 })
 
+app.post('/tests', async(req, res) => {
+    try {
+        const test = new Test(req.body);
+        await test.save();
+        res.status(201).send({ message: `successfully created new test with name ${req.body.name}!`})
+    } catch (error) {
+        res.status(500).send({ error: error.message });
+    }
+})
+
 app.post('/tests/order', async(req,res) => {
     try {
         const order = new TestOrder(req.body);
