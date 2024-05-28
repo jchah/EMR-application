@@ -33,14 +33,14 @@
           </a>
           <div class="navbar-dropdown">
             <a class="dropdown-item">
-              <p class="has-text-white">User</p>
+              <p>User</p>
             </a>
             <a class="dropdown-item">
-              <p class="has-text-white">Theme</p>
+              <p >Theme</p>
             </a>
             <hr class="navbar-divider">
             <a class="dropdown-item">
-              <p class="has-text-white">Report an issue</p>
+              <p >Report an issue</p>
             </a>
           </div>
         </div>
