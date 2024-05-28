@@ -77,7 +77,6 @@
           <thead>
             <tr>
               <th>First Name</th>
-              <th>Middle Initial</th>
               <th>Last Name</th>
               <th>dateOfBirth</th>
               <th>Sex</th>
@@ -88,7 +87,6 @@
           <tbody>
             <tr v-for="patient in filteredPatients" :key="patient.id">
               <td>{{ patient.firstName }}</td>
-              <td>{{ patient.middleInitial }}</td>
               <td>{{ patient.lastName }}</td>
               <td>{{ patient.dateOfBirth }}</td>
               <td>{{ patient.sex }}</td>
@@ -111,7 +109,6 @@ export default {
   data() {
     return {
       patientFirstName: '',
-      middleInitial: '',
       lastName: '',
       dateOfBirth: '',
       address: '',
@@ -141,13 +138,12 @@ export default {
     submitForm() {
       this.filteredPatients = this.healthCards.filter(patient => {
         const firstNameMatch = this.patientFirstName === '' || patient.firstName.toLowerCase().includes(this.patientFirstName.toLowerCase());
-        const middleInitialMatch = this.middleInitial === '' || patient.middleInitial.toLowerCase() === this.middleInitial.toLowerCase();
         const lastNameMatch = this.lastName === '' || patient.lastName.toLowerCase().includes(this.lastName.toLowerCase());
         const dateOfBirthMatch = this.dateOfBirth === '' || patient.dateOfBirth === this.dateOfBirth;
         const addressMatch = this.address === '' || patient.address.toLowerCase().includes(this.address.toLowerCase());
         const healthCardMatch = this.healthCard === '' || patient.cardNumber.toLowerCase().includes(this.healthCard.toLowerCase());
 
-        return firstNameMatch && middleInitialMatch && lastNameMatch && dateOfBirthMatch && addressMatch && healthCardMatch;
+        return firstNameMatch && lastNameMatch && dateOfBirthMatch && addressMatch && healthCardMatch;
       });
 
       console.log(this.filteredPatients)
@@ -161,7 +157,6 @@ export default {
     },
     resetForm() {
       this.patientFirstName = '';
-      this.middleInitial = '';
       this.lastName = '';
       this.dateOfBirth = '';
       this.address = '';
