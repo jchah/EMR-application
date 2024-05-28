@@ -14,13 +14,6 @@
               </div>
 
               <div class="field">
-                <label class="label">Middle Initial</label>
-                <div class="control">
-                  <input class="input" type="text" v-model="middleInitial">
-                </div>
-              </div>
-
-              <div class="field">
                 <label class="label">Last Name</label>
                 <div class="control">
                   <input class="input" type="text" v-model="lastName">
