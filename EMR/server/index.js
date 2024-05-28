@@ -347,7 +347,7 @@ app.put("/healthcards/:id", async (req, res) => {
     }
 });
 
-// Delete a condition by ID
+// Delete a health card by ID
 app.delete("/healthcards/:id", async (req, res) => {
     try {
         const deletedHealthCard = await Medicine.findByIdAndDelete(req.params.id);
@@ -359,3 +359,79 @@ app.delete("/healthcards/:id", async (req, res) => {
         res.status(500).send({ message: error.message });
     }
 }); // undo
+
+
+app.get('/tests', async (req,res) => {
+    try {
+        const tests = await Test.find({});
+        res.status(200).send(tests);
+    } catch (error) {
+        res.status(500).send({ error: error.message });
+    }
+})
+
+app.get('/tests/orders', async (req,res) => {
+    try {
+        const orders = await TestOrder.find({});
+        res.status(200).send(orders);
+    } catch (error) {
+        res.status(500).send({ error: error.message });
+    }
+})
+
+app.get('/tests/results', async (req,res) => {
+    try {
+        const results = await TestResults.find({});
+        res.status(200).send(results);
+    } catch (error) {
+        res.status(500).send({ error: error.message });
+    }
+})
+
+app.get('/tests/order/:id', async (req,res) => {
+    try {
+        const order = await TestOrder.findById(req.params.id);
+        if (!order) {
+            res.status(404).send({ error: `could not find a test order with id ${req.params.id}` })
+        }
+        res.status(200).send(order);
+    } catch (error) {
+        res.status(500).send({ error: error.message });
+    }
+})
+
+app.get('/tests/results/:testid', async (req,res) => {
+    try {
+        const allResults = await TestResults.find({});
+        let results;
+        results.forEach((instance) => {
+            if (instance.order === req.params.testid) results = instance;
+        })
+        if (!results) {
+            return res.status(404).send({ error: `could not find test results for order with id ${req.params.testid}` })
+        }
+        res.status(200).send(results);
+    } catch (error) {
+        res.status(500).send({ error: error.message });
+    }
+})
+
+app.post('/tests/order', async(req,res) => {
+    try {
+        const order = new TestOrder(req.body);
+        await order.save();
+        res.status(201).send({message: "successfully posted test order!"});
+    } catch (error) {
+        res.status(500).send({ error: error.message });
+    }
+})
+
+app.post('/tests/results', async(req,res) => {
+    try {
+        const results = new TestResults(req.body);
+        await results.save();
+        res.status(201).send({message: "successfully posted test order!"});
+    } catch (error) {
+        res.status(500).send({ error: error.message });
+    }
+})
