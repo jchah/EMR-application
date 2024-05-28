@@ -22,15 +22,16 @@ import Header from './components/Navbar.vue';
   height: 100vh;
 }
 
+.content {
+  flex: 1;
+  overflow-y: auto;
+}
+
 .main-layout {
   display: flex;
   flex: 1;
 }
 
-.content {
-  flex: 1;
-  overflow-y: auto;
-}
 
 header {
   background-color: #42b883;
