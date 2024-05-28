@@ -1,5 +1,5 @@
 <template>
-  <nav class="navbar" role="navigation" aria-label="main navigation" style="height: 5rem; background-color: #555">
+  <nav class="navbar is-transparent" role="navigation" aria-label="main navigation" style="height: 5rem; background-color: #555">
     <div class="navbar-brand">
       <a role="button" class="navbar-burger" aria-label="menu" aria-expanded="false" data-target="navbarBasicExample">
         <span aria-hidden="true"></span>
@@ -8,7 +8,7 @@
       </a>
     </div>
 
-    <div id="navbarBasicExample" class="navbar-menu">
+    <div id="navbarBasicExample" class="navbar-menu" style="background-color: #555">
 
       <div class="navbar-start">
         <a class="navbar-item navbar-logo" href="/">
@@ -33,14 +33,14 @@
           </a>
           <div class="navbar-dropdown">
             <a class="dropdown-item">
-              User
+              <p class="has-text-white">User</p>
             </a>
             <a class="dropdown-item">
-              Theme
+              <p class="has-text-white">Theme</p>
             </a>
             <hr class="navbar-divider">
             <a class="dropdown-item">
-              Report an issue
+              <p class="has-text-white">Report an issue</p>
             </a>
           </div>
         </div>
@@ -77,7 +77,9 @@ export default {
     });
 
     dropdown.addEventListener('click', () => {
+      console.log('hello')
       if(document.body.clientWidth <= 1024) {
+        console.log('hi')
         dropdownItems.classList.toggle('show-me')
       }
     })
@@ -115,5 +117,9 @@ nav {
 
 .navbar-item:hover {
   color: black!important;
+}
+
+.show-me {
+  display: block;
 }
 </style>

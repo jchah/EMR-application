@@ -12,9 +12,6 @@ const Condition = require("./models/Condition");
 const Medicine = require('./models/Medicine');
 const HealthCard = require("./models/HealthCard");
 
-const Test = require('./models/Test');
-const TestOrder = require('./models/TestOrder');
-const TestResults = require('./models/TestResults');
 
 const app = express();
 dotenv.config();
