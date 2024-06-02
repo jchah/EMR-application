@@ -19,11 +19,39 @@
                               </thead>
                               <tbody>
                                   <tr v-for="app in appointments">
-                                    <td>{{ app.patient }}</td>
-                                    <td>{{ app.startTime }}</td>
-                                    <td>{{ app.endTime }}</td>
-                                    <td>{{ app.notes }}</td>
-                                    <td> <button @click="deleteAppointment(app)" class="button is-danger"> Delete</button></td>
+                                  
+                                      <td>{{ app.patient }}</td>
+                                      <td v-if="!isEditing">{{ app.startTime }}</td>
+                                      <td v-if="!isEditing">{{ app.endTime }}</td>
+                                      <td v-if="!isEditing">{{ app.notes }}</td>
+                                     
+                                          <td v-if="isEditing">
+                                            
+                                            <DatePicker mode="time" v-model="info.startTime"/>
+                                          </td>
+                                          <td v-if="isEditing">
+                                            
+                                            <DatePicker mode="time" v-model="info.endTime"/>
+                                          </td>
+                                          <td v-if="isEditing">
+                                           
+                                            <div class="control">
+                                                <input class="input" type="text" v-model="editingInfo.notes">
+                                            </div>
+                                          </td>
+                                            
+                                         
+                                  
+                                         
+                                      
+                               
+                                  
+                                    <td> <button @click="deleteAppointment(app)" class="button is-danger" v-if="!isEditing"> Delete</button>
+                                          <button class="button" @click="isEditingAppointment(true, app)" v-if="!isEditing" > Edit</button>
+                                          <button class="button" v-if="isEditing" @click="editAppointment(app)"> Submit Edit</button>
+                                          <button class="button" v-if="isEditing" @click="isEditingAppointment(false , 
+                                            {notes:'',})"> Cancel Edit</button>
+                                      </td>
                                   </tr>
                               </tbody>
                             
@@ -105,6 +133,7 @@ export default {
   },
   setup() {
     const date = ref(new Date());
+    let isEditing = ref(false)
     
     let patientList = ref(null);
     let searchOptions = ref();
@@ -116,6 +145,10 @@ export default {
       date:'',
       startTime: new Date(),
       endTime: new Date(),
+      notes:'',
+    })
+
+    let editingInfo = ref({
       notes:'',
     })
     function showOptions(){
@@ -255,6 +288,26 @@ export default {
       
     }
 
+    function isEditingAppointment(a, b){
+          isEditing.value = a;
+          editingInfo.value.notes = b.notes;
+    }
+    async function editAppointment(app){
+        try {
+          await axios.put(`${API_URL}/appointments/${app._id}`, {
+            startTime: info.value.startTime.toLocaleTimeString(),
+            endTime: info.value.endTime.toLocaleTimeString(),
+            notes: editingInfo.value.notes
+          })
+          location.reload()
+        } catch (error) {
+          
+        }
+    }
+
+
+
+
 
 
     return { 
@@ -269,7 +322,11 @@ export default {
       selectOption,
       inSearchBar,
       searchOptions,
-      showOptions
+      showOptions,
+      isEditingAppointment,
+      isEditing,
+      editAppointment,
+      editingInfo
      
 
     };
