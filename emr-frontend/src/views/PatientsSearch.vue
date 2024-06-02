@@ -5,7 +5,7 @@
         <div class="column is-half">
           <h1 class="title">Search For Patient</h1>
           <div class="box">
-            <form @submit.prevent="submitForm">
+            <form>
               <div class="field">
                 <label class="label">Patient First Name</label>
                 <div class="control">
@@ -46,7 +46,25 @@
                 <div class="control">
                   <input class="input" type="text" v-model="healthCard">
                 </div>
-              </div>              
+              </div> 
+              <div class="field">
+                <label class="label">Phone Number</label>
+                <div class="control">
+                  <input class="input" type="text" v-model="phoneNum">
+                </div>
+              </div> 
+              <div class="field">
+                <label class="label">Email</label>
+                <div class="control">
+                  <input class="input" type="text" v-model="email">
+                </div>
+              </div> 
+              <div class="field">
+                <label class="label">Emergency Contact</label>
+                <div class="control">
+                  <input class="input" type="text" v-model="emergencyContact">
+                </div>
+              </div>            
 
               <div class="field is-grouped">
                 <div class="control">
@@ -55,6 +73,10 @@
                 <div class="control">
                   <button class="button is-link" @click="resetForm">Reset</button>
                 </div>
+                <div class="control">
+                  <button class="button is-info" @click="createNewPatient">Add New Patient</button>
+                </div>
+                
               </div>
             </form>
           </div>
@@ -109,7 +131,10 @@ export default {
       healthCard: '',
       healthCards: [],
       filteredPatients: [],
-      hasSearched: false
+      hasSearched: false,
+      phoneNum : '',
+      email : '',
+      emergencyContact : '',
     };
   },
   methods: {
@@ -147,6 +172,31 @@ export default {
     },
     showSearch() {
       this.hasSearched = false;
+    },
+    createNewPatient() {
+      if(this.firstName !== '' && this.lastName !== '' && this.dateOfBirth !== '' && this.sex !== '' && this.address !== '' && this.phoneNum !== '' && this.email !== '' && this.emergencyContact !== '' && cardNumber !== '') {
+        let newCard = {
+          firstName : this.firstname,
+          lastName : this.lastName,
+          dateOfBirth : this.dateOfBirth,
+          sex : this.sex,
+          address : this.address,
+          contact : {
+            phone : this.phoneNum,
+            email : this.email,
+          },
+          emergencyContact : this.emergencyContact,
+          cardNumber : this.cardNumber
+        }
+        const response = axios.post(`http://localhost:3000/healthcards`, newCard, {
+          headers: {
+            'Content-Type': 'application/x-www-form-urlencoded'
+          }
+        });
+        console.log(response.data)
+      } else {
+        console.log("ERROR : Please ensure you fill out all fields")
+      }
     },
     resetForm() {
       this.patientFirstName = '';
