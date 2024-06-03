@@ -190,7 +190,8 @@ export default {
 
     async function makeAppointment(date){
         info.value.date = date.toLocaleDateString();
-        info.value.patientName = inSearchBar.value
+        info.value.patientName = inSearchBar.value;
+        let a = await getCardNum(info.value.patientName)
         try {
           await axios.post(`${API_URL}/appointments`, {
             patient: info.value.patientName,
@@ -266,10 +267,15 @@ export default {
         }
     }
 
+    async function getCardNum(name){
+            try {
+               const healthcardReponse =  await axios.get(`${API_URL}/healthcard/${name}`)
+               let num = healthcardReponse.data
+               return num[0].cardNumber
+            } catch (error) {
 
-
-
-
+            }
+    }
 
     return {
       date,
@@ -286,7 +292,8 @@ export default {
       isEditingAppointment,
       isEditing,
       editAppointment,
-      editingInfo
+      editingInfo,
+      getCardNum
 
 
     };
@@ -295,5 +302,10 @@ export default {
 </script>
 
 <style>
+.vc-time-header{
+  display: none;
+}
 
 </style>
+
+

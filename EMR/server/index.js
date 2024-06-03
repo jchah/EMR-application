@@ -319,6 +319,19 @@ app.get('/healthcards', async (req, res) => {
 });
 
 // Get a health card by ID
+app.get('/healthcards/cardNumber/:cardNumber', async (req, res) => {
+    try {
+        const healthCard = await HealthCard.findById(req.params.cardNumber);
+        if (!healthCard) {
+            return res.status(404).send({message: "Health card not found"});
+        }
+        res.status(200).send(healthCard);
+    } catch (error) {
+        res.status(500).send({message: error.message});
+    }
+});
+
+// Get a health card by ID
 app.get('/healthcards/:id', async (req, res) => {
     try {
         const healthCard = await HealthCard.findById(req.params.id);
@@ -443,6 +456,18 @@ app.post('/tests/results', async(req,res) => {
         const results = new TestResults(req.body);
         await results.save();
         res.status(201).send({message: "successfully posted test order!"});
+    } catch (error) {
+        res.status(500).send({ error: error.message });
+    }
+})
+
+app.get('/healthcard/:patientName', async(req,res)=>{
+    try {
+        let firstName = req.params.patientName.substring(0, req.params.patientName.indexOf(" "))
+        let lastName =  req.params.patientName.substring(req.params.patientName.indexOf(" ") +1)
+        console.log(`Firstname: ${firstName} + Lastname : ${lastName}` )
+        const results = await HealthCard.find({firstName:firstName, lastName: lastName})
+        res.send(results)
     } catch (error) {
         res.status(500).send({ error: error.message });
     }
