@@ -54,7 +54,3 @@
     </div>
   </section>
 </template>
-
-<script>
-import { useRouter } from 'vue-router';
-</script>
