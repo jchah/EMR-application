@@ -319,6 +319,19 @@ app.get('/healthcards', async (req, res) => {
 });
 
 // Get a health card by ID
+app.get('/healthcards/cardNumber/:cardNumber', async (req, res) => {
+    try {
+        const healthCard = await HealthCard.findById(req.params.cardNumber);
+        if (!healthCard) {
+            return res.status(404).send({message: "Health card not found"});
+        }
+        res.status(200).send(healthCard);
+    } catch (error) {
+        res.status(500).send({message: error.message});
+    }
+});
+
+// Get a health card by ID
 app.get('/healthcards/:id', async (req, res) => {
     try {
         const healthCard = await HealthCard.findById(req.params.id);
