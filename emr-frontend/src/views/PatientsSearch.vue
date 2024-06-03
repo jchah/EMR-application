@@ -31,7 +31,7 @@
                     <label class="label">Sex</label>
                     <select v-model="sex">
                     <option value="Male">Male</option>
-                    <option value="Femals">Female</option>
+                    <option value="Female">Female</option>
                     </select>
                 </div>
                 <br><br><br>
@@ -74,7 +74,7 @@
                   <button class="button is-link" @click="resetForm">Reset</button>
                 </div>
                 <div class="control">
-                  <button class="button is-info" @click="createNewPatient">Add New Patient</button>
+                  <button type="button" class="button is-info" @click="createNewPatient">Add New Patient</button>
                 </div>
                 
               </div>
@@ -173,10 +173,9 @@ export default {
     showSearch() {
       this.hasSearched = false;
     },
-    createNewPatient() {
-      if(this.firstName !== '' && this.lastName !== '' && this.dateOfBirth !== '' && this.sex !== '' && this.address !== '' && this.phoneNum !== '' && this.email !== '' && this.emergencyContact !== '' && cardNumber !== '') {
-        let newCard = {
-          firstName : this.firstname,
+    async createNewPatient() {
+      let newCard = {
+          firstName : this.patientFirstName,
           lastName : this.lastName,
           dateOfBirth : this.dateOfBirth,
           sex : this.sex,
@@ -186,12 +185,19 @@ export default {
             email : this.email,
           },
           emergencyContact : this.emergencyContact,
-          cardNumber : this.cardNumber
+          cardNumber : this.healthCard
         }
-        const response = axios.post(`http://localhost:3000/healthcards`, newCard, {
-          headers: {
-            'Content-Type': 'application/x-www-form-urlencoded'
-          }
+        
+      
+      if(this.firstName !== '' && this.lastName !== '' && this.dateOfBirth !== '' && this.sex !== '' && this.address !== '' && this.phoneNum !== '' && this.email !== '' && this.emergencyContact !== '' && this.healthCard !== '') {
+
+        console.log(newCard)
+
+        console.log("http://localhost:3000/healthcards");
+        const response = await axios.post(`http://localhost:3000/healthcards`, newCard, {
+          // headers: {
+          //   'Content-Type': 'application/x-www-form-urlencoded'
+          // }
         });
         console.log(response.data)
       } else {

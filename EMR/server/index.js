@@ -299,6 +299,8 @@ app.delete("/treatments/:id", async (req, res) => {
 app.post('/healthcards', async (req, res) => {
     try {
         const newHealthCard = new HealthCard(req.body);
+        console.log("healthcard request body")
+        console.log(req.body)
         await newHealthCard.save();
         res.status(201).send(newHealthCard);
     } catch (error) {
