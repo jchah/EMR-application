@@ -447,3 +447,15 @@ app.post('/tests/results', async(req,res) => {
         res.status(500).send({ error: error.message });
     }
 })
+
+app.get('/healthcard/:patientName', async(req,res)=>{
+    try {
+        let firstName = req.params.patientName.substring(0, req.params.patientName.indexOf(" "))
+        let lastName =  req.params.patientName.substring(req.params.patientName.indexOf(" ") +1)
+        console.log(`Firstname: ${firstName} + Lastname : ${lastName}` )
+        const results = await HealthCard.find({firstName:firstName, lastName: lastName})
+        res.send(results)
+    } catch (error) {
+        res.status(500).send({ error: error.message });
+    }
+})
