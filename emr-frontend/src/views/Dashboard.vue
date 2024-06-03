@@ -44,7 +44,7 @@
                 <p class="card-header-title is-centered">Tests</p>
               </header>
               <div class="card-content">
-                <div the="content">View and manage tests</div>
+                <div class="content">View and manage tests</div>
               </div>
             </div>
           </div>

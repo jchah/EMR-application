@@ -132,6 +132,7 @@ export default {
               .catch((error) => {
                 console.log(error);
               }),
+
           axios.get('http://localhost:3000/test/orders', {
             headers: {
               'Content-Type': 'application/json'
@@ -169,7 +170,7 @@ export default {
   methods: {
     submitOrder(data) {
       axios.post('http://localhost:3000/tests/order', data)
-          .then((response) => {
+          .then(() => {
             this.orderSuccess = 'Order submitted successfully';
             this.orderError = '';
             document.location.reload();
@@ -182,7 +183,7 @@ export default {
     },
     submitResults(data) {
       axios.post('http://localhost:3000/tests/results', data)
-          .then((response) => {
+          .then(() => {
             this.resultsSuccess = 'Results submitted successfully';
             this.resultsError = '';
             document.location.reload();
