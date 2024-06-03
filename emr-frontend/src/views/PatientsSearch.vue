@@ -97,6 +97,7 @@
               <th>Sex</th>
               <th>Address</th>
               <th>Health Card</th>
+              <th>Go To Patient Profile</th>
             </tr>
           </thead>
           <tbody>
@@ -107,9 +108,14 @@
               <td>{{ patient.sex }}</td>
               <td>{{ patient.address }}</td>
               <td>{{ patient.cardNumber }}</td>
+              <td><button class="button is-link" type="button" @click="goToPatientProfile(patient.cardNumber)"> - Profile - </button></td>
+
             </tr>
+            
           </tbody>
         </table>
+
+        
       </div>
     </div>
     </div>
@@ -160,8 +166,9 @@ export default {
         const dateOfBirthMatch = this.dateOfBirth === '' || patient.dateOfBirth === this.dateOfBirth;
         const addressMatch = this.address === '' || patient.address.toLowerCase().includes(this.address.toLowerCase());
         const healthCardMatch = this.healthCard === '' || patient.cardNumber.toLowerCase().includes(this.healthCard.toLowerCase());
+        const sexMatch = this.sex === '' || patient.sex.toLowerCase().includes(this.sex.toLowerCase())
 
-        return firstNameMatch && lastNameMatch && dateOfBirthMatch && addressMatch && healthCardMatch;
+        return firstNameMatch && lastNameMatch && dateOfBirthMatch && addressMatch && healthCardMatch && sexMatch;
       });
 
       console.log(this.filteredPatients)
@@ -172,6 +179,9 @@ export default {
     },
     showSearch() {
       this.hasSearched = false;
+    },
+    goToPatientProfile(cardNum) {
+      this.$router.push({ name: 'PatientProfile', params: { cardNum }, query: {currentPage: this.currentPage}});
     },
     async createNewPatient() {
       let newCard = {
@@ -204,6 +214,7 @@ export default {
         console.log("ERROR : Please ensure you fill out all fields")
       }
     },
+    
     resetForm() {
       this.patientFirstName = '';
       this.lastName = '';

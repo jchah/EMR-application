@@ -2,6 +2,7 @@ import { createRouter, createWebHistory } from 'vue-router';
 
 import Dashboard from '../views/Dashboard.vue';
 import Patients from '../views/PatientsSearch.vue';
+import PatientProfile from '../views/PatientProfile.vue'
 // import Appointments from './views/Appointments.vue';
 import Settings from '../views/Settings.vue';
 import Calendar from '../views/CalenderView.vue'
@@ -18,6 +19,7 @@ const routes = [
     { path: '/test-dashboard', component: Tests },
     { path: '/login', component: Login },
     { path: '/register', component: Register },
+    { path: '/patients/:cardNum', name : 'PatientProfile', component: PatientProfile}
     // { path: '/documentation', component: Documentation },
 ];
 
