@@ -23,6 +23,9 @@ const appointmentSchema = new Schema({
     notes:{
         type:String
     },
+    cardNum:{
+        type: String
+    }
 })
 
 const Appointment = mongoose.model("Appointment", appointmentSchema);

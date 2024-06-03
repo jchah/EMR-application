@@ -20,7 +20,7 @@
                               <tbody>
                                   <tr v-for="app in appointments">
                                   
-                                      <td>{{ app.patient }}</td>
+                                      <td><router-link :to="`/patients/${app.cardNum}`">{{ app.patient }}</router-link></td>
                                       <td v-if="!isEditing">{{ app.startTime }}</td>
                                       <td v-if="!isEditing">{{ app.endTime }}</td>
                                       <td v-if="!isEditing">{{ app.notes }}</td>
@@ -123,6 +123,7 @@
 <script>
 import { ref, watch, onMounted } from 'vue';
 import { Calendar, DatePicker } from 'v-calendar';
+import { useRouter } from 'vue-router';
 import 'v-calendar/style.css';
 import axios from 'axios';
 
@@ -229,14 +230,16 @@ export default {
 
     async function makeAppointment(date){
         info.value.date = date.toLocaleDateString();
-        info.value.patientName = inSearchBar.value
+        info.value.patientName = inSearchBar.value;
+        let a = await getCardNum(info.value.patientName)
         try {
           await axios.post(`${API_URL}/appointments`, {
             patient: info.value.patientName,
             date: info.value.date,
             startTime: info.value.startTime.toLocaleTimeString(),
             endTime: info.value.endTime.toLocaleTimeString(),
-            notes: info.value.notes
+            notes: info.value.notes,
+            cardNum: a
           })
           location.reload()
         } catch (error) {
@@ -305,6 +308,17 @@ export default {
         }
     }
 
+    async function getCardNum(name){
+            try {
+               const healthcardReponse =  await axios.get(`${API_URL}/healthcard/${name}`)
+               let num = healthcardReponse.data
+               return num[0].cardNumber
+            } catch (error) {
+              
+            }
+    }
+    
+
 
 
 
@@ -326,7 +340,8 @@ export default {
       isEditingAppointment,
       isEditing,
       editAppointment,
-      editingInfo
+      editingInfo,
+      getCardNum
      
 
     };

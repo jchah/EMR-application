@@ -1,126 +1,123 @@
 <template>
   <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bulma@0.9.3/css/bulma.min.css">
-    <div class="container">
-      <div v-if="!hasSearched" class="columns is-centered">
-        <div class="column is-half">
-          <h1 class="title">Search For Patient</h1>
-          <div class="box">
-            <form>
-              <div class="field">
-                <label class="label">Patient First Name</label>
-                <div class="control">
-                  <input class="input" type="text" v-model="patientFirstName">
+  <div class="container">
+    <div v-if="!hasSearched" class="columns is-centered">
+      <div class="column is-half mt-5">
+        <h1 class="title">Search For Patient</h1>
+        <div class="box">
+          <form>
+            <div class="columns">
+              <div class="column">
+                <div class="field">
+                  <label class="label">Patient First Name</label>
+                  <div class="control">
+                    <input class="input" type="text" v-model="patientFirstName">
+                  </div>
+                </div>
+                <div class="field">
+                  <label class="label">Last Name</label>
+                  <div class="control">
+                    <input class="input" type="text" v-model="lastName">
+                  </div>
+                </div>
+                <div class="field">
+                  <label class="label">Date of Birth</label>
+                  <div class="control">
+                    <input class="input" type="date" v-model="dateOfBirth">
+                  </div>
                 </div>
               </div>
-
-              <div class="field">
-                <label class="label">Last Name</label>
-                <div class="control">
-                  <input class="input" type="text" v-model="lastName">
-                </div>
-              </div>
-
-              <div class="field">
-                <label class="label">dateOfBirth</label>
-                <div class="control">
-                  <input class="input" type="date" v-model="dateOfBirth">
-                </div>
-              </div>
-
-              <div class="select is-fullwidth">
-                    <label class="label">Sex</label>
+              <div class="column">
+                <div class="field">
+                  <label class="label">Sex</label>
+                  <div class="select is-fullwidth">
                     <select v-model="sex">
-                    <option value="Male">Male</option>
-                    <option value="Female">Female</option>
+                      <option value="Male">Male</option>
+                      <option value="Female">Female</option>
                     </select>
+                  </div>
                 </div>
-                <br><br><br>
-              <div class="field">
-                <label class="label">Address</label>
-                <div class="control">
-                  <input class="input" type="text" v-model="address">
+                <div class="field">
+                  <label class="label">Health Card</label>
+                  <div class="control">
+                    <input class="input" type="text" v-model="healthCard">
+                  </div>
+                </div>
+                <div class="field">
+                  <label class="label">Phone Number</label>
+                  <div class="control">
+                    <input class="input" type="text" v-model="phoneNum">
+                  </div>
                 </div>
               </div>
-              <div class="field">
-                <label class="label">Health Card</label>
-                <div class="control">
-                  <input class="input" type="text" v-model="healthCard">
-                </div>
-              </div> 
-              <div class="field">
-                <label class="label">Phone Number</label>
-                <div class="control">
-                  <input class="input" type="text" v-model="phoneNum">
-                </div>
-              </div> 
-              <div class="field">
-                <label class="label">Email</label>
-                <div class="control">
-                  <input class="input" type="text" v-model="email">
-                </div>
-              </div> 
-              <div class="field">
-                <label class="label">Emergency Contact</label>
-                <div class="control">
-                  <input class="input" type="text" v-model="emergencyContact">
-                </div>
-              </div>            
-
-              <div class="field is-grouped">
-                <div class="control">
-                  <button class="button is-primary" @click="submitForm">Submit</button>
-                </div>
-                <div class="control">
-                  <button class="button is-link" @click="resetForm">Reset</button>
-                </div>
-                <div class="control">
-                  <button type="button" class="button is-info" @click="createNewPatient">Add New Patient</button>
-                </div>
-                
+            </div>
+            <div class="field">
+              <label class="label">Address</label>
+              <div class="control">
+                <input class="input" type="text" v-model="address">
               </div>
-            </form>
-          </div>
+            </div>
+            <div class="field">
+              <label class="label">Email</label>
+              <div class="control">
+                <input class="input" type="text" v-model="email">
+              </div>
+            </div>
+            <div class="field">
+              <label class="label">Emergency Contact</label>
+              <div class="control">
+                <input class="input" type="text" v-model="emergencyContact">
+              </div>
+            </div>
+            <div class="field is-grouped">
+              <div class="control">
+                <button class="button is-primary" @click="submitForm">Submit</button>
+              </div>
+              <div class="control">
+                <button class="button is-link" @click="resetForm">Reset</button>
+              </div>
+              <div class="control">
+                <button type="button" class="button is-info" @click="createNewPatient">Add New Patient</button>
+              </div>
+            </div>
+          </form>
         </div>
       </div>
-      <div v-if="hasSearched" class="columns is-centered">
+    </div>
+    <div v-if="hasSearched" class="columns is-centered">
       <div class="column is-full">
         <div class="control">
-          <button class="button is-link" @click="showSearch">< Go Back to Search  </button>
+          <button class="button is-link" @click="showSearch">Go Back to Search</button>
         </div>
         <h1 class="title">Filtered Patients</h1>
         <table class="table is-fullwidth is-striped">
           <thead>
-            <tr>
-              <th>First Name</th>
-              <th>Last Name</th>
-              <th>dateOfBirth</th>
-              <th>Sex</th>
-              <th>Address</th>
-              <th>Health Card</th>
-              <th>Go To Patient Profile</th>
-            </tr>
+          <tr>
+            <th>First Name</th>
+            <th>Last Name</th>
+            <th>Date of Birth</th>
+            <th>Sex</th>
+            <th>Address</th>
+            <th>Health Card</th>
+            <th>Go To Patient Profile</th>
+          </tr>
           </thead>
           <tbody>
-            <tr v-for="patient in filteredPatients" :key="patient.id">
-              <td>{{ patient.firstName }}</td>
-              <td>{{ patient.lastName }}</td>
-              <td>{{ patient.dateOfBirth }}</td>
-              <td>{{ patient.sex }}</td>
-              <td>{{ patient.address }}</td>
-              <td>{{ patient.cardNumber }}</td>
-              <td><button class="button is-link" type="button" @click="goToPatientProfile(patient.cardNumber)"> - Profile - </button></td>
-
-            </tr>
-            
+          <tr v-for="patient in filteredPatients" :key="patient.id">
+            <td>{{ patient.firstName }}</td>
+            <td>{{ patient.lastName }}</td>
+            <td>{{ patient.dateOfBirth }}</td>
+            <td>{{ patient.sex }}</td>
+            <td>{{ patient.address }}</td>
+            <td>{{ patient.cardNumber }}</td>
+            <td><button class="button is-link" type="button" @click="goToPatientProfile(patient.cardNumber)">Profile</button></td>
+          </tr>
           </tbody>
         </table>
-
-        
       </div>
     </div>
-    </div>
+  </div>
 </template>
-
 
 
 <script>
@@ -197,8 +194,8 @@ export default {
           emergencyContact : this.emergencyContact,
           cardNumber : this.healthCard
         }
-        
-      
+
+
       if(this.firstName !== '' && this.lastName !== '' && this.dateOfBirth !== '' && this.sex !== '' && this.address !== '' && this.phoneNum !== '' && this.email !== '' && this.emergencyContact !== '' && this.healthCard !== '') {
 
         console.log(newCard)
@@ -214,13 +211,13 @@ export default {
         console.log("ERROR : Please ensure you fill out all fields")
       }
     },
-    
+
     resetForm() {
       this.patientFirstName = '';
       this.lastName = '';
       this.dateOfBirth = '';
       this.address = '';
-      
+
     }
   },
   created() {
@@ -228,11 +225,3 @@ export default {
   }
 };
 </script>
-
-<style scoped>
-.container {
-  max-width: 400px;
-  margin: auto;
-  padding: 20px;
-}
-</style>
