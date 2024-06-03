@@ -23,7 +23,7 @@
             </div>
           </div>
         </RouterLink>
-        
+
         <RouterLink :to="'/calendar'">
           <div class="column is-narrow">
             <div class="card has-text-centered" style="width: 300px;">
@@ -36,7 +36,7 @@
             </div>
           </div>
         </RouterLink>
-        
+
         <RouterLink :to="'/test-dashboard'">
           <div class="column is-narrow">
             <div class="card has-text-centered" style="width: 300px;">
@@ -44,13 +44,24 @@
                 <p class="card-header-title is-centered">Tests</p>
               </header>
               <div class="card-content">
-                <div class="content">View and manage tests</div>
+                <div the="content">View and manage tests</div>
               </div>
             </div>
           </div>
         </RouterLink>
-        
+
       </div>
     </div>
   </section>
 </template>
+
+<style scoped>
+.container {
+  overflow-x: hidden; /* Hide horizontal overflow */
+}
+
+/* Additional styling to ensure that the elements do not cause overflow */
+.columns {
+  flex-wrap: wrap; /* Ensure columns wrap inside the container */
+}
+</style>

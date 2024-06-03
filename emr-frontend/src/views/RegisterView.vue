@@ -5,7 +5,7 @@
           <div class="column is-one-third">
             <div class="card">
               <div class="card-content">
-                <h1 class="title">Register New Account</h1>
+                <h1 class="title">Register An Account</h1>
                 <form>
                   <div class="field">
                     <label class="label" for="email">Email:</label>

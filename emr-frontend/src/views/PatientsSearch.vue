@@ -5,6 +5,12 @@
       <div class="column is-half mt-5">
         <h1 class="title">Search For Patient</h1>
         <div class="box">
+          <div v-if="successMessage" class="notification is-success">
+            {{ successMessage }}
+          </div>
+          <div v-if="errorMessage" class="notification is-danger">
+            {{ errorMessage }}
+          </div>
           <form>
             <div class="columns">
               <div class="column">
@@ -119,7 +125,6 @@
   </div>
 </template>
 
-
 <script>
 import axios from "axios";
 
@@ -135,24 +140,20 @@ export default {
       healthCards: [],
       filteredPatients: [],
       hasSearched: false,
-      phoneNum : '',
-      email : '',
-      emergencyContact : '',
+      phoneNum: '',
+      email: '',
+      emergencyContact: '',
+      successMessage: '',
+      errorMessage: ''
     };
   },
   methods: {
     async fetchHealthCards() {
       try {
-        const response = await axios.get(`http://localhost:3000/healthcards`, {
-          headers: {
-            'Content-Type': 'application/x-www-form-urlencoded'
-          }
-        });
-        this.healthCards = response.data
-        console.log(this.healthCards)
-        console.log(this.healthCards[0].address)
+        const response = await axios.get(`http://localhost:3000/healthcards`);
+        this.healthCards = response.data;
       } catch (error) {
-        console.log(error)
+        console.error(error);
       }
     },
 
@@ -163,52 +164,45 @@ export default {
         const dateOfBirthMatch = this.dateOfBirth === '' || patient.dateOfBirth === this.dateOfBirth;
         const addressMatch = this.address === '' || patient.address.toLowerCase().includes(this.address.toLowerCase());
         const healthCardMatch = this.healthCard === '' || patient.cardNumber.toLowerCase().includes(this.healthCard.toLowerCase());
-        const sexMatch = this.sex === '' || patient.sex.toLowerCase().includes(this.sex.toLowerCase())
-
+        const sexMatch = this.sex === '' || patient.sex.toLowerCase().includes(this.sex.toLowerCase());
         return firstNameMatch && lastNameMatch && dateOfBirthMatch && addressMatch && healthCardMatch && sexMatch;
       });
 
-      console.log(this.filteredPatients)
-
       this.hasSearched = true;
-
-      console.log(this.hasSearched);
     },
     showSearch() {
       this.hasSearched = false;
     },
     goToPatientProfile(cardNum) {
-      this.$router.push({ name: 'PatientProfile', params: { cardNum }, query: {currentPage: this.currentPage}});
+      this.$router.push({ name: 'PatientProfile', params: { cardNum } });
     },
     async createNewPatient() {
       let newCard = {
-          firstName : this.patientFirstName,
-          lastName : this.lastName,
-          dateOfBirth : this.dateOfBirth,
-          sex : this.sex,
-          address : this.address,
-          contact : {
-            phone : this.phoneNum,
-            email : this.email,
-          },
-          emergencyContact : this.emergencyContact,
-          cardNumber : this.healthCard
+        firstName: this.patientFirstName,
+        lastName: this.lastName,
+        dateOfBirth: this.dateOfBirth,
+        sex: this.sex,
+        address: this.address,
+        contact: {
+          phone: this.phoneNum,
+          email: this.email,
+        },
+        emergencyContact: this.emergencyContact,
+        cardNumber: this.healthCard
+      };
+
+      if (this.firstName !== '' && this.lastName !== '' && this.dateOfBirth !== '' && this.sex !== '' && this.address !== '' && this.phoneNum !== '' && this.email !== '' && this.emergencyContact !== '' && this.healthCard !== '') {
+        try {
+          const response = await axios.post(`http://localhost:3000/healthcards`, newCard);
+          this.successMessage = 'New patient added successfully.';
+          this.errorMessage = '';
+        } catch (error) {
+          this.successMessage = '';
+          this.errorMessage = 'Failed to add new patient.';
         }
-
-
-      if(this.firstName !== '' && this.lastName !== '' && this.dateOfBirth !== '' && this.sex !== '' && this.address !== '' && this.phoneNum !== '' && this.email !== '' && this.emergencyContact !== '' && this.healthCard !== '') {
-
-        console.log(newCard)
-
-        console.log("http://localhost:3000/healthcards");
-        const response = await axios.post(`http://localhost:3000/healthcards`, newCard, {
-          // headers: {
-          //   'Content-Type': 'application/x-www-form-urlencoded'
-          // }
-        });
-        console.log(response.data)
       } else {
-        console.log("ERROR : Please ensure you fill out all fields")
+        this.successMessage = '';
+        this.errorMessage = 'Please ensure you fill out all fields.';
       }
     },
 
@@ -217,7 +211,11 @@ export default {
       this.lastName = '';
       this.dateOfBirth = '';
       this.address = '';
-
+      this.sex = '';
+      this.healthCard = '';
+      this.phoneNum = '';
+      this.email = '';
+      this.emergencyContact = '';
     }
   },
   created() {
@@ -225,3 +223,11 @@ export default {
   }
 };
 </script>
+
+<style>
+.container {
+  overflow-x: hidden;
+  overflow-y: hidden;
+}
+</style>
+

@@ -5,8 +5,8 @@ import Header from './components/Navbar.vue';
 
 <template>
    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bulma@0.9.3/css/bulma.min.css">
+  <Header></Header>
   <div id="app">
-    <Header></Header>
     <div class="main-layout">
       <main class="content">
         <RouterView />

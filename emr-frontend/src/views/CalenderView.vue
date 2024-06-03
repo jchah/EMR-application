@@ -1,140 +1,105 @@
 <!-- IF YOU ARE ABOUT TO EDIT MY CODE TELL ME SO I CAN DO IT I NEED TO GET MARKS OFF THIS FUCKING PROJECT -->
 
 <template>
-  
-  <Suspense>
-    <div>
       <div class="section">
-                  <div class="columns is-centered">
-                    <div class="column">
-                            <DatePicker v-model="date"  expanded/>
-                            <table class="table">
-                              <thead>
-                                <tr>
-                                  <th>Name</th>
-                                  <th>Start Time</th>
-                                  <th>End Time</th>
-                                  <th>Notes</th>
-                                </tr>
-                              </thead>
-                              <tbody>
-                                  <tr v-for="app in appointments">
-                                  
-                                      <td>{{ app.patient }}</td>
-                                      <td v-if="!isEditing">{{ app.startTime }}</td>
-                                      <td v-if="!isEditing">{{ app.endTime }}</td>
-                                      <td v-if="!isEditing">{{ app.notes }}</td>
-                                     
-                                          <td v-if="isEditing">
-                                            
-                                            <DatePicker mode="time" v-model="info.startTime"/>
-                                          </td>
-                                          <td v-if="isEditing">
-                                            
-                                            <DatePicker mode="time" v-model="info.endTime"/>
-                                          </td>
-                                          <td v-if="isEditing">
-                                           
-                                            <div class="control">
-                                                <input class="input" type="text" v-model="editingInfo.notes">
-                                            </div>
-                                          </td>
-                                            
-                                         
-                                  
-                                         
-                                      
-                               
-                                  
-                                    <td> <button @click="deleteAppointment(app)" class="button is-danger" v-if="!isEditing"> Delete</button>
-                                          <button class="button" @click="isEditingAppointment(true, app)" v-if="!isEditing" > Edit</button>
-                                          <button class="button" v-if="isEditing" @click="editAppointment(app)"> Submit Edit</button>
-                                          <button class="button" v-if="isEditing" @click="isEditingAppointment(false , 
-                                            {notes:'',})"> Cancel Edit</button>
-                                      </td>
-                                  </tr>
-                              </tbody>
-                            
-                            </table>
-                      </div>
-                      <div class="column is-one-third">
-                      <h1 class="title">Make an Appointment</h1>
-                          <div class="box">
-                              <form @submit.prevent="makeAppointment(date)">
-                                  <div class="field">
-                                    <label class="label">Selected Date: {{ formatDate(date) }}</label>
-                                  </div>
-                                 
-                                  <label class="label">Patient Name</label>
-                                  <div class="control">
-                                      <input class="input" type="text" v-model="inSearchBar" required>
-                                      <div class="control">
-                                        <div class="dropdown is-active" v-if="showOptions()">
-                                          <div class="dropdown-menu" style="position: absolute;">
-                                            <div class="dropdown-content">
-                                              <a v-for="option in searchOptions"  @click="selectOption(option)" class="dropdown-item">{{ option }}</a>
-                                            </div>
-                                          </div>
-                                        </div>
-                                  </div>
-                                  </div>
-                        
-                          
-                                  <div class="field">
-                                  <div class="control beside">
-                                    <label class="label">Start Time</label>
-                                    <DatePicker mode="time" v-model="info.startTime"/>
-                                    <label class="label">End Time</label>
-                                    <DatePicker mode="time" v-model="info.endTime"/>
-                                      
-                                  </div>
-                                 
-                                  </div>
-                          
-                              
-                          
-                                  <div class="field">
-                                  <label class="label">Notes</label>
-                                  <div class="control">
-                                      <input class="input" type="text" v-model="info.notes">
-                                  </div>
-                                  </div>
-                          
-                                  <div class="field is-grouped">
-                                  <div class="control">
-                                      <button class="button is-primary" type="submit">Submit</button>
-                                  </div>
-                                  </div>
-                              </form>
-                          </div>
-                         
+        <div class="columns is-centered">
+          <div class="column">
+            <DatePicker v-model="date" expanded/>
+            <table class="table">
+              <thead>
+              <tr>
+                <th>Name</th>
+                <th>Start Time</th>
+                <th>End Time</th>
+                <th>Notes</th>
+              </tr>
+              </thead>
+              <tbody>
+              <tr v-for="app in appointments" :key="app.id">
+                <td>{{ app.patient }}</td>
+                <td v-if="!isEditing">{{ app.startTime }}</td>
+                <td v-if="!isEditing">{{ app.endTime }}</td>
+                <td v-if="!isEditing">{{ app.notes }}</td>
+                <td v-if="isEditing">
+                  <DatePicker mode="time" v-model="info.startTime"/>
+                </td>
+                <td v-if="isEditing">
+                  <DatePicker mode="time" v-model="info.endTime"/>
+                </td>
+                <td v-if="isEditing">
+                  <div class="control">
+                    <input class="input" type="text" v-model="editingInfo.notes">
                   </div>
-                  <div>
-
-            </div>
+                </td>
+                <td>
+                  <button @click="deleteAppointment(app)" class="button is-danger" v-if="!isEditing"> Delete</button>
+                  <button class="button" @click="isEditingAppointment(true, app)" v-if="!isEditing"> Edit</button>
+                  <button class="button" v-if="isEditing" @click="editAppointment(app)"> Submit Edit</button>
+                  <button class="button" v-if="isEditing" @click="isEditingAppointment(false, {notes: ''})"> Cancel Edit</button>
+                </td>
+              </tr>
+              </tbody>
+            </table>
+          </div>
+          <div class="column is-one-third">
+            <h1 class="title">Make an Appointment</h1>
+            <div class="box">
+              <form @submit.prevent="makeAppointment(date)">
+                <div class="field">
+                  <label class="label">Selected Date: {{ formatDate(date) }}</label>
+                </div>
+                <label class="label">Patient Name</label>
+                <div class="control">
+                  <input class="input" type="text" v-model="inSearchBar" required>
+                  <div class="dropdown is-active" v-if="showOptions()">
+                    <div class="dropdown-menu" style="position: absolute;">
+                      <div class="dropdown-content">
+                        <a v-for="option in searchOptions" @click="selectOption(option)" class="dropdown-item">{{ option }}</a>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+                <div class="field">
+                  <div class="control beside">
+                    <label class="label">Start Time</label>
+                    <DatePicker mode="time" v-model="info.startTime"/>
+                    <label class="label">End Time</label>
+                    <DatePicker mode="time" v-model="info.endTime"/>
+                  </div>
+                </div>
+                <div class="field">
+                  <label class="label">Notes</label>
+                  <div class="control">
+                    <input class="input" type="text" v-model="info.notes">
+                  </div>
+                </div>
+                <div class="field is-grouped">
+                  <div class="control">
+                    <button class="button is-primary" type="submit">Submit</button>
+                  </div>
+                </div>
+              </form>
             </div>
           </div>
-    </div>
-   
-  </Suspense>
-  
+        </div>
+      </div>
 </template>
 
 <script>
 import { ref, watch, onMounted } from 'vue';
-import { Calendar, DatePicker } from 'v-calendar';
+import { DatePicker } from 'v-calendar';
 import 'v-calendar/style.css';
 import axios from 'axios';
 
 const API_URL = "http://localhost:3000";
 export default {
-  components: { 
+  components: {
     DatePicker,
   },
   setup() {
     const date = ref(new Date());
     let isEditing = ref(false)
-    
+
     let patientList = ref(null);
     let searchOptions = ref();
     let inSearchBar = ref();
@@ -152,39 +117,35 @@ export default {
       notes:'',
     })
     function showOptions(){
-    
-      try {
-        if((inSearchBar.value.length<=0) || (isSelected.value))
 
-          return false
-        else  
-          return true;
-      
+      try {
+        return !((inSearchBar.value.length <= 0) || (isSelected.value));
+
       } catch (error) {
 
         return false;
       }
-      
+
     }
-    //geting appointments
+    // geting appointments
     let appointments = ref(null);
-    watch(date, (newValue, oldValue) =>{
+    watch(date, () =>{
       getAppointments(date.value);
     })
-    watch(inSearchBar, (newValue, oldValue) =>{
+    watch(inSearchBar, (newValue) =>{
       inSearchBar.value = newValue
       try {
-        if((inSearchBar.value === searchOptions.value[0]) === false)
+        if(!(inSearchBar.value === searchOptions.value[0]))
             isSelected.value = false
       } catch (error) {
         isSelected.value = false
       }
-      
+
       filterSearch();
     })
 
     onMounted(() => {
-      
+
       getPatients();
       getAppointments(date.value);
     });
@@ -198,19 +159,19 @@ export default {
           params:{
             date: date.toLocaleDateString()
           }
-         
+
         });
-       
+
         console.log(appointments.value)
         appointments.value = response.data;
         sortTimeEariliest();
 
 
-        
+
       } catch (error) {
         console.error("Error getting data from getAppointments", error);
       }
-      
+
     }
 
     function sortTimeEariliest(){
@@ -240,7 +201,7 @@ export default {
           })
           location.reload()
         } catch (error) {
-          
+
         }
     }
 
@@ -250,26 +211,26 @@ export default {
         await axios.delete(`${API_URL}/appointments/${date._id}`)
         location.reload();
       } catch (error) {
-        
+
       }
     }
 
     function formatDate(date) {
-      return date.toLocaleDateString(); 
+      return date.toLocaleDateString();
     }
 
     async function getPatients(){
       try {
-      
+
         let response = await axios.get(`${API_URL}/healthcards`)
         patientList.value = response.data;
         console.log(patientList.value)
         patientList.value = patientList.value.map((a) =>{
           return a.firstName + " " + a.lastName
         })
-        
+
       } catch (error) {
-        
+
       }
     }
 
@@ -285,7 +246,7 @@ export default {
     function selectOption(option){
       inSearchBar.value=option
       isSelected.value = true;
-      
+
     }
 
     function isEditingAppointment(a, b){
@@ -301,7 +262,7 @@ export default {
           })
           location.reload()
         } catch (error) {
-          
+
         }
     }
 
@@ -310,11 +271,10 @@ export default {
 
 
 
-    return { 
+    return {
       date,
       formatDate,
       info,
-      getAppointments,
       makeAppointment,
       appointments,
       deleteAppointment,
@@ -327,7 +287,7 @@ export default {
       isEditing,
       editAppointment,
       editingInfo
-     
+
 
     };
   },
@@ -335,10 +295,5 @@ export default {
 </script>
 
 <style>
-.vc-time-header{
-  display: none;
-}
 
 </style>
-
-
