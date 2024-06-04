@@ -1,42 +1,55 @@
 <template>
   <div class="container mt-5">
-    <div class="row justify-content-center">
-      <div class="col-md-6">
+    <div class="columns is-centered">
+      <div class="column is-half">
         <div class="card">
-          <div class="card-header">
-            <h2 class="text-center">Create Account</h2>
-          </div>
-          <div class="card-body">
+          <header class="card-header">
+            <p class="card-header-title has-text-centered">
+              Create Account
+            </p>
+          </header>
+          <div class="card-content">
             <form @submit.prevent="createAccount">
-              <div class="mb-3">
-                <label for="email" class="form-label">email:</label>
-                <input type="email" class="form-control" id="email" v-model="account.email"
-                  required>
+              <div class="field">
+                <label class="label" for="email">Email</label>
+                <div class="control">
+                  <input type="email" class="input" id="email" v-model="account.email" required>
+                </div>
               </div>
-              <div class="mb-3">
-                <label for="password" class="form-label">Password:</label>
-                <input type="password" class="form-control" id="password" v-model="account.password" required>
+              <div class="field">
+                <label class="label" for="password">Password</label>
+                <div class="control">
+                  <input type="password" class="input" id="password" v-model="account.password" required>
+                </div>
               </div>
-              <div class="mb-3">
-                <label for="firstName" class="form-label">firstName:</label>
-                <input type="text" class="form-control" id="firstName" v-model="account.firstName" required>
+              <div class="field">
+                <label class="label" for="firstName">First Name</label>
+                <div class="control">
+                  <input type="text" class="input" id="firstName" v-model="account.firstName" required>
+                </div>
               </div>
-              <div class="mb-3">
-                <label for="lastName" class="form-label">lastName:</label>
-                <input type="text" class="form-control" id="lastName" v-model="account.lastName" required>
+              <div class="field">
+                <label class="label" for="lastName">Last Name</label>
+                <div class="control">
+                  <input type="text" class="input" id="lastName" v-model="account.lastName" required>
+                </div>
               </div>
-              <div class="mb-3">
-                <label for="role" class="form-label">Role:</label>
-                <select class="form-control" id="role" v-model="account.role" required>
-                  <option value="user">User</option>
-                  <option value="admin">Admin</option>
-                </select>
+              <div class="field">
+                <label class="label" for="role">Role</label>
+                <div class="control">
+                  <div class="select">
+                    <select id="role" v-model="account.role" required>
+                      <option value="user">User</option>
+                      <option value="admin">Admin</option>
+                    </select>
+                  </div>
+                </div>
               </div>
               <!-- Success and Error Messages -->
-              <div v-if="successMessage" class="alert alert-success">{{ successMessage }}</div>
-              <div v-if="errorMessage" class="alert alert-danger">{{ errorMessage }}</div>
-              <div class="d-grid">
-                <button type="submit" class="btn btn-primary">Create Account</button>
+              <div v-if="successMessage" class="notification is-success">{{ successMessage }}</div>
+              <div v-if="errorMessage" class="notification is-danger">{{ errorMessage }}</div>
+              <div class="control">
+                <button type="submit" class="button is-primary is-fullwidth">Create Account</button>
               </div>
             </form>
           </div>
@@ -45,6 +58,7 @@
     </div>
   </div>
 </template>
+
 <script>
 export default {
   name: 'AccountForm',
@@ -80,7 +94,7 @@ export default {
         }
       } catch (error) {
         console.error('Error:', error);
-        this.errorMessage = 'Failed to create account.';
+        this.errorMessage = 'Something went wrong. Please try again later.';
       }
     }
   }
