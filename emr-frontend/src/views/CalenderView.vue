@@ -5,7 +5,7 @@
         <div class="columns is-centered">
           <div class="column">
             <DatePicker v-model="date" expanded/>
-            <button class="button is-primary" @click="isDoingForm(true)">Make Appointment</button>
+            <button class="button is-primary is-centered" @click="isDoingForm(true)">Make Appointment</button>
             <table class="table">
               <thead>
               <tr>
@@ -17,7 +17,7 @@
               </thead>
               <tbody>
               <tr v-for="app in appointments" :key="app.id">
-                <td>{{ app.patient }}</td>
+                <td><router-link :to="`/patients/${app.cardNum}`">{{ app.patient }}</router-link></td>
                 <td v-if="!isEditing">{{ app.startTime }}</td>
                 <td v-if="!isEditing">{{ app.endTime }}</td>
                 <td v-if="!isEditing">{{ app.notes }}</td>
@@ -54,7 +54,7 @@
                 <div class="control">
                   <input class="input" type="text" v-model="inSearchBar" required>
                   <div class="dropdown is-active" v-if="showOptions()">
-                    <div class="dropdown-menu" style="position: absolute;">
+                    <div class="dropdown-menu" style="">
                       <div class="dropdown-content">
                         <a v-for="option in searchOptions" @click="selectOption(option)" class="dropdown-item">{{ option }}</a>
                       </div>
@@ -202,7 +202,8 @@ export default {
             date: info.value.date,
             startTime: info.value.startTime.toLocaleTimeString(),
             endTime: info.value.endTime.toLocaleTimeString(),
-            notes: info.value.notes
+            notes: info.value.notes,
+            cardNum: a
           })
           location.reload()
         } catch (error) {
