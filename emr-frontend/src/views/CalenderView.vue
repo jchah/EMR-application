@@ -5,6 +5,7 @@
         <div class="columns is-centered">
           <div class="column">
             <DatePicker v-model="date" expanded/>
+            <button class="button is-primary" @click="isDoingForm(true)">Make Appointment</button>
             <table class="table">
               <thead>
               <tr>
@@ -40,9 +41,10 @@
               </tr>
               </tbody>
             </table>
+           
           </div>
-          <div class="column is-one-third">
-            <h1 class="title">Make an Appointment</h1>
+          
+          <div class="overlay" v-if="isOn">
             <div class="box">
               <form @submit.prevent="makeAppointment(date)">
                 <div class="field">
@@ -79,6 +81,7 @@
                   </div>
                 </div>
               </form>
+              <button class="button is-danger" @click="isDoingForm(false)"> Cancel</button>
             </div>
           </div>
         </div>
@@ -97,6 +100,7 @@ export default {
     DatePicker,
   },
   setup() {
+    let isOn = ref(false)
     const date = ref(new Date());
     let isEditing = ref(false)
 
@@ -277,6 +281,10 @@ export default {
             }
     }
 
+    function isDoingForm(a){
+      isOn.value = a;
+    }
+
     return {
       date,
       formatDate,
@@ -293,7 +301,9 @@ export default {
       isEditing,
       editAppointment,
       editingInfo,
-      getCardNum
+      getCardNum,
+      isOn,
+      isDoingForm
 
 
     };
@@ -304,6 +314,25 @@ export default {
 <style>
 .vc-time-header{
   display: none;
+}
+
+.overlay {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background-color: rgba(0, 0, 0, 0.5); /* Semi-transparent black overlay */
+  z-index: 9999; /* Make sure it appears on top of everything */
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.overlay .box {
+  background-color: white;
+  padding: 20px;
+  border-radius: 5px;
 }
 
 </style>
