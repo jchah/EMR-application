@@ -21,7 +21,8 @@
     "v-calendar": "^3.1.2",
     "vue": "^3.4.21",
     "vue-router": "^4.3.0",
-    "vue-sidebar-menu": "^5.3.1"
+    "vue-sidebar-menu": "^5.3.1",
+    "vuex": "^4.1.0"
   },
   "devDependencies": {
     "@vitejs/plugin-vue": "^5.0.4",

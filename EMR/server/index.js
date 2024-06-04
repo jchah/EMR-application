@@ -12,6 +12,7 @@ const Condition = require("./models/Condition");
 const Medicine = require('./models/Medicine');
 const HealthCard = require("./models/HealthCard");
 
+const UserRouter = require("./routes/user.js");
 
 const app = express();
 dotenv.config();
@@ -25,6 +26,8 @@ mongoose.connect(process.env.MONGO_URI, {
     useNewUrlParser: true,
     useUnifiedTopology: true,
 });
+
+app.use("/user", UserRouter);
 
 // Create a new patient
 app.post("/patients", async (req, res, next) => {
