@@ -5,6 +5,7 @@
         <div class="columns is-centered">
           <div class="column">
             <DatePicker v-model="date" expanded/>
+            <button class="button is-primary is-centered" @click="isDoingForm(true)">Make Appointment</button>
             <table class="table">
               <thead>
               <tr>
@@ -16,7 +17,7 @@
               </thead>
               <tbody>
               <tr v-for="app in appointments" :key="app.id">
-                <td>{{ app.patient }}</td>
+                <td><router-link :to="`/patients/${app.cardNum}`">{{ app.patient }}</router-link></td>
                 <td v-if="!isEditing">{{ app.startTime }}</td>
                 <td v-if="!isEditing">{{ app.endTime }}</td>
                 <td v-if="!isEditing">{{ app.notes }}</td>
@@ -40,9 +41,10 @@
               </tr>
               </tbody>
             </table>
+           
           </div>
-          <div class="column is-one-third">
-            <h1 class="title">Make an Appointment</h1>
+          
+          <div class="overlay" v-if="isOn">
             <div class="box">
               <form @submit.prevent="makeAppointment(date)">
                 <div class="field">
@@ -52,7 +54,7 @@
                 <div class="control">
                   <input class="input" type="text" v-model="inSearchBar" required>
                   <div class="dropdown is-active" v-if="showOptions()">
-                    <div class="dropdown-menu" style="position: absolute;">
+                    <div class="dropdown-menu" style="">
                       <div class="dropdown-content">
                         <a v-for="option in searchOptions" @click="selectOption(option)" class="dropdown-item">{{ option }}</a>
                       </div>
@@ -79,6 +81,7 @@
                   </div>
                 </div>
               </form>
+              <button class="button is-danger" @click="isDoingForm(false)"> Cancel</button>
             </div>
           </div>
         </div>
@@ -97,6 +100,7 @@ export default {
     DatePicker,
   },
   setup() {
+    let isOn = ref(false)
     const date = ref(new Date());
     let isEditing = ref(false)
 
@@ -198,7 +202,8 @@ export default {
             date: info.value.date,
             startTime: info.value.startTime.toLocaleTimeString(),
             endTime: info.value.endTime.toLocaleTimeString(),
-            notes: info.value.notes
+            notes: info.value.notes,
+            cardNum: a
           })
           location.reload()
         } catch (error) {
@@ -277,6 +282,10 @@ export default {
             }
     }
 
+    function isDoingForm(a){
+      isOn.value = a;
+    }
+
     return {
       date,
       formatDate,
@@ -293,7 +302,9 @@ export default {
       isEditing,
       editAppointment,
       editingInfo,
-      getCardNum
+      getCardNum,
+      isOn,
+      isDoingForm
 
 
     };
@@ -304,6 +315,25 @@ export default {
 <style>
 .vc-time-header{
   display: none;
+}
+
+.overlay {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background-color: rgba(0, 0, 0, 0.5); /* Semi-transparent black overlay */
+  z-index: 9999; /* Make sure it appears on top of everything */
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.overlay .box {
+  background-color: white;
+  padding: 20px;
+  border-radius: 5px;
 }
 
 </style>
