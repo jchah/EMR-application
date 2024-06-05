@@ -6,6 +6,8 @@
           <div class="column">
             <DatePicker v-model="date" expanded/>
             <button class="button is-primary is-centered" @click="isDoingForm(true)">Make Appointment</button>
+            </div>
+            <div class="column">
             <table class="table">
               <thead>
               <tr>
@@ -53,7 +55,7 @@
                 <label class="label">Patient Name</label>
                 <div class="control">
                   <input class="input" type="text" v-model="inSearchBar" required>
-                  <div class="dropdown is-active" v-if="showOptions()">
+                  <div class="dropdown is-active is-bottom" v-if="showOptions()" style="display: flex;">
                     <div class="dropdown-menu" style="">
                       <div class="dropdown-content">
                         <a v-for="option in searchOptions" @click="selectOption(option)" class="dropdown-item">{{ option }}</a>
@@ -81,6 +83,7 @@
                   </div>
                 </div>
               </form>
+              <br>
               <button class="button is-danger" @click="isDoingForm(false)"> Cancel</button>
             </div>
           </div>
@@ -93,6 +96,7 @@ import { ref, watch, onMounted } from 'vue';
 import { DatePicker } from 'v-calendar';
 import 'v-calendar/style.css';
 import axios from 'axios';
+
 
 const API_URL = "http://localhost:3000";
 export default {
@@ -139,6 +143,8 @@ export default {
     watch(inSearchBar, (newValue) =>{
       inSearchBar.value = newValue
       try {
+        console.log(inSearchBar.value)
+        console.log(searchOptions.value[0])
         if(!(inSearchBar.value === searchOptions.value[0]))
             isSelected.value = false
       } catch (error) {
@@ -206,6 +212,7 @@ export default {
             cardNum: a
           })
           location.reload()
+          
         } catch (error) {
 
         }
@@ -317,6 +324,10 @@ export default {
   display: none;
 }
 
+.vc-time-select-group{
+  border: 0px;
+}
+
 .overlay {
   position: fixed;
   top: 0;
@@ -328,12 +339,32 @@ export default {
   display: flex;
   align-items: center;
   justify-content: center;
+  animation: fadeInAnimation ease 0.4s;
+  animation-iteration-count: 1;
+  animation-fill-mode: forwards;
 }
 
 .overlay .box {
   background-color: white;
+  width: 500px;
   padding: 20px;
   border-radius: 5px;
+  animation: fadeInAnimation ease 0.4s;
+    animation-iteration-count: 1;
+    animation-fill-mode: forwards;
+}
+
+@keyframes fadeInAnimation {
+    0% {
+        opacity: 0.4;
+    }
+    100% {
+        opacity: 1;
+    }
+}
+
+.dropdown{
+  display: flex;
 }
 
 </style>
