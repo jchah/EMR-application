@@ -73,10 +73,14 @@ export default {
         });
         if (response.ok) {
           const data = await response.json();
+          console.log(data.result);
           this.successMessage = 'Login successful!';
-          localStorage.setItem("user", JSON.stringify(data.user));
+          localStorage.setItem("user", JSON.stringify(data.result));
           localStorage.setItem("token", data.token);
-          setTimeout(() => this.$router.push('/dashboard'), 1000); // Redirect after 1 second to dashboard
+          setTimeout(() => {
+            window.location = ('/')
+
+          }, 1000); // Redirect after 1 second to dashboard
         } else {
           const data = await response.json();
           this.errorMessage = data.message || 'Failed to login.';
