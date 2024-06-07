@@ -70,10 +70,10 @@ const medicineSchema = new mongoose.Schema({
         required: true,
     },
     startDate: {
-        type: Date,
+        type: String,
     },
     endDate: {
-        type: Date,
+        type: String,
     },
     prescribingPhysician: {
         type: String,
