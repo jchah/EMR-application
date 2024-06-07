@@ -68,5 +68,4 @@ export default {
   height: 70px;
   padding: 10px;
 }
-
 </style>

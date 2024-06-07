@@ -7,14 +7,13 @@
       <div class="container">
         <h1 class="title has-text-centered animate__animated animate__fadeInDown">Welcome to the EMR Application</h1>
         <p class="subtitle has-text-centered animate__animated animate__fadeIn">Manage all your medical records in one place.</p>
-
         <div class="columns is-multiline is-centered is-variable is-8">
           <div class="column is-narrow animate__animated animate__fadeInLeft">
             <RouterLink :to="'/patients'">
               <div class="card has-text-centered">
                 <div class="card-image">
                   <figure class="image is-4by3">
-                    <img src="../img/doctor.jpg" style="object-fit: cover; width: 100%; height: 100%;" alt="Patients">
+                    <img src="../img/doctor.jpg" style="object-fit: cover;" alt="Patients">
                   </figure>
                 </div>
                 <header class="card-header">
@@ -32,7 +31,7 @@
               <div class="card has-text-centered">
                 <div class="card-image">
                   <figure class="image is-4by3">
-                    <img src="../img/appointment.jpg" style="object-fit: cover; width: 100%; height: 100%;" alt="Appointments">
+                    <img src="../img/appointment.jpg" style="object-fit: cover;" alt="Appointments">
                   </figure>
                 </div>
                 <header class="card-header">
@@ -50,7 +49,7 @@
               <div class="card has-text-centered">
                 <div class="card-image">
                   <figure class="image is-4by3">
-                    <img src="../img/test.jpeg" style="object-fit: cover; width: 100%; height: 100%;" alt="Tests">
+                    <img src="../img/test.jpeg" style="object-fit: cover;" alt="Tests">
                   </figure>
                 </div>
                 <header class="card-header">
@@ -89,5 +88,9 @@
 
 .container {
   overflow-x: hidden;
+}
+
+.card-image, .image {
+  margin: 0;
 }
 </style>
