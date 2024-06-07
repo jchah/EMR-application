@@ -3,10 +3,8 @@ const Schema = mongoose.Schema;
 
 const appointmentSchema = new Schema({
     patient:{
-        // type: Schema.Types.ObjectId,
-        // ref:'Patient', change for later ;)
-        type: String,
-        required: true
+        type: Schema.Types.ObjectId,
+        ref:'Patient'
     },
     date:{
         type: String,
@@ -23,9 +21,6 @@ const appointmentSchema = new Schema({
     notes:{
         type:String
     },
-    cardNum:{
-        type: String
-    }
 })
 
 const Appointment = mongoose.model("Appointment", appointmentSchema);

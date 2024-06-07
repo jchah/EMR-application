@@ -153,12 +153,27 @@ app.delete("/conditions/:id", async (req, res) => {
 
 // Add an appointment
 app.post("/appointments", async (req, res) => {
+    
     try {
-        let appointment = new Appointment(req.body);
+
+        let a = req.body.patientDeats
+        let fn = a.substring(0, a.indexOf(" "));
+        let ln = a.substring(a.indexOf(" ") +1, a.indexOf(",") )
+        let cn = a.substring(a.lastIndexOf(" ") + 1);
+        let patient = await Patient.findOne({firstName: fn, lastName: ln, cardNumber: cn})
+        let appointment = new Appointment({
+            patient: patient,
+            date: req.body.date, 
+            startTime: req.body.startTime, 
+            endTime: req.body.endTime, 
+            notes: req.body.notes
+        });
+        console.log(appointment)
         await appointment.save();
         res.send(appointment);
     } catch (error) {
-        res.status(400).send({ message: error.message });
+        res.status(500).send({ message: error.message });
+       
     }
 });
 
@@ -214,6 +229,7 @@ app.delete("/appointments/:id", async (req, res) => {
         res.status(500).send({ message: error.message });
     }
 });
+
 
 // Error Handling Middleware
 app.use((err, req, res, next) => {

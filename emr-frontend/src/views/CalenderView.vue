@@ -19,7 +19,8 @@
               </thead>
               <tbody>
               <tr v-for="app in appointments" :key="app.id">
-                <td><router-link :to="`/patients/${app.cardNum}`">{{ app.patient }}</router-link></td>
+                <td><router-link :to="`/patients/${app.patient.data._id}`">{{ app.patient.data.firstName + " " + 
+                 app.patient.data.lastName}}</router-link></td>
                 <td v-if="!isEditing">{{ app.startTime }}</td>
                 <td v-if="!isEditing">{{ app.endTime }}</td>
                 <td v-if="!isEditing">{{ app.notes }}</td>
@@ -82,6 +83,7 @@
                     <button class="button is-primary" type="submit">Submit</button>
                   </div>
                 </div>
+                <div v-if="hasErrorMessage" class="notification is-danger">Please Enter Valid Patient Name</div>
               </form>
               <br>
               <button class="button is-danger" @click="isDoingForm(false)"> Cancel</button>
@@ -112,6 +114,7 @@ export default {
     let searchOptions = ref();
     let inSearchBar = ref();
     let isSelected = ref(false);
+    let hasErrorMessage = ref(false)
     //making appointment
     let info = ref({
       patientName: '',
@@ -172,8 +175,13 @@ export default {
 
         });
 
-        console.log(appointments.value)
+        
         appointments.value = response.data;
+        appointments.value.forEach(async (a) =>{
+          let id = a.patient
+          a.patient = await axios.get(`${API_URL}/patients/${id}`)
+        })
+        console.log(appointments.value)
         sortTimeEariliest();
 
 
@@ -200,22 +208,28 @@ export default {
 
     async function makeAppointment(date){
         info.value.date = date.toLocaleDateString();
-        info.value.patientName = inSearchBar.value;
-        let a = await getCardNum(info.value.patientName)
-        try {
+        if(findName(inSearchBar.value)){
+          hasErrorMessage.value = false;
+          info.value.patientName = inSearchBar.value;
+          try {
           await axios.post(`${API_URL}/appointments`, {
-            patient: info.value.patientName,
+            patientDeats: info.value.patientName,
             date: info.value.date,
             startTime: info.value.startTime.toLocaleTimeString(),
             endTime: info.value.endTime.toLocaleTimeString(),
             notes: info.value.notes,
-            cardNum: a
           })
           location.reload()
           
-        } catch (error) {
+          } catch (error) {
 
+          }
+        }else{
+          hasErrorMessage.value = true;
+          return ""
         }
+          
+       
     }
 
     async function deleteAppointment(date){
@@ -226,6 +240,16 @@ export default {
       } catch (error) {
 
       }
+    }
+
+    function findName(a){
+      let foundName = false;
+      patientList.value.forEach((b)=>{
+        if((b.name) === a.substring(0, a.indexOf(","))){
+          foundName = true
+        }
+      })
+      return foundName;
     }
 
     function formatDate(date) {
@@ -239,8 +263,9 @@ export default {
         patientList.value = response.data;
         console.log(patientList.value)
         patientList.value = patientList.value.map((a) =>{
-          return a.firstName + " " + a.lastName
+          return {name:a.firstName + " " + a.lastName, patientID: a._id, cardNumber: a.cardNumber}
         })
+        console.log(patientList.value)
 
       } catch (error) {
 
@@ -249,11 +274,13 @@ export default {
 
     function filterSearch(){
       console.log("search bar value: " + inSearchBar.value)
+      console.log(patientList.value)
       searchOptions.value = patientList.value.filter((a) => {
-
-        return a.toLowerCase().includes(inSearchBar.value.toLowerCase())
-      })
-      console.log("search options: " + searchOptions.value)
+        console.log(a.name)
+        if(a.name.toLowerCase().includes(inSearchBar.value.toLowerCase()))
+          return a.name
+      }).map((a) => a.name + ", Card Number: " + a.cardNumber)
+      
     }
 
     function selectOption(option){
@@ -264,6 +291,7 @@ export default {
 
     function isEditingAppointment(a, b){
           isEditing.value = a;
+          console.log(b)
           editingInfo.value.notes = b.notes;
     }
     async function editAppointment(app){
@@ -279,15 +307,6 @@ export default {
         }
     }
 
-    async function getCardNum(name){
-            try {
-               const healthcardReponse =  await axios.get(`${API_URL}/patients/${name}`)
-               let num = healthcardReponse.data
-               return num[0].cardNumber
-            } catch (error) {
-
-            }
-    }
 
     function isDoingForm(a){
       isOn.value = a;
@@ -309,9 +328,9 @@ export default {
       isEditing,
       editAppointment,
       editingInfo,
-      getCardNum,
       isOn,
-      isDoingForm
+      isDoingForm,
+      hasErrorMessage
 
 
     };
