@@ -1,67 +1,93 @@
-<script setup>
-</script>
-
 <template>
   <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bulma@0.9.3/css/bulma.min.css">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/animate.css/4.1.1/animate.min.css"/>
 
-  <section class="section">
-    <div class="container">
-      <div class="content has-text-centered">
-        <h1 class="title">Welcome to the EMR Application</h1>
-      </div>
+  <section class="hero is-primary is-fullheight-with-navbar">
+    <div class="hero-body">
+      <div class="container">
+        <h1 class="title has-text-centered animate__animated animate__fadeInDown">Welcome to the EMR Application</h1>
+        <p class="subtitle has-text-centered animate__animated animate__fadeIn">Manage all your medical records in one place.</p>
 
-      <div class="columns is-multiline is-centered is-variable is-8">
-        <RouterLink :to="'/patients'">
-          <div class="column is-narrow">
-            <div class="card has-text-centered" style="width: 300px;">
-              <header class="card-header">
-                <p class="card-header-title is-centered">Patients</p>
-              </header>
-              <div class="card-content">
-                <div class="content">View and manage patient records</div>
+        <div class="columns is-multiline is-centered is-variable is-8">
+          <div class="column is-narrow animate__animated animate__fadeInLeft">
+            <RouterLink :to="'/patients'">
+              <div class="card has-text-centered">
+                <div class="card-image">
+                  <figure class="image is-4by3">
+                    <img src="../img/doctor.jpg" style="object-fit: cover; width: 100%; height: 100%;" alt="Patients">
+                  </figure>
+                </div>
+                <header class="card-header">
+                  <p class="card-header-title is-centered">Patients</p>
+                </header>
+                <div class="card-content">
+                  <div class="content">View and manage patient records</div>
+                </div>
               </div>
-            </div>
+            </RouterLink>
           </div>
-        </RouterLink>
 
-        <RouterLink :to="'/calendar'">
-          <div class="column is-narrow">
-            <div class="card has-text-centered" style="width: 300px;">
-              <header class="card-header">
-                <p class="card-header-title is-centered">Appointments</p>
-              </header>
-              <div class="card-content">
-                <div class="content">View and manage appointments</div>
+          <div class="column is-narrow animate__animated animate__fadeInUp">
+            <RouterLink :to="'/calendar'">
+              <div class="card has-text-centered">
+                <div class="card-image">
+                  <figure class="image is-4by3">
+                    <img src="../img/appointment.jpg" style="object-fit: cover; width: 100%; height: 100%;" alt="Appointments">
+                  </figure>
+                </div>
+                <header class="card-header">
+                  <p class="card-header-title is-centered">Appointments</p>
+                </header>
+                <div class="card-content">
+                  <div class="content">View and manage appointments</div>
+                </div>
               </div>
-            </div>
+            </RouterLink>
           </div>
-        </RouterLink>
 
-        <RouterLink :to="'/test-dashboard'">
-          <div class="column is-narrow">
-            <div class="card has-text-centered" style="width: 300px;">
-              <header class="card-header">
-                <p class="card-header-title is-centered">Tests</p>
-              </header>
-              <div class="card-content">
-                <div class="content">View and manage tests</div>
+          <div class="column is-narrow animate__animated animate__fadeInRight">
+            <RouterLink :to="'/test-dashboard'">
+              <div class="card has-text-centered">
+                <div class="card-image">
+                  <figure class="image is-4by3">
+                    <img src="../img/test.jpeg" style="object-fit: cover; width: 100%; height: 100%;" alt="Tests">
+                  </figure>
+                </div>
+                <header class="card-header">
+                  <p class="card-header-title is-centered">Tests</p>
+                </header>
+                <div class="card-content">
+                  <div class="content">View and manage tests</div>
+                </div>
               </div>
-            </div>
+            </RouterLink>
           </div>
-        </RouterLink>
-
+        </div>
       </div>
     </div>
   </section>
 </template>
 
 <style scoped>
-.container {
-  overflow-x: hidden; /* Hide horizontal overflow */
+.hero {
+  background-size: cover;
+  background-position: center;
 }
 
-/* Additional styling to ensure that the elements do not cause overflow */
-.columns {
-  flex-wrap: wrap; /* Ensure columns wrap inside the container */
+.card {
+  width: 300px;
+  overflow: hidden;
+}
+
+.card-image img {
+  transition: transform 0.5s ease;
+}
+
+.card-image:hover img {
+  transform: scale(1.05);
+}
+
+.container {
+  overflow-x: hidden;
 }
 </style>
