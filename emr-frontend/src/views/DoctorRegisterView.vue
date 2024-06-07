@@ -5,11 +5,11 @@
         <div class="card">
           <header class="card-header">
             <p class="card-header-title has-text-centered">
-              Login to EMR
+              Create Account
             </p>
           </header>
           <div class="card-content">
-            <form @submit.prevent="login">
+            <form @submit.prevent="createAccount">
               <div class="field">
                 <label class="label" for="email">Email</label>
                 <div class="control">
@@ -20,6 +20,18 @@
                 <label class="label" for="password">Password</label>
                 <div class="control">
                   <input type="password" class="input" id="password" v-model="account.password" required>
+                </div>
+              </div>
+              <div class="field">
+                <label class="label" for="firstName">First Name</label>
+                <div class="control">
+                  <input type="text" class="input" id="firstName" v-model="account.firstName" required>
+                </div>
+              </div>
+              <div class="field">
+                <label class="label" for="lastName">Last Name</label>
+                <div class="control">
+                  <input type="text" class="input" id="lastName" v-model="account.lastName" required>
                 </div>
               </div>
               <div class="field">
@@ -37,7 +49,7 @@
               <div v-if="successMessage" class="notification is-success">{{ successMessage }}</div>
               <div v-if="errorMessage" class="notification is-danger">{{ errorMessage }}</div>
               <div class="control">
-                <button type="submit" class="button is-primary is-fullwidth">Login</button>
+                <button type="submit" class="button is-primary is-fullwidth">Create Account</button>
               </div>
             </form>
           </div>
@@ -55,6 +67,8 @@ export default {
       account: {
         email: '',
         password: '',
+        firstName: '',
+        lastName: '',
         role: 'user'
       },
       successMessage: '',
@@ -62,28 +76,21 @@ export default {
     };
   },
   methods: {
-    async login() {
+    async createAccount() {
       this.successMessage = '';
       this.errorMessage = '';
       try {
-        const response = await fetch('http://localhost:3000/user/signin', {
+        const response = await fetch('http://localhost:3000/user/signup', {
           method: 'POST',
           headers: { 'Content-Type': 'application/json' },
           body: JSON.stringify(this.account)
         });
         if (response.ok) {
-          const data = await response.json();
-          console.log(data.result);
-          this.successMessage = 'Login successful!';
-          localStorage.setItem("user", JSON.stringify(data.result));
-          localStorage.setItem("token", data.token);
-          setTimeout(() => {
-            window.location = ('/')
-
-          }, 1000); // Redirect after 1 second to dashboard
+          this.successMessage = 'Account created successfully!';
+          setTimeout(() => this.$router.push('/login'), 3000); // Redirect after 3 seconds
         } else {
           const data = await response.json();
-          this.errorMessage = data.message || 'Failed to login.';
+          this.errorMessage = data.message || 'Failed to create account.';
         }
       } catch (error) {
         console.error('Error:', error);
