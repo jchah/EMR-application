@@ -118,6 +118,9 @@ import { DatePicker } from 'v-calendar';
 import 'v-calendar/style.css';
 import axios from 'axios';
 
+import emailjs from 'emailjs-com'
+
+emailjs.init('2aRoZGFYWXbozLSuh');
 
 const API_URL = "http://localhost:3000";
 export default {
@@ -235,10 +238,24 @@ export default {
             endTime: info.value.endTime.toLocaleTimeString(),
             notes: info.value.notes,
           })
-          location.reload()
+
+          const idPatientForEmail = patientList.value.filter((a) => {
+              console.log('paitents name is ' + a.name, "appointment patients name is " + inSearchBar.value)
+              console.log(inSearchBar.value.toLowerCase().includes(a.name.toLowerCase()))
+              if(inSearchBar.value.toLowerCase().includes(a.name.toLowerCase()))
+                return a.name
+          })[0].patientID
+
+          const emailForSending = await axios.get(`${API_URL}/patients/${idPatientForEmail}`)
+          
+          console.log(emailForSending.data.contact.email)
+
+          await sendEmail(emailForSending.data.contact.email, 'Appointment Confirmation', `Your appointment is scheduled for ${info.value.date} and ${info.value.startTime.toLocaleTimeString()}.`)
+
+          isDoingForm(false)
           
           } catch (error) {
-
+            console.error(error)
           }
         }else{
           hasErrorMessage.value = true;
@@ -312,6 +329,22 @@ export default {
       isOn.value = a;
     }
 
+    async function sendEmail(patientEmail, subject, message) {
+      const templateParams = {
+          to_email: patientEmail,
+          subject: subject,
+          message: message,
+      };
+
+      emailjs.send('emr-reminders', 'reminder-template', templateParams)
+          .then(response => {
+              console.log('Email sent successfully!', response.status, response.text);
+          })
+          .catch(error => {
+              console.error('Failed to send email.', error);
+          });
+    }
+
     return {
       date,
       formatDate,
@@ -326,8 +359,8 @@ export default {
       showOptions,
       isOn,
       isDoingForm,
-      hasErrorMessage
-
+      hasErrorMessage,
+      sendEmail
 
     };
   },
