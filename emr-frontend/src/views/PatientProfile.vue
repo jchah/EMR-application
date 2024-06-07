@@ -34,12 +34,11 @@
     <div class="columns has-background-danger-light info">
       <div class="column">
         <p class="title has-text-centered">Conditions</p>     
-        <table class="table is-fullwidth is-striped has-background-danger-light">
+        <table class="table is-fullwidth has-background-danger-light">
           <thead>
           <tr>
             <th></th>
-            <th class="has-text-centered is-size-5">Condition Name</th>
-            <th class="has-text-centered is-size-4">Date of Diagnosis</th>
+            <th class="has-text-centered is-size-4">Condition Name</th>
             <th class="has-text-centered is-size-4">Treatment Name</th>
             <th class="has-text-centered is-size-4">Frequency</th>
             <th class="has-text-centered is-size-4">Start Date</th>
@@ -48,21 +47,20 @@
             <th class="has-text-centered is-size-4">Dosage</th>
             <th class="has-text-centered is-size-4">Prescribing Physician</th>
             <th></th>
+            
           </tr>
           </thead>
           <tbody>
-          <tr v-for="condition in conditions" :key="condition._id">
-            <td></td>
-            <td class="has-text-centered">{{ condition.name }}</td>
-            <td class="has-text-centered">{{ new Date(condition.dateOfDiagnosis).toLocaleDateString() }}</td>
-            <td class="has-text-centered" v-if="condition.treatment">{{ condition.treatment.name }}</td>
-            <td class="has-text-centered" v-if="condition.treatment">{{ condition.treatment.frequency }}</td>
-            <td class="has-text-centered" v-if="condition.treatment">{{ new Date(condition.treatment.startDate).toLocaleDateString() }}</td>
-            <td class="has-text-centered" v-if="condition.treatment">{{ new Date(condition.treatment.endDate).toLocaleDateString() }}</td>
-            <td class="has-text-centered" v-if="condition.treatment">{{ condition.treatment.route }}</td>
-            <td class="has-text-centered" v-if="condition.treatment">{{ condition.treatment.dosage }}</td>
-            <td class="has-text-centered" v-if="condition.treatment">{{ condition.treatment.prescribingPhysician }}</td>
-            <td class="has-text-centered" v-else colspan="7">No treatment available</td>
+          <tr v-for="treatment in treatments" :key="treatment._id">
+            <td><button class="button is-danger" @click="clearTreatment(treatment)">X</button></td>
+            <td class="has-text-centered is-bold">{{ treatment.condition }}</td>
+            <td class="has-text-centered">{{ treatment.name }}</td>
+            <td class="has-text-centered">{{ treatment.frequency }}</td>
+            <td class="has-text-centered">{{ new Date(treatment.startDate).toLocaleDateString() }}</td>
+            <td class="has-text-centered">{{ new Date(treatment.endDate).toLocaleDateString() }}</td>
+            <td class="has-text-centered">{{ treatment.route }}</td>
+            <td class="has-text-centered">{{ treatment.dosage }}</td>
+            <td class="has-text-centered">{{ treatment.prescribingPhysician }}</td>
             <td></td>
           </tr>
           </tbody>
@@ -178,13 +176,10 @@
                     <button class="button is-danger" @click="openTreatmentForm(false)"> Cancel</button>
                   </div>
                 </div>
-    
               </form>
               <br>
             </div>
-          </div>
-
-
+    </div>
   </div>
 </template>
 
@@ -195,7 +190,6 @@ export default {
   data() {
     return {
       patient: null,
-      conditions: [],
       treatments: [],
       appoitnments: [],
       windowOpen : false,
@@ -218,30 +212,30 @@ export default {
         const response = await axios.get(`http://localhost:3000/patients/${this.$route.params.patient}`);
         this.patient = response.data;
         console.log(this.patient);
-        await this.fetchTreatments();
+        await this.fillTreatments();
       } catch (error) {
         console.error("Failed to fetch patient data:", error);
       }
     },
-    async fetchTreatments() {
-      try {
-        const treatmentPromises = this.conditions
-            .filter(condition => condition.treatment)
-            .map(condition => axios.get(`http://localhost:3000/treatments/${condition.treatment}`));
-        const treatmentResponses = await Promise.all(treatmentPromises);
-        this.treatments = treatmentResponses.map(response => response.data);
+    // async fetchTreatments() {
+    //   try {
+    //     const treatmentPromises = this.conditions
+    //         .filter(condition => condition.treatment)
+    //         .map(condition => axios.get(`http://localhost:3000/treatments/${condition.treatment}`));
+    //     const treatmentResponses = await Promise.all(treatmentPromises);
+    //     this.treatments = treatmentResponses.map(response => response.data);
 
-        // Map treatments back to conditions
-        this.conditions = this.conditions.map(condition => {
-          if (condition.treatment) {
-            condition.treatment = this.treatments.find(treatment => treatment._id === condition.treatment);
-          }
-          return condition;
-        });
-      } catch (error) {
-        console.error("Failed to fetch treatments data:", error);
-      }
-    },
+    //     // Map treatments back to conditions
+    //     this.conditions = this.conditions.map(condition => {
+    //       if (condition.treatment) {
+    //         condition.treatment = this.treatments.find(treatment => treatment._id === condition.treatment);
+    //       }
+    //       return condition;
+    //     });
+    //   } catch (error) {
+    //     console.error("Failed to fetch treatments data:", error);
+    //   }
+    // },
     // async fetchAppointments(){
     //   try {
     //     const response = await axios.get(`http://localhost:3000/calendar/appointments`, {
@@ -313,12 +307,15 @@ export default {
             };
 
             await axios.put(`http://localhost:3000/patients/${this.$route.params.patient}`, data)
+            this.openTreatmentForm(false);
+            this.clearTreatmentForm();
             console.log("Successfully updated patient");
             this.successMessage = 'Successfully updated patient';
+            
           } catch (e) {
             console.log("Error updating patients: " + e);
           }
-          this.resetForm();
+         
           await this.fetchPatients();
         } catch (error) {
             this.successMessage = '';
@@ -328,52 +325,31 @@ export default {
         this.successMessage = '';
         this.errorMessage = 'Please ensure you fill out all fields.';
       }
-    // }
-    //     async addTreatment() {
-    //     console.log(this.newTreatment);
-    //
-    //     if (this.newTreatment.condition !== '' && this.newTreatment.prescribingPhysician !== '') {
-    //         if (this.newTreatment.name === '') {
-    //             this.newTreatment.name = 'None';
-    //             this.newTreatment.dosage = 'N/A';
-    //             this.newTreatment.frequency = 'N/A';
-    //             this.newTreatment.route = 'N/A';
-    //             this.newTreatment.startDate = 'N/A';
-    //             this.newTreatment.endDate = 'N/A';
-    //         }
-    //         console.log("After Filter Treatment : ");
-    //         console.log(this.newTreatment);
-    //
-    //         try {
-    //             // Add new treatment
-    //             const response = await axios.post(`http://localhost:3000/treatments, this.newTreatment)`);
-    //             this.successMessage = 'New treatment added successfully.';
-    //             console.log(response.data);
-    //             let treatmentID = response.data._id;
-    //             console.log(treatmentID);
-    //
-    //             // Fetch patient data
-    //             const patientResponse = await axios.get(`http://localhost:3000/patients/${$route.params.patient}`);
-    //             const patient = patientResponse.data;
-    //
-    //             // Update treatments array and patient data
-    //             await axios.put(`http://localhost:3000/patients/${$route.params.patient}`, {
-    //                 ...patient,
-    //                 treatments: [...patient.treatments, treatmentID]
-    //             });
-    //
-    //             this.errorMessage = '';
-    //             this.resetForm();
-    //             await this.fetchPatients();
-    //         } catch (error) {
-    //             this.successMessage = '';
-    //             this.errorMessage = 'Failed to add new patient or update treatments.';
-    //             console.error(error);
-    //         }
-    //     } else {
-    //         this.successMessage = '';
-    //         this.errorMessage = 'Please ensure you fill out all fields.';
-    //     }
+   
+    },
+    async fillTreatments() {
+      const tempTreatments = [];
+
+      const allTreatments = this.patient.treatments.map(async (treatment) => {
+        try {
+          console.log(treatment)
+          const response = await axios.get(`http://localhost:3000/treatments/${treatment}`)
+          console.log(response)
+          console.log(response.data);
+          tempTreatments.push(response.data)
+        } catch (error) {
+          console.error(`Error fetching treatment ${treatment}`, error);
+        }
+      });
+      await Promise.all(allTreatments)
+
+      await console.log(tempTreatments)
+      this.treatments = tempTreatments
+    },
+    async clearTreatment(treatment) {
+      const deletedID = treatment._id
+      const response = await axios.delete(`http://localhost:3000/treatments/${deletedID}`)
+      location.reload()
     }
   },
   created() {
