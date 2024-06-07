@@ -19,12 +19,6 @@
             </div>
           </div>
           <div class="field">
-            <label class="label">Treatment</label>
-            <div class="control">
-              <input class="input" type="text" placeholder="Enter Medicine ID" v-model="newCondition.treatment">
-            </div>
-          </div>
-          <div class="field">
             <div class="control">
               <button class="button is-primary">Add Condition</button>
             </div>
@@ -74,11 +68,11 @@ export default {
   methods: {
     addCondition() {
       this.conditions.push({ ...this.newCondition, id: this.conditions.length + 1 });
-      this.newCondition = { name: '', dateOfDiagnosis: '', treatment: '' }; // Reset form
+      this.newCondition = { name: '', dateOfDiagnosis: '', treatment: '' };
     },
     editCondition(index) {
       const condition = this.conditions[index];
-      this.newCondition = { ...condition }; // Load the selected condition into the form for editing
+      this.newCondition = { ...condition };
     }
   }
 };

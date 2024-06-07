@@ -1,8 +1,13 @@
 const mongoose = require("mongoose");
+const Schema = mongoose.Schema;
 
 const dosagePattern = /^\d+mg$/;
 
 const medicineSchema = new mongoose.Schema({
+    condition: {
+        type: Schema.Types.ObjectId,
+        ref: 'Condition'
+    },
     name: {
         type: String,
         required: true,
@@ -37,7 +42,6 @@ const medicineSchema = new mongoose.Schema({
     },
 });
 
-// Create a model from the schema
 const Medicine = mongoose.model("Medicine", medicineSchema);
 
 module.exports = Medicine;

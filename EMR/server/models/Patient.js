@@ -58,10 +58,6 @@ const conditionSchema = new Schema({
     dateOfDiagnosis: {
         type: Date,
         required: true,
-    },
-    treatment: {
-        type: Schema.Types.ObjectId,
-        ref: 'Medicine'
     }
 });
 
