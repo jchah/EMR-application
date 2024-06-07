@@ -2,13 +2,14 @@
 
 <template>
       <div class="section">
-        <div class="columns is-centered">
-          <div class="column">
+        <h1 class="title">Appointments</h1>
+        <div class="is-centered">
+          <div class="">
             <DatePicker v-model="date" expanded/>
-            <button class="button is-primary is-centered" @click="isDoingForm(true)">Make Appointment</button>
+            <button style="margin-top: 20px; margin-bottom: 20px" class="button is-primary is-centered" @click="isDoingForm(true)">Make Appointment</button>
             </div>
-            <div class="column">
-            <table class="table">
+            <div class="">
+            <table class="table" v-if="!appointments || appointments.length > 0">
               <thead>
               <tr>
                 <th>Name</th>
@@ -19,18 +20,21 @@
               </thead>
               <tbody>
               <tr v-for="app in appointments" :key="app.id">
-                <td><router-link :to="`/patients/${app.patient.data._id}`">{{ app.patient.data.firstName + " " + 
+                <td><router-link :to="`/patients/${app.patient.data._id}`">{{ app.patient.data.firstName + " " +
                  app.patient.data.lastName}}</router-link></td>
                 <td>{{ app.startTime }}</td>
                 <td>{{ app.endTime }}</td>
                 <td>{{ app.notes }}</td>
                 <td>
                   <button @click="deleteAppointment(app)" class="button is-danger"> Delete</button>
-                  
+
                 </td>
               </tr>
               </tbody>
             </table>
+            <div v-else>
+              <p>No appointments scheduled for the selected date.</p>
+            </div>
           </div>
           
           <div class="overlay" v-if="isOn">
@@ -85,6 +89,9 @@ import { DatePicker } from 'v-calendar';
 import 'v-calendar/style.css';
 import axios from 'axios';
 
+import emailjs from 'emailjs-com'
+
+emailjs.init('2aRoZGFYWXbozLSuh');
 
 const API_URL = "http://localhost:3000";
 export default {
@@ -100,7 +107,7 @@ export default {
     let inSearchBar = ref();
     let isSelected = ref(false);
     let hasErrorMessage = ref(false)
-    //making appointment
+    // making appointment
     let info = ref({
       patientName: '',
       date:'',
@@ -121,7 +128,7 @@ export default {
       }
 
     }
-    // geting appointments
+    // getting appointments
     let appointments = ref(null);
     watch(date, () =>{
       getAppointments(date.value);
@@ -202,10 +209,22 @@ export default {
             endTime: info.value.endTime.toLocaleTimeString(),
             notes: info.value.notes,
           })
-          location.reload()
+
+          const idPatientForEmail = patientList.value.filter((a) => {
+              console.log('paitents name is ' + a.name, "appointment patients name is " + inSearchBar.value)
+              console.log(inSearchBar.value.toLowerCase().includes(a.name.toLowerCase()))
+              if(inSearchBar.value.toLowerCase().includes(a.name.toLowerCase()))
+                return a.name
+          })[0].patientID
+
+          const emailForSending = await axios.get(`${API_URL}/patients/${idPatientForEmail}`)
+          
+          console.log(emailForSending.data.contact.email)
+
+          await sendEmail(emailForSending.data.contact.email, 'Appointment Confirmation', `Your appointment is scheduled for ${info.value.date} and ${info.value.startTime.toLocaleTimeString()}.`)
           
           } catch (error) {
-
+            console.error(error)
           }
         }else{
           hasErrorMessage.value = true;
@@ -279,6 +298,29 @@ export default {
       isOn.value = a;
     }
 
+    function hasAppointments() {
+      console.log('has appointments: ' + appointments.value.length)
+      return appointments.value.length > 0
+    }
+
+    async function sendEmail(patientEmail, subject, message) {
+      const templateParams = {
+          to_email: patientEmail,
+          subject: subject,
+          message: message,
+      };
+
+      emailjs.send('emr-reminders', 'reminder-template', templateParams)
+          .then(response => {
+              console.log('Email sent successfully!', response.status, response.text);
+          })
+          .catch(error => {
+              console.error('Failed to send email.', error);
+          });
+
+      location.reload();
+    }
+
     return {
       date,
       formatDate,
@@ -293,8 +335,9 @@ export default {
       showOptions,
       isOn,
       isDoingForm,
-      hasErrorMessage
-
+      hasErrorMessage,
+      sendEmail,
+      hasAppointments
 
     };
   },
@@ -302,14 +345,6 @@ export default {
 </script>
 
 <style>
-.vc-time-header{
-  display: none;
-}
-
-.vc-time-select-group{
-  border: 0px;
-}
-
 .overlay {
   position: fixed;
   top: 0;

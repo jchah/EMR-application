@@ -176,13 +176,10 @@
                     <button class="button is-danger" @click="openTreatmentForm(false)"> Cancel</button>
                   </div>
                 </div>
-    
               </form>
               <br>
             </div>
-          </div>
-
-
+    </div>
   </div>
 </template>
 

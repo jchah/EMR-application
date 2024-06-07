@@ -20,7 +20,9 @@
         <div class="navbar-item has-dropdown is-hoverable">
           <a class="navbar-link">Settings</a>
           <div class="navbar-dropdown">
-            <a class="dropdown-item">User</a>
+            <a class="dropdown-item">
+              <router-link to="/user">User</router-link>
+            </a>
             <a class="dropdown-item">Theme</a>
             <hr class="navbar-divider">
             <a class="dropdown-item">Report an issue</a>

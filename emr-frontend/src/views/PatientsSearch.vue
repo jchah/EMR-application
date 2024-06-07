@@ -127,7 +127,7 @@
           </tr>
           </thead>
           <tbody>
-          <tr v-for="patient in filteredPatients" :key="patient._id">
+          <tr v-for="patient in paginatedPatients" :key="patient._id">
             <td>{{ patient.firstName }}</td>
             <td>{{ patient.lastName }}</td>
             <td>{{ patient.dateOfBirth }}</td>
@@ -141,6 +141,15 @@
           </tr>
           </tbody>
         </table>
+        <nav class="pagination is-centered" role="navigation" aria-label="pagination">
+          <button class="pagination-previous" @click="prevPage" :disabled="currentPage === 1">Previous</button>
+          <button class="pagination-next" @click="nextPage" :disabled="currentPage * pageSize >= filteredPatients.length">Next</button>
+          <ul class="pagination-list">
+            <li><a class="pagination-link" :class="{'is-current': n === currentPage}" v-for="n in Math.ceil(filteredPatients.length / pageSize)" :key="n" @click="currentPage = n">
+              {{ n }}
+            </a></li>
+          </ul>
+        </nav>
       </div>
     </div>
   </div>
@@ -155,6 +164,8 @@ export default {
   components: { Multiselect },
   data() {
     return {
+      currentPage: 1,
+      pageSize: 10,
       patientFirstName: '',
       lastName: '',
       dateOfBirth: '',
@@ -175,7 +186,24 @@ export default {
       errorMessage: ''
     };
   },
+  computed: {
+    paginatedPatients() {
+      const start = (this.currentPage - 1) * this.pageSize;
+      const end = start + this.pageSize;
+      return this.filteredPatients.slice(start, end);
+    }
+  },
   methods: {
+    nextPage() {
+      if ((this.currentPage * this.pageSize) < this.filteredPatients.length) {
+        this.currentPage++;
+      }
+    },
+    prevPage() {
+      if (this.currentPage > 1) {
+        this.currentPage--;
+      }
+    },
     async fetchPatients() {
       try {
         const response = await axios.get(`http://localhost:3000/patients`);
