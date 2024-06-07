@@ -87,12 +87,12 @@
                 <input class="input" type="text" v-model="emergencyContactPhone">
               </div>
             </div>
-            <div class="field">
-              <label class="label">Conditions</label>
-              <div class="control">
-                <multiselect v-model="selectedConditions" :options="conditions" label="name" track-by="_id" multiple close-on-select="false" placeholder="Select conditions"></multiselect>
-              </div>
-            </div>
+<!--            <div class="field">-->
+<!--              <label class="label">Conditions</label>-->
+<!--              <div class="control">-->
+<!--                <multiselect v-model="selectedConditions" :options="conditions" label="name" track-by="_id" multiple close-on-select="false" placeholder="Select conditions"></multiselect>-->
+<!--              </div>-->
+<!--            </div>-->
             <div class="field is-grouped">
               <div class="control">
                 <button class="button is-primary" @click="submitForm">Submit</button>
@@ -180,14 +180,6 @@ export default {
       try {
         const response = await axios.get(`http://localhost:3000/patients`);
         this.patients = response.data;
-      } catch (error) {
-        console.error(error);
-      }
-    },
-    async fetchConditions() {
-      try {
-        const response = await axios.get(`http://localhost:3000/conditions`);
-        this.conditions = response.data;
       } catch (error) {
         console.error(error);
       }
@@ -293,7 +285,6 @@ export default {
   },
   created() {
     this.fetchPatients();
-    this.fetchConditions();
     let storedResults = localStorage.getItem('searchResults');
     let storedState = localStorage.getItem('searchState');
     if (storedResults && storedState) {

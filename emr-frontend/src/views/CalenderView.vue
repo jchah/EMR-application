@@ -32,11 +32,6 @@
               </tbody>
             </table>
           </div>
-
-
-
-
-
           
           <div class="overlay" v-if="isOn">
             <div class="box">
@@ -55,26 +50,13 @@
                     </div>
                   </div>
                 </div>
-                <br>
-
-                <div class="columns has-text-centered">
-                      <div class="column">
-                        <div class="field">
-                          <label class="label ">Start Time</label>
-                          <DatePicker mode="time" v-model="info.startTime"/>
-                        </div>
-                      </div>
-                      <div class="column">
-                        <br>
-                        <p class="title">__________</p>
-                      </div>
-
-                      <div class="column">
-                        <div class="field">
-                          <label class="label">End Time</label>
-                          <DatePicker mode="time" v-model="info.endTime"/>
-                        </div>
-                      </div>
+                <div class="field">
+                  <div class="control beside">
+                    <label class="label">Start Time</label>
+                    <DatePicker mode="time" v-model="info.startTime"/>
+                    <label class="label">End Time</label>
+                    <DatePicker mode="time" v-model="info.endTime"/>
+                  </div>
                 </div>
                 <div class="field">
                   <label class="label">Notes</label>
@@ -82,32 +64,17 @@
                     <input class="input" type="text" v-model="info.notes">
                   </div>
                 </div>
-                <div class="columns has-text-centered">
-                  <div class="column">
-                    <div class="field">
-                      <div class="control">
-                        <button class="button is-primary is-fullwidth" type="submit">Submit</button>
-                      </div>
-                    </div>
-                  </div>
-                  <div class="column">
-                    <button class="button is-danger is-fullwidth" @click="isDoingForm(false)"> Cancel</button>
+                <div class="field is-grouped">
+                  <div class="control">
+                    <button class="button is-primary" type="submit">Submit</button>
                   </div>
                 </div>
-                
                 <div v-if="hasErrorMessage" class="notification is-danger">Please Enter Valid Patient Name</div>
               </form>
               <br>
+              <button class="button is-danger" @click="isDoingForm(false)"> Cancel</button>
             </div>
           </div>
-
-
-
-
-
-
-
-
         </div>
       </div>
 </template>
@@ -416,5 +383,3 @@ export default {
 }
 
 </style>
-
-
