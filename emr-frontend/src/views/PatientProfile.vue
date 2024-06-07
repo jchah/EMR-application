@@ -286,7 +286,7 @@ export default {
       console.log(this.newTreatment)
       
       try {
-          await axios.post(`http://localhost:3000/treatments`, newPatient);
+          await axios.post(`http://localhost:3000/treatments`, this.newTreatment);
           this.successMessage = 'New patient added successfully.';
           this.errorMessage = '';
           this.resetForm();

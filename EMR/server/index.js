@@ -6,9 +6,9 @@ const cors = require("cors");
 const dotenv = require("dotenv");
 require('./db');
 
-const { Patient, Condition } = require("./models/Patient");
+const { Patient, Medicine } = require("./models/Patient");
 const Appointment = require("./models/Appointment");
-const Medicine = require('./models/Condition');
+//const Medicine = require('./models/Condition');
 
 const UserRouter = require("./routes/user.js");
 
@@ -88,68 +88,68 @@ app.delete("/patients/:id", async (req, res, next) => {
 });
 
 // Create a new condition
-app.post("/conditions", async (req, res) => {
-    try {
-        const newCondition = new Condition(req.body);
-        await newCondition.save();
-        res.status(201).send(newCondition);
-    } catch (error) {
-        res.status(400).send({ message: error.message });
-    }
-});
+// app.post("/conditions", async (req, res) => {
+//     try {
+//         const newCondition = new Condition(req.body);
+//         await newCondition.save();
+//         res.status(201).send(newCondition);
+//     } catch (error) {
+//         res.status(400).send({ message: error.message });
+//     }
+// });
 
 // Get all conditions
-app.get("/conditions", async (req, res) => {
-    try {
-        const conditions = await Condition.find();
-        res.status(200).send(conditions);
-    } catch (error) {
-        res.status(500).send({ message: error.message });
-    }
-});
+// app.get("/conditions", async (req, res) => {
+//     try {
+//         const conditions = await Condition.find();
+//         res.status(200).send(conditions);
+//     } catch (error) {
+//         res.status(500).send({ message: error.message });
+//     }
+// });
 
-// Get condition by ID
-app.get("/conditions/:id", async (req, res) => {
-    try {
-        const condition = await Condition.findById(req.params.id);
-        if (!condition) {
-            return res.status(404).send({ message: "Condition not found" });
-        }
-        res.status(200).send(condition);
-    } catch (error) {
-        res.status(500).send({ message: error.message });
-    }
-});
+// // Get condition by ID
+// app.get("/conditions/:id", async (req, res) => {
+//     try {
+//         const condition = await Condition.findById(req.params.id);
+//         if (!condition) {
+//             return res.status(404).send({ message: "Condition not found" });
+//         }
+//         res.status(200).send(condition);
+//     } catch (error) {
+//         res.status(500).send({ message: error.message });
+//     }
+// });
 
-// Update a condition by ID
-app.put("/conditions/:id", async (req, res) => {
-    try {
-        const updatedCondition = await Condition.findByIdAndUpdate(
-            req.params.id,
-            req.body,
-            { new: true, runValidators: true }
-        );
-        if (!updatedCondition) {
-            return res.status(404).send({ message: "Condition not found" });
-        }
-        res.status(200).send(updatedCondition);
-    } catch (error) {
-        res.status(400).send({ message: error.message });
-    }
-});
+// // Update a condition by ID
+// app.put("/conditions/:id", async (req, res) => {
+//     try {
+//         const updatedCondition = await Condition.findByIdAndUpdate(
+//             req.params.id,
+//             req.body,
+//             { new: true, runValidators: true }
+//         );
+//         if (!updatedCondition) {
+//             return res.status(404).send({ message: "Condition not found" });
+//         }
+//         res.status(200).send(updatedCondition);
+//     } catch (error) {
+//         res.status(400).send({ message: error.message });
+//     }
+// });
 
-// Delete a condition by ID
-app.delete("/conditions/:id", async (req, res) => {
-    try {
-        const deletedCondition = await Condition.findByIdAndDelete(req.params.id);
-        if (!deletedCondition) {
-            return res.status(404).send({ message: "Condition not found" });
-        }
-        res.status(200).send(deletedCondition);
-    } catch (error) {
-        res.status(500).send({ message: error.message });
-    }
-});
+// // Delete a condition by ID
+// app.delete("/conditions/:id", async (req, res) => {
+//     try {
+//         const deletedCondition = await Condition.findByIdAndDelete(req.params.id);
+//         if (!deletedCondition) {
+//             return res.status(404).send({ message: "Condition not found" });
+//         }
+//         res.status(200).send(deletedCondition);
+//     } catch (error) {
+//         res.status(500).send({ message: error.message });
+//     }
+// });
 
 // Add an appointment
 app.post("/appointments", async (req, res) => {
