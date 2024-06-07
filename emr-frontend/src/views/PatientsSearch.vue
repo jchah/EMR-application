@@ -159,7 +159,7 @@ export default {
       sex: '',
       cardNumber: '',
       patients: [],
-      conditions: [], // should be an array of conditions from db. Displaying can use condition.name
+      conditions: [],
       selectedConditions: [],
       filteredPatients: [],
       hasSearched: false,
