@@ -19,12 +19,10 @@ import Header from './components/Navbar.vue';
 #app {
   display: flex;
   flex-direction: column;
-  height: 100vh;
 }
 
 .content {
   flex: 1;
-  overflow-y: auto;
 }
 
 .main-layout {
@@ -36,7 +34,7 @@ import Header from './components/Navbar.vue';
 header {
   background-color: #42b883;
   color: white;
-  padding: 20px;
+
   text-align: center;
 }
 </style>
