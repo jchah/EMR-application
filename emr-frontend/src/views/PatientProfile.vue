@@ -33,10 +33,11 @@
 
     <div class="columns has-background-danger-light info">
       <div class="column">
-        <p class="title has-text-centered">Conditions</p>
+        <p class="title has-text-centered">Conditions</p>     
         <table class="table is-fullwidth is-striped has-background-danger-light">
           <thead>
           <tr>
+            <th></th>
             <th class="has-text-centered is-size-5">Condition Name</th>
             <th class="has-text-centered is-size-4">Date of Diagnosis</th>
             <th class="has-text-centered is-size-4">Treatment Name</th>
@@ -46,10 +47,12 @@
             <th class="has-text-centered is-size-4">Route</th>
             <th class="has-text-centered is-size-4">Dosage</th>
             <th class="has-text-centered is-size-4">Prescribing Physician</th>
+            <th></th>
           </tr>
           </thead>
           <tbody>
           <tr v-for="condition in conditions" :key="condition._id">
+            <td></td>
             <td class="has-text-centered">{{ condition.name }}</td>
             <td class="has-text-centered">{{ new Date(condition.dateOfDiagnosis).toLocaleDateString() }}</td>
             <td class="has-text-centered" v-if="condition.treatment">{{ condition.treatment.name }}</td>
@@ -60,9 +63,11 @@
             <td class="has-text-centered" v-if="condition.treatment">{{ condition.treatment.dosage }}</td>
             <td class="has-text-centered" v-if="condition.treatment">{{ condition.treatment.prescribingPhysician }}</td>
             <td class="has-text-centered" v-else colspan="7">No treatment available</td>
+            <td></td>
           </tr>
           </tbody>
         </table>
+        <div class="has-text-centered"><button class="button is-danger has-text-centered" @click="openTreatmentForm(true)">Add Treatment?</button></div>
       </div>
     </div>
 
@@ -91,6 +96,95 @@
         </table>
       </div>
     </div>
+
+    <div class="overlay" v-if="windowOpen">
+            <div class="box">
+              <form @submit.prevent="addTreatment()">
+                <br>
+                <p class="title has-text-centered">Add New Treatment</p>
+                  <div class="columns">
+                    <div class="column">
+                      <div class="field">
+                        <label class="label">Condition Name</label>
+                        <div class="control">
+                          <input class="input" type="text" v-model="newTreatment.condition">
+                        </div>
+                      </div>
+                      <div class="field">
+                        <label class="label">Name</label>
+                        <div class="control">
+                          <input class="input" type="text" v-model="newTreatment.name">
+                        </div>
+                      </div>
+                      <div class="field">
+                        <label class="label">Dosage</label>
+                        <div class="control">
+                          <input class="input" type="text" v-model="newTreatment.dosage">
+                        </div>
+                      </div>
+                      <div class="field">
+                        <label class="label">Frequency</label>
+                        <div class="control">
+                          <input class="input" type="text" v-model="newTreatment.frequency">
+                        </div>
+                      </div>
+                      <div class="field">
+                        <label class="label">Route</label>
+                        <div class="control">
+                          <input class="input" type="text" v-model="newTreatment.route">
+                        </div>
+                      </div>
+                    </div>
+                  
+                  <div class="column">
+                  <div class="field">
+                    <label class="label">Start Date</label>
+                    <div class="control">
+                      <input class="input" type="date" v-model="newTreatment.startDate">
+                    </div>
+                  </div>
+                  <div class="field">
+                    <label class="label">Date of Birth</label>
+                    <div class="control">
+                      <input class="input" type="date" v-model="newTreatment.endDate">
+                    </div>
+                  </div>
+                  <div class="field">
+                    <label class="label">Prescribing Physician</label>
+                    <div class="control">
+                      <input class="input" type="text" v-model="newTreatment.prescribingPhysician">
+                    </div>
+                  </div>
+                  <div class="field">
+                    <label class="label">Notes</label>
+                    <div class="control">
+                      <input class="input" type="text" v-model="newTreatment.notes">
+                    </div>
+                  </div>
+                </div>
+                </div>
+                <div class="columns has-text-centered">
+                  <div class="column">
+                    <div class="field is-grouped">
+                      <div class="control">
+                        <button class="button is-primary" type="submit">Submit</button>
+                      </div>
+                    </div>
+                  </div>
+                  <div class="column">
+                    <button class="button is-info" @click="clearTreatmentForm()"> Clear Form</button>
+                  </div>
+                  <div class="column">
+                    <button class="button is-danger" @click="openTreatmentForm(false)"> Cancel</button>
+                  </div>
+                </div>
+    
+              </form>
+              <br>
+            </div>
+          </div>
+
+
   </div>
 </template>
 
@@ -103,7 +197,19 @@ export default {
       patient: null,
       conditions: [],
       treatments: [],
-      appoitnments: []
+      appoitnments: [],
+      windowOpen : false,
+      newTreatment : {
+        condition : '',
+        name : '',
+        dosage : '',
+        frequency : '', 
+        route : '',
+        startDate : '',
+        endDate : '',
+        prescribingPhysician : '',
+        notes: ''
+      }
     };
   },
   methods: {
@@ -146,8 +252,26 @@ export default {
         console.error("Failed to fetch treatments data:", error);
       }
     },
+    openTreatmentForm(value) {
+      this.windowOpen = value
+      this.clearTreatmentForm()
+    },
+    clearTreatmentForm() {
+      this.newTreatment.condition = ''
+      this.newTreatment.name = ''
+      this.newTreatment.dosage = ''
+      this.newTreatment.frequency = '',
+      this.newTreatment.route = ''
+      this.newTreatment.startDate = ''
+      this.newTreatment.endDate = ''
+      this.newTreatment.prescribingPhysician = ''
+      this.newTreatment.notes= ''
+    },
     goBack() {
       this.$router.push('/patients');
+    },
+    addTreatment() {
+      console.log(this.newTreatment)
     }
   },
   created() {
