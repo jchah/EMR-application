@@ -19,14 +19,14 @@
               </thead>
               <tbody>
               <tr v-for="app in appointments" :key="app.id">
-                <td><router-link :to="`/patients/${app.patient.data._id}`">{{ app.patient.data.firstName + " " + 
+                <td><router-link :to="`/patients/${app.patient.data._id}`">{{ app.patient.data.firstName + " " +
                  app.patient.data.lastName}}</router-link></td>
                 <td>{{ app.startTime }}</td>
                 <td>{{ app.endTime }}</td>
                 <td>{{ app.notes }}</td>
                 <td>
                   <button @click="deleteAppointment(app)" class="button is-danger"> Delete</button>
-                  
+
                 </td>
               </tr>
               </tbody>
@@ -103,7 +103,7 @@ export default {
     let inSearchBar = ref();
     let isSelected = ref(false);
     let hasErrorMessage = ref(false)
-    //making appointment
+    // making appointment
     let info = ref({
       patientName: '',
       date:'',
@@ -124,7 +124,7 @@ export default {
       }
 
     }
-    // geting appointments
+    // getting appointments
     let appointments = ref(null);
     watch(date, () =>{
       getAppointments(date.value);
@@ -335,14 +335,6 @@ export default {
 </script>
 
 <style>
-.vc-time-header{
-  display: none;
-}
-
-.vc-time-select-group{
-  border: 0px;
-}
-
 .overlay {
   position: fixed;
   top: 0;
