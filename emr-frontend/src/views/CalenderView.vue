@@ -235,7 +235,7 @@ export default {
     async function getPatients(){
       try {
 
-        let response = await axios.get(`${API_URL}/healthcards`)
+        let response = await axios.get(`${API_URL}/patients`)
         patientList.value = response.data;
         console.log(patientList.value)
         patientList.value = patientList.value.map((a) =>{
@@ -281,7 +281,7 @@ export default {
 
     async function getCardNum(name){
             try {
-               const healthcardReponse =  await axios.get(`${API_URL}/healthcard/${name}`)
+               const healthcardReponse =  await axios.get(`${API_URL}/patients/${name}`)
                let num = healthcardReponse.data
                return num[0].cardNumber
             } catch (error) {
