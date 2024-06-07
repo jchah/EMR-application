@@ -34,13 +34,35 @@
     <div class="columns has-background-info-light info">
       <div class="column">
         <p class="title has-text-centered">Conditions</p>
-        <ul>
-          <li v-for="condition in conditions" :key="condition._id">
-             <p><strong>Name:</strong>  {{ condition.name }}  </p>
-            <p><strong>Date of Diagnosis:</strong> {{ new Date(condition.dateOfDiagnosis).toLocaleDateString() }}</p>
-            <p v-if="condition.treatment"><strong>Treatment:</strong> {{ condition.treatment.name }}</p>
-          </li>
-        </ul>
+        <table class="table is-fullwidth is-striped has-background-info-light">
+          <thead>
+          <tr>
+            <th>Condition Name</th>
+            <th>Date of Diagnosis</th>
+            <th>Treatment Name</th>
+            <th>Frequency</th>
+            <th>Start Date</th>
+            <th>End Date</th>
+            <th>Route</th>
+            <th>Dosage</th>
+            <th>Prescribing Physician</th>
+          </tr>
+          </thead>
+          <tbody>
+          <tr v-for="condition in conditions" :key="condition._id">
+            <td>{{ condition.name }}</td>
+            <td>{{ new Date(condition.dateOfDiagnosis).toLocaleDateString() }}</td>
+            <td v-if="condition.treatment">{{ condition.treatment.name }}</td>
+            <td v-if="condition.treatment">{{ condition.treatment.frequency }}</td>
+            <td v-if="condition.treatment">{{ new Date(condition.treatment.startDate).toLocaleDateString() }}</td>
+            <td v-if="condition.treatment">{{ new Date(condition.treatment.endDate).toLocaleDateString() }}</td>
+            <td v-if="condition.treatment">{{ condition.treatment.route }}</td>
+            <td v-if="condition.treatment">{{ condition.treatment.dosage }}</td>
+            <td v-if="condition.treatment">{{ condition.treatment.prescribingPhysician }}</td>
+            <td v-else colspan="7">No treatment available</td>
+          </tr>
+          </tbody>
+        </table>
       </div>
     </div>
 
@@ -59,7 +81,8 @@ export default {
   data() {
     return {
       patient: null,
-      conditions: []
+      conditions: [],
+      treatments: []
     };
   },
   methods: {
@@ -78,12 +101,28 @@ export default {
         const conditionPromises = this.patient.conditions.map(id => axios.get(`http://localhost:3000/conditions/${id}`));
         const conditionResponses = await Promise.all(conditionPromises);
         this.conditions = conditionResponses.map(response => response.data);
-
-
-
-
+        await this.fetchTreatments();
       } catch (error) {
         console.error("Failed to fetch conditions data:", error);
+      }
+    },
+    async fetchTreatments() {
+      try {
+        const treatmentPromises = this.conditions
+            .filter(condition => condition.treatment)
+            .map(condition => axios.get(`http://localhost:3000/treatments/${condition.treatment}`));
+        const treatmentResponses = await Promise.all(treatmentPromises);
+        this.treatments = treatmentResponses.map(response => response.data);
+
+        // Map treatments back to conditions
+        this.conditions = this.conditions.map(condition => {
+          if (condition.treatment) {
+            condition.treatment = this.treatments.find(treatment => treatment._id === condition.treatment);
+          }
+          return condition;
+        });
+      } catch (error) {
+        console.error("Failed to fetch treatments data:", error);
       }
     },
     goBack() {

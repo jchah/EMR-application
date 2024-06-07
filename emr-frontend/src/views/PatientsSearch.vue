@@ -153,7 +153,7 @@ export default {
       sex: '',
       cardNumber: '',
       patients: [],
-      conditions: ["Condition1", "Condition2", "Condition3"],
+      conditions: ["Condition1", "Condition2", "Condition3"], // should be an array of conditions from db. Displaying can use condition.name
       selectedConditions: [],
       filteredPatients: [],
       hasSearched: false,
