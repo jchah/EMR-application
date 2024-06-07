@@ -270,8 +270,36 @@ export default {
     goBack() {
       this.$router.push('/patients');
     },
-    addTreatment() {
+    async addTreatment() {
       console.log(this.newTreatment)
+
+    if (this.newTreatment.condition !== '' && this.newTreatment.prescribingPhysician !== '') {
+      if(this.newTreatment.name == '') {
+        this.newTreatment.name == 'None'
+        this.newTreatment.dosage == 'N/A'
+        this.newTreatment.frequency == 'N/A'
+        this.newTreatment.route == 'N/A'
+        this.newTreatment.startDate == 'N/A'
+        this.newTreatment.endDate == 'N/A'
+      }  
+      console.log("After Filter Treatment : ")
+      console.log(this.newTreatment)
+      
+      try {
+          await axios.post(`http://localhost:3000/treatments`, newPatient);
+          this.successMessage = 'New patient added successfully.';
+          this.errorMessage = '';
+          this.resetForm();
+          await this.fetchPatients();
+        } catch (error) {
+          this.successMessage = '';
+          this.errorMessage = 'Failed to add new patient.';
+        }
+      } else {
+        this.successMessage = '';
+        this.errorMessage = 'Please ensure you fill out all fields.';
+      
+    }
     }
   },
   created() {
