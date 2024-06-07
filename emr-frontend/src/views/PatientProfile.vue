@@ -1,104 +1,421 @@
 <template>
-    
+  <section class="hero is-link">
+    <div class="hero-body is-flex is-justify-content-space-between is-align-items-center">
+      <p class="title" v-if="patient">Patient Profile : {{patient.firstName + " " + patient.lastName}}</p>
+      <button class="button is-info" @click="goBack">Back to Patients</button>
+    </div>
+  </section>
 
-      <section class="hero is-link">
-        <div class="hero-body">
-          <p class="title">Ethan McMullen - Patient Profile</p>
-        </div>
-      </section>
-      
-      <div class="columns has-background-link-light info">
-        <div class="column ">
-          <p class="title has-text-centered">Patient Info</p>
-            <div class="columns">
-              <div class="column">
-                <p class="subtitle">First Name : {{ selectedCard.firstName}}</p>
-                <p class="subtitle">Last Name : {{ selectedCard.lastName}}</p>
-              </div>
-              <div class="column">
-                <p class="subtitle">Sex : {{ selectedCard.sex}}</p>
-                <p class="subtitle">Health Card Number : {{ selectedCard.cardNumber}}</p>
-              </div>
-              <div class="column ">
-                <p class="subtitle">DOB : {{ selectedCard.dateOfBirth}}</p>
-                <p class="subtitle">Address : {{ selectedCard.address}}</p>
-              </div>
-              <div class="column ">
-                <p class="subtitle">Phone : {{ selectedCard.contact.phone}}</p>
-                <p class="subtitle">Email : {{ selectedCard.contact.phone}}</p>
-              </div>
-            </div>
-        </div>
-      </div>
-      <div class="columns has-background-warning-light info">
+  <div v-if="patient">
+    <div class="columns has-background-link-light info">
+      <div class="column">
+        <p class="title has-text-centered">Patient Info</p>
+        <div class="columns">
           <div class="column">
-            <p class="title has-text-centered">Appointments</p>
+            <p class="subtitle">First Name : {{ patient.firstName}}</p>
+            <p class="subtitle">Last Name : {{ patient.lastName}}</p>
           </div>
-          
+          <div class="column">
+            <p class="subtitle">Sex : {{ patient.sex}}</p>
+            <p class="subtitle">Health Card Number : {{ patient.cardNumber}}</p>
+          </div>
+          <div class="column">
+            <p class="subtitle">DOB : {{ patient.dateOfBirth}}</p>
+            <p class="subtitle">Address : {{ patient.address}}</p>
+          </div>
+          <div class="column">
+            <p class="subtitle">Phone : {{ patient.contact.phone}}</p>
+            <p class="subtitle">Email : {{ patient.contact.email}}</p>
+          </div>
+        </div>
       </div>
-      
-  </template>
-     
-    
-    <script>
-    import axios from "axios";
-    
-    export default {
-      data() {
-        return {
-          cardNumberFromParam : '',
-          healthCards: [],
-          selectedCard: null
-        };
-      },
-      methods: {
-      async fetchHealthCards() {
-          try {
-          const response = await axios.get(`http://localhost:3000/healthcards`, {
-            headers: {
-              'Content-Type': 'application/x-www-form-urlencoded'
-            }
-          });
-          this.healthCards = response.data
-          console.log(this.healthCards)
-        } catch (error) {
-          console.log(error)
-        }
+    </div>
 
-        this.healthCards.forEach(card => {
-          console.log(card.cardNumber)
-          console.log(this.cardNumberFromParam)
-          if(card.cardNumber == this.cardNumberFromParam) {
-            this.selectedCard = card
-            console.log(this.selectedCard)
-            return
-          }          
-        })
-      }    
-      },
-      created() {
-          console.log(this.$route.params.cardNum)
-          this.cardNumberFromParam = this.$route.params.cardNum;
-          this.fetchHealthCards()
+    <div class="columns has-background-danger-light info">
+      <div class="column">
+        <p class="title has-text-centered">Conditions</p>     
+        <table class="table is-fullwidth is-striped has-background-danger-light">
+          <thead>
+          <tr>
+            <th></th>
+            <th class="has-text-centered is-size-5">Condition Name</th>
+            <th class="has-text-centered is-size-4">Date of Diagnosis</th>
+            <th class="has-text-centered is-size-4">Treatment Name</th>
+            <th class="has-text-centered is-size-4">Frequency</th>
+            <th class="has-text-centered is-size-4">Start Date</th>
+            <th class="has-text-centered is-size-4">End Date</th>
+            <th class="has-text-centered is-size-4">Route</th>
+            <th class="has-text-centered is-size-4">Dosage</th>
+            <th class="has-text-centered is-size-4">Prescribing Physician</th>
+            <th></th>
+          </tr>
+          </thead>
+          <tbody>
+          <tr v-for="condition in conditions" :key="condition._id">
+            <td></td>
+            <td class="has-text-centered">{{ condition.name }}</td>
+            <td class="has-text-centered">{{ new Date(condition.dateOfDiagnosis).toLocaleDateString() }}</td>
+            <td class="has-text-centered" v-if="condition.treatment">{{ condition.treatment.name }}</td>
+            <td class="has-text-centered" v-if="condition.treatment">{{ condition.treatment.frequency }}</td>
+            <td class="has-text-centered" v-if="condition.treatment">{{ new Date(condition.treatment.startDate).toLocaleDateString() }}</td>
+            <td class="has-text-centered" v-if="condition.treatment">{{ new Date(condition.treatment.endDate).toLocaleDateString() }}</td>
+            <td class="has-text-centered" v-if="condition.treatment">{{ condition.treatment.route }}</td>
+            <td class="has-text-centered" v-if="condition.treatment">{{ condition.treatment.dosage }}</td>
+            <td class="has-text-centered" v-if="condition.treatment">{{ condition.treatment.prescribingPhysician }}</td>
+            <td class="has-text-centered" v-else colspan="7">No treatment available</td>
+            <td></td>
+          </tr>
+          </tbody>
+        </table>
+        <div class="has-text-centered"><button class="button is-danger has-text-centered" @click="openTreatmentForm(true)">Add Treatment?</button></div>
+      </div>
+    </div>
 
-      
+    <div class="columns has-background-warning-light info">
+      <div class="column">
+        <p class="title has-text-centered">Appointments</p>
+        <table class="table is-fullwidth is-striped has-background-warning-light">
+          <thead>
+          <tr>
+            <th class="has-text-centered is-size-4">Notes</th>
+            <th class="has-text-centered is-size-4">Date</th>
+            <th class="has-text-centered is-size-4">Start Time</th>
+            <th class="has-text-centered is-size-4">End Time</th>
+            <th class="has-text-centered is-size-4">Doctor</th>
+          </tr>
+          </thead>
+          <tbody>
+          <tr v-for="appointment in appointments" :key="condition._id">
+            <td class="has-text-centered"></td>
+            <td class="has-text-centered"></td>
+            <td class="has-text-centered"></td>
+            <td class="has-text-centered"></td>
+            <td class="has-text-centered"></td>
+          </tr>
+          </tbody>
+        </table>
+      </div>
+    </div>
+
+    <div class="overlay" v-if="windowOpen">
+            <div class="box">
+              <form @submit.prevent="addTreatment()">
+                <br>
+                <p class="title has-text-centered">Add New Treatment</p>
+                  <div class="columns">
+                    <div class="column">
+                      <div class="field">
+                        <label class="label">Condition Name</label>
+                        <div class="control">
+                          <input class="input" type="text" v-model="newTreatment.condition">
+                        </div>
+                      </div>
+                      <div class="field">
+                        <label class="label">Name</label>
+                        <div class="control">
+                          <input class="input" type="text" v-model="newTreatment.name">
+                        </div>
+                      </div>
+                      <div class="field">
+                        <label class="label">Dosage</label>
+                        <div class="control">
+                          <input class="input" type="text" v-model="newTreatment.dosage">
+                        </div>
+                      </div>
+                      <div class="field">
+                        <label class="label">Frequency</label>
+                        <div class="control">
+                          <input class="input" type="text" v-model="newTreatment.frequency">
+                        </div>
+                      </div>
+                      <div class="field">
+                        <label class="label">Route</label>
+                        <div class="control">
+                          <input class="input" type="text" v-model="newTreatment.route">
+                        </div>
+                      </div>
+                    </div>
+                  
+                  <div class="column">
+                  <div class="field">
+                    <label class="label">Start Date</label>
+                    <div class="control">
+                      <input class="input" type="date" v-model="newTreatment.startDate">
+                    </div>
+                  </div>
+                  <div class="field">
+                    <label class="label">End Date</label>
+                    <div class="control">
+                      <input class="input" type="date" v-model="newTreatment.endDate">
+                    </div>
+                  </div>
+                  <div class="field">
+                    <label class="label">Prescribing Physician</label>
+                    <div class="control">
+                      <input class="input" type="text" v-model="newTreatment.prescribingPhysician">
+                    </div>
+                  </div>
+                  <div class="field">
+                    <label class="label">Notes</label>
+                    <div class="control">
+                      <input class="input" type="text" v-model="newTreatment.notes">
+                    </div>
+                  </div>
+                </div>
+                </div>
+                <div class="columns has-text-centered">
+                  <div class="column">
+                    <div class="field is-grouped">
+                      <div class="control">
+                        <button class="button is-primary" type="submit">Submit</button>
+                      </div>
+                    </div>
+                  </div>
+                  <div class="column">
+                    <button class="button is-info" @click="clearTreatmentForm()"> Clear Form</button>
+                  </div>
+                  <div class="column">
+                    <button class="button is-danger" @click="openTreatmentForm(false)"> Cancel</button>
+                  </div>
+                </div>
+    
+              </form>
+              <br>
+            </div>
+          </div>
+
+
+  </div>
+</template>
+
+<script>
+import axios from "axios";
+
+export default {
+  data() {
+    return {
+      patient: null,
+      conditions: [],
+      treatments: [],
+      appoitnments: [],
+      windowOpen : false,
+      newTreatment : {
+        condition : '',
+        name : '',
+        dosage : '',
+        frequency : '', 
+        route : '',
+        startDate : '',
+        endDate : '',
+        prescribingPhysician : '',
+        notes: ''
       }
     };
-    </script>
-    
-    <style scoped>
-    .padding {
-      padding: 40px;
-      color: white;
-      font-size: 50px
-    }
-    
-    .columns {
-      padding: 20px;
-    }
+  },
+  methods: {
+    async fetchPatient() {
+      try {
+        const response = await axios.get(`http://localhost:3000/patients/${this.$route.params.patient}`);
+        this.patient = response.data;
+        console.log(this.patient);
+        await this.fetchConditions();
+      } catch (error) {
+        console.error("Failed to fetch patient data:", error);
+      }
+    },
+    async fetchConditions() {
+      try {
+        const conditionPromises = this.patient.conditions.map(id => axios.get(`http://localhost:3000/conditions/${id}`));
+        const conditionResponses = await Promise.all(conditionPromises);
+        this.conditions = conditionResponses.map(response => response.data);
+        await this.fetchTreatments();
+      } catch (error) {
+        console.error("Failed to fetch conditions data:", error);
+      }
+    },
+    async fetchTreatments() {
+      try {
+        const treatmentPromises = this.conditions
+            .filter(condition => condition.treatment)
+            .map(condition => axios.get(`http://localhost:3000/treatments/${condition.treatment}`));
+        const treatmentResponses = await Promise.all(treatmentPromises);
+        this.treatments = treatmentResponses.map(response => response.data);
 
-    .info {
-      padding-bottom: 50px;
-      padding-top: 50px;
+        // Map treatments back to conditions
+        this.conditions = this.conditions.map(condition => {
+          if (condition.treatment) {
+            condition.treatment = this.treatments.find(treatment => treatment._id === condition.treatment);
+          }
+          return condition;
+        });
+      } catch (error) {
+        console.error("Failed to fetch treatments data:", error);
+      }
+    },
+    async fetchAppointments(){
+      try {
+        const response = await axios.get(`http://localhost:3000/calendar/appointments`, {
+          params:{
+            date: date.toLocaleDateString()
+          }
+
+        });
+
+        
+        appointments.value = response.data;
+        appointments.value.forEach(async (a) =>{
+          let id = a.patient
+          a.patient = await axios.get(`http://localhost:3000/patients/${id}`)
+        })
+        console.log(appointments.value)
+        sortTimeEariliest();
+
+
+
+      } catch (error) {
+        console.error("Error getting data from getAppointments", error);
+      }
+    },
+    openTreatmentForm(value) {
+      this.windowOpen = value
+      this.clearTreatmentForm()
+    },
+    clearTreatmentForm() {
+      this.newTreatment.condition = ''
+      this.newTreatment.name = ''
+      this.newTreatment.dosage = ''
+      this.newTreatment.frequency = '',
+      this.newTreatment.route = ''
+      this.newTreatment.startDate = ''
+      this.newTreatment.endDate = ''
+      this.newTreatment.prescribingPhysician = ''
+      this.newTreatment.notes= ''
+    },
+    goBack() {
+      this.$router.push('/patients');
+    },
+    // async addTreatment() {
+    //   console.log(this.newTreatment)
+
+    // if (this.newTreatment.condition !== '' && this.newTreatment.prescribingPhysician !== '') {
+    //   if(this.newTreatment.name == '') {
+    //     this.newTreatment.name == 'None'
+    //     this.newTreatment.dosage == 'N/A'
+    //     this.newTreatment.frequency == 'N/A'
+    //     this.newTreatment.route == 'N/A'
+    //     this.newTreatment.startDate == 'N/A'
+    //     this.newTreatment.endDate == 'N/A'
+    //   }  
+    //   console.log("After Filter Treatment : ")
+    //   console.log(this.newTreatment)
+      
+    //   try {
+    //       const response = await axios.post(`http://localhost:3000/treatments`, this.newTreatment);
+    //       this.successMessage = 'New patient added successfully.';
+    //       console.log(response.data)
+    //       let treatmentID = response.data._id;
+    //       console.log(treatmentID);
+    //       const data = {
+
+    //       }
+    //       try {
+    //         axios.get(`http://localhost:3000/patients/${$route.params.patient}`).then(response => {
+    //             const patient = response.data;
+    //             return axios.put(`http://localhost:3000/patients/${$route.params.patient}`, {
+    //                 ...patient,
+    //                 treatments: [...patient.treatments, treatmentID]
+    //             });
+    //         }).catch(error => {
+    //             console.log('Failed')
+    //         });
+    //       } catch {
+
+    //       }
+    //       this.errorMessage = '';
+    //       this.resetForm();
+    //       await this.fetchPatients();
+    //     } catch (error) {
+    //       this.successMessage = '';
+    //       this.errorMessage = 'Failed to add new patient.';
+    //     }
+    //   } else {
+    //     this.successMessage = '';
+    //     this.errorMessage = 'Please ensure you fill out all fields.';
+    // }
+    // }
+        async addTreatment() {
+        console.log(this.newTreatment);
+
+        if (this.newTreatment.condition !== '' && this.newTreatment.prescribingPhysician !== '') {
+            if (this.newTreatment.name === '') {
+                this.newTreatment.name = 'None';
+                this.newTreatment.dosage = 'N/A';
+                this.newTreatment.frequency = 'N/A';
+                this.newTreatment.route = 'N/A';
+                this.newTreatment.startDate = 'N/A';
+                this.newTreatment.endDate = 'N/A';
+            }
+            console.log("After Filter Treatment : ");
+            console.log(this.newTreatment);
+
+            try {
+                // Add new treatment
+                const response = await axios.post(`http://localhost:3000/treatments, this.newTreatment)`);
+                this.successMessage = 'New treatment added successfully.';
+                console.log(response.data);
+                let treatmentID = response.data._id;
+                console.log(treatmentID);
+
+                // Fetch patient data
+                const patientResponse = await axios.get(`http://localhost:3000/patients/${$route.params.patient}`);
+                const patient = patientResponse.data;
+
+                // Update treatments array and patient data
+                await axios.put(`http://localhost:3000/patients/${$route.params.patient}`, {
+                    ...patient,
+                    treatments: [...patient.treatments, treatmentID]
+                });
+
+                this.errorMessage = '';
+                this.resetForm();
+                await this.fetchPatients();
+            } catch (error) {
+                this.successMessage = '';
+                this.errorMessage = 'Failed to add new patient or update treatments.';
+                console.error(error);
+            }
+        } else {
+            this.successMessage = '';
+            this.errorMessage = 'Please ensure you fill out all fields.';
+        }
     }
-    </style>
+  },
+  created() {
+    this.fetchPatient();
+    this.fetchAppointments();
+  }
+};
+</script>
+
+<style scoped>
+.columns {
+  padding: 20px;
+}
+
+.info {
+  padding-bottom: 50px;
+  padding-top: 50px;
+}
+
+.is-flex {
+  display: flex;
+}
+
+.is-justify-content-space-between {
+  justify-content: space-between;
+}
+
+.is-align-items-center {
+  align-items: center;
+}
+</style>

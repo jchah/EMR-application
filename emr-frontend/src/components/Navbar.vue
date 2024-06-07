@@ -2,7 +2,7 @@
   <nav class="navbar is-dark" role="navigation" aria-label="main navigation">
     <div class="navbar-brand">
       <a class="navbar-item" href="/">
-        <img src="../assets/LogoCropped.png" alt="Logo">
+        <img src="../img/LogoCropped.png" alt="Logo">
       </a>
       <a role="button" class="navbar-burger" :class="{'is-active': isActive}" aria-label="menu" aria-expanded="false" @click="toggleMenu">
         <span aria-hidden="true"></span>
@@ -31,8 +31,9 @@
       <div class="navbar-end">
         <div class="navbar-item">
           <div class="buttons">
-            <router-link class="button has-background-success" to="/register">Register</router-link>
-            <router-link class="button has-background-warning" to="/login">Log in</router-link>
+            <router-link v-if="!token" class="button has-background-success" to="/register">Register</router-link>
+            <router-link v-if="!token" class="button has-background-warning" to="/login">Log in</router-link>
+            <a @click="logout" v-if="token" class="button has-background-danger" to="/login">Log Out</a>
           </div>
         </div>
       </div>
@@ -46,12 +47,18 @@ export default {
   data() {
     return {
       isActive: false,
+      token: localStorage.getItem('token')
     };
   },
   methods: {
     toggleMenu() {
       this.isActive = !this.isActive;
     },
+    logout() {
+      localStorage.clear()
+      window.location = ('/')
+
+    }
   },
 };
 </script>
@@ -60,9 +67,5 @@ export default {
 .navbar {
   height: 70px;
   padding: 10px;
-}
-
-.head {
-  margin-top: 70px;
 }
 </style>

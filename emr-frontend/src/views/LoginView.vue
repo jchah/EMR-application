@@ -1,34 +1,43 @@
 <template>
   <div class="container mt-5">
-    <div class="row justify-content-center">
-      <div class="col-md-6">
+    <div class="columns is-centered">
+      <div class="column is-half">
         <div class="card">
-          <div class="card-header">
-            <h2 class="text-center">Create Account</h2>
-          </div>
-          <div class="card-body">
+          <header class="card-header">
+            <p class="card-header-title has-text-centered">
+              Login to EMR
+            </p>
+          </header>
+          <div class="card-content">
             <form @submit.prevent="login">
-              <div class="mb-3">
-                <label for="email" class="form-label">email:</label>
-                <input type="email" class="form-control" id="email" v-model="account.email"
-                  required>
+              <div class="field">
+                <label class="label" for="email">Email</label>
+                <div class="control">
+                  <input type="email" class="input" id="email" v-model="account.email" required>
+                </div>
               </div>
-              <div class="mb-3">
-                <label for="password" class="form-label">Password:</label>
-                <input type="password" class="form-control" id="password" v-model="account.password" required>
+              <div class="field">
+                <label class="label" for="password">Password</label>
+                <div class="control">
+                  <input type="password" class="input" id="password" v-model="account.password" required>
+                </div>
               </div>
-              <div class="mb-3">
-                <label for="role" class="form-label">Role:</label>
-                <select class="form-control" id="role" v-model="account.role" required>
-                  <option value="user">User</option>
-                  <option value="admin">Admin</option>
-                </select>
+              <div class="field">
+                <label class="label" for="role">Role</label>
+                <div class="control">
+                  <div class="select">
+                    <select id="role" v-model="account.role" required>
+                      <option value="user">User</option>
+                      <option value="admin">Admin</option>
+                    </select>
+                  </div>
+                </div>
               </div>
               <!-- Success and Error Messages -->
-              <div v-if="successMessage" class="alert alert-success">{{ successMessage }}</div>
-              <div v-if="errorMessage" class="alert alert-danger">{{ errorMessage }}</div>
-              <div class="d-grid">
-                <button type="submit" class="btn btn-primary">Login</button>
+              <div v-if="successMessage" class="notification is-success">{{ successMessage }}</div>
+              <div v-if="errorMessage" class="notification is-danger">{{ errorMessage }}</div>
+              <div class="control">
+                <button type="submit" class="button is-primary is-fullwidth">Login</button>
               </div>
             </form>
           </div>
@@ -37,8 +46,8 @@
     </div>
   </div>
 </template>
+
 <script>
-import { mapMutations } from "vuex";
 export default {
   name: 'AccountForm',
   data() {
@@ -53,8 +62,7 @@ export default {
     };
   },
   methods: {
-    async login(e) {
-      e.preventDefault();
+    async login() {
       this.successMessage = '';
       this.errorMessage = '';
       try {
@@ -64,20 +72,22 @@ export default {
           body: JSON.stringify(this.account)
         });
         if (response.ok) {
+          const data = await response.json();
+          console.log(data.result);
           this.successMessage = 'Login successful!';
-          
-          const {result, token} = await response.json();
-          localStorage.setItem("user", result);
-          localStorage.setItem("token", token);
-          console.log("hi!");
-          setTimeout(() => this.$router.push('/'), 1000); // Redirect after 3 seconds
+          localStorage.setItem("user", JSON.stringify(data.result));
+          localStorage.setItem("token", data.token);
+          setTimeout(() => {
+            window.location = ('/')
+
+          }, 1000); // Redirect after 1 second to dashboard
         } else {
           const data = await response.json();
           this.errorMessage = data.message || 'Failed to login.';
         }
       } catch (error) {
         console.error('Error:', error);
-        this.errorMessage = 'something went wrong.';
+        this.errorMessage = 'Something went wrong. Please try again later.';
       }
     }
   }

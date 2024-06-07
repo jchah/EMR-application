@@ -6,6 +6,8 @@
           <div class="column">
             <DatePicker v-model="date" expanded/>
             <button class="button is-primary is-centered" @click="isDoingForm(true)">Make Appointment</button>
+            </div>
+            <div class="column">
             <table class="table">
               <thead>
               <tr>
@@ -17,43 +19,30 @@
               </thead>
               <tbody>
               <tr v-for="app in appointments" :key="app.id">
-                <td><router-link :to="`/patients/${app.cardNum}`">{{ app.patient }}</router-link></td>
-                <td v-if="!isEditing">{{ app.startTime }}</td>
-                <td v-if="!isEditing">{{ app.endTime }}</td>
-                <td v-if="!isEditing">{{ app.notes }}</td>
-                <td v-if="isEditing">
-                  <DatePicker mode="time" v-model="info.startTime"/>
-                </td>
-                <td v-if="isEditing">
-                  <DatePicker mode="time" v-model="info.endTime"/>
-                </td>
-                <td v-if="isEditing">
-                  <div class="control">
-                    <input class="input" type="text" v-model="editingInfo.notes">
-                  </div>
-                </td>
+                <td><router-link :to="`/patients/${app.patient.data._id}`">{{ app.patient.data.firstName + " " + 
+                 app.patient.data.lastName}}</router-link></td>
+                <td>{{ app.startTime }}</td>
+                <td>{{ app.endTime }}</td>
+                <td>{{ app.notes }}</td>
                 <td>
-                  <button @click="deleteAppointment(app)" class="button is-danger" v-if="!isEditing"> Delete</button>
-                  <button class="button" @click="isEditingAppointment(true, app)" v-if="!isEditing"> Edit</button>
-                  <button class="button" v-if="isEditing" @click="editAppointment(app)"> Submit Edit</button>
-                  <button class="button" v-if="isEditing" @click="isEditingAppointment(false, {notes: ''})"> Cancel Edit</button>
+                  <button @click="deleteAppointment(app)" class="button is-danger"> Delete</button>
+                  
                 </td>
               </tr>
               </tbody>
             </table>
-           
           </div>
           
           <div class="overlay" v-if="isOn">
             <div class="box">
               <form @submit.prevent="makeAppointment(date)">
-                <div class="field">
-                  <label class="label">Selected Date: {{ formatDate(date) }}</label>
+                <div class="field has-text-centered">
+                  <label class="title">Selected Date: {{ formatDate(date) }}</label>
                 </div>
                 <label class="label">Patient Name</label>
                 <div class="control">
                   <input class="input" type="text" v-model="inSearchBar" required>
-                  <div class="dropdown is-active" v-if="showOptions()">
+                  <div class="dropdown is-active is-bottom" v-if="showOptions()" style="display: flex;">
                     <div class="dropdown-menu" style="">
                       <div class="dropdown-content">
                         <a v-for="option in searchOptions" @click="selectOption(option)" class="dropdown-item">{{ option }}</a>
@@ -80,7 +69,9 @@
                     <button class="button is-primary" type="submit">Submit</button>
                   </div>
                 </div>
+                <div v-if="hasErrorMessage" class="notification is-danger">Please Enter Valid Patient Name</div>
               </form>
+              <br>
               <button class="button is-danger" @click="isDoingForm(false)"> Cancel</button>
             </div>
           </div>
@@ -94,6 +85,7 @@ import { DatePicker } from 'v-calendar';
 import 'v-calendar/style.css';
 import axios from 'axios';
 
+
 const API_URL = "http://localhost:3000";
 export default {
   components: {
@@ -102,12 +94,12 @@ export default {
   setup() {
     let isOn = ref(false)
     const date = ref(new Date());
-    let isEditing = ref(false)
 
     let patientList = ref(null);
     let searchOptions = ref();
     let inSearchBar = ref();
     let isSelected = ref(false);
+    let hasErrorMessage = ref(false)
     //making appointment
     let info = ref({
       patientName: '',
@@ -117,9 +109,7 @@ export default {
       notes:'',
     })
 
-    let editingInfo = ref({
-      notes:'',
-    })
+
     function showOptions(){
 
       try {
@@ -139,6 +129,8 @@ export default {
     watch(inSearchBar, (newValue) =>{
       inSearchBar.value = newValue
       try {
+        console.log(inSearchBar.value)
+        console.log(searchOptions.value[0])
         if(!(inSearchBar.value === searchOptions.value[0]))
             isSelected.value = false
       } catch (error) {
@@ -166,8 +158,13 @@ export default {
 
         });
 
-        console.log(appointments.value)
+        
         appointments.value = response.data;
+        appointments.value.forEach(async (a) =>{
+          let id = a.patient
+          a.patient = await axios.get(`${API_URL}/patients/${id}`)
+        })
+        console.log(appointments.value)
         sortTimeEariliest();
 
 
@@ -194,21 +191,28 @@ export default {
 
     async function makeAppointment(date){
         info.value.date = date.toLocaleDateString();
-        info.value.patientName = inSearchBar.value;
-        let a = await getCardNum(info.value.patientName)
-        try {
+        if(findName(inSearchBar.value)){
+          hasErrorMessage.value = false;
+          info.value.patientName = inSearchBar.value;
+          try {
           await axios.post(`${API_URL}/appointments`, {
-            patient: info.value.patientName,
+            patientDeats: info.value.patientName,
             date: info.value.date,
             startTime: info.value.startTime.toLocaleTimeString(),
             endTime: info.value.endTime.toLocaleTimeString(),
             notes: info.value.notes,
-            cardNum: a
           })
           location.reload()
-        } catch (error) {
+          
+          } catch (error) {
 
+          }
+        }else{
+          hasErrorMessage.value = true;
+          return ""
         }
+          
+       
     }
 
     async function deleteAppointment(date){
@@ -221,6 +225,16 @@ export default {
       }
     }
 
+    function findName(a){
+      let foundName = false;
+      patientList.value.forEach((b)=>{
+        if((b.name) === a.substring(0, a.indexOf(","))){
+          foundName = true
+        }
+      })
+      return foundName;
+    }
+
     function formatDate(date) {
       return date.toLocaleDateString();
     }
@@ -228,12 +242,13 @@ export default {
     async function getPatients(){
       try {
 
-        let response = await axios.get(`${API_URL}/healthcards`)
+        let response = await axios.get(`${API_URL}/patients`)
         patientList.value = response.data;
         console.log(patientList.value)
         patientList.value = patientList.value.map((a) =>{
-          return a.firstName + " " + a.lastName
+          return {name:a.firstName + " " + a.lastName, patientID: a._id, cardNumber: a.cardNumber}
         })
+        console.log(patientList.value)
 
       } catch (error) {
 
@@ -242,11 +257,13 @@ export default {
 
     function filterSearch(){
       console.log("search bar value: " + inSearchBar.value)
+      console.log(patientList.value)
       searchOptions.value = patientList.value.filter((a) => {
-
-        return a.toLowerCase().includes(inSearchBar.value.toLowerCase())
-      })
-      console.log("search options: " + searchOptions.value)
+        console.log(a.name)
+        if(a.name.toLowerCase().includes(inSearchBar.value.toLowerCase()))
+          return a.name
+      }).map((a) => a.name + ", Card Number: " + a.cardNumber)
+      
     }
 
     function selectOption(option){
@@ -255,32 +272,8 @@ export default {
 
     }
 
-    function isEditingAppointment(a, b){
-          isEditing.value = a;
-          editingInfo.value.notes = b.notes;
-    }
-    async function editAppointment(app){
-        try {
-          await axios.put(`${API_URL}/appointments/${app._id}`, {
-            startTime: info.value.startTime.toLocaleTimeString(),
-            endTime: info.value.endTime.toLocaleTimeString(),
-            notes: editingInfo.value.notes
-          })
-          location.reload()
-        } catch (error) {
 
-        }
-    }
 
-    async function getCardNum(name){
-            try {
-               const healthcardReponse =  await axios.get(`${API_URL}/healthcard/${name}`)
-               let num = healthcardReponse.data
-               return num[0].cardNumber
-            } catch (error) {
-
-            }
-    }
 
     function isDoingForm(a){
       isOn.value = a;
@@ -298,13 +291,9 @@ export default {
       inSearchBar,
       searchOptions,
       showOptions,
-      isEditingAppointment,
-      isEditing,
-      editAppointment,
-      editingInfo,
-      getCardNum,
       isOn,
-      isDoingForm
+      isDoingForm,
+      hasErrorMessage
 
 
     };
@@ -315,6 +304,10 @@ export default {
 <style>
 .vc-time-header{
   display: none;
+}
+
+.vc-time-select-group{
+  border: 0px;
 }
 
 .overlay {
@@ -328,14 +321,32 @@ export default {
   display: flex;
   align-items: center;
   justify-content: center;
+  animation: fadeInAnimation ease 0.4s;
+  animation-iteration-count: 1;
+  animation-fill-mode: forwards;
 }
 
 .overlay .box {
   background-color: white;
+  width: 500px;
   padding: 20px;
   border-radius: 5px;
+  animation: fadeInAnimation ease 0.4s;
+    animation-iteration-count: 1;
+    animation-fill-mode: forwards;
+}
+
+@keyframes fadeInAnimation {
+    0% {
+        opacity: 0.4;
+    }
+    100% {
+        opacity: 1;
+    }
+}
+
+.dropdown{
+  display: flex;
 }
 
 </style>
-
-
