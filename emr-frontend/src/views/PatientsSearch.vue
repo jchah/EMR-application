@@ -70,15 +70,27 @@
               </div>
             </div>
             <div class="field">
-              <label class="label">Emergency Contact</label>
+              <label class="label">Emergency Contact Name</label>
               <div class="control">
-                <input class="input" type="text" v-model="emergencyContact">
+                <input class="input" type="text" v-model="emergencyContactName">
+              </div>
+            </div>
+            <div class="field">
+              <label class="label">Emergency Contact Relationship</label>
+              <div class="control">
+                <input class="input" type="text" v-model="emergencyContactRelationship">
+              </div>
+            </div>
+            <div class="field">
+              <label class="label">Emergency Contact Phone</label>
+              <div class="control">
+                <input class="input" type="text" v-model="emergencyContactPhone">
               </div>
             </div>
             <div class="field">
               <label class="label">Conditions</label>
               <div class="control">
-                <multiselect v-model="selectedConditions" :options="conditions" multiple close-on-select="false" placeholder="Select conditions"></multiselect>
+                <multiselect v-model="selectedConditions" :options="conditions" label="name" track-by="_id" multiple close-on-select="false" placeholder="Select conditions"></multiselect>
               </div>
             </div>
             <div class="field is-grouped">
@@ -111,23 +123,17 @@
             <th>Sex</th>
             <th>Address</th>
             <th>Health Card</th>
-<!--            <th>Conditions</th>-->
             <th>Go To Patient Profile</th>
           </tr>
           </thead>
           <tbody>
-          <tr v-for="patient in filteredPatients" :key="patient.id">
+          <tr v-for="patient in filteredPatients" :key="patient._id">
             <td>{{ patient.firstName }}</td>
             <td>{{ patient.lastName }}</td>
             <td>{{ patient.dateOfBirth }}</td>
             <td>{{ patient.sex }}</td>
             <td>{{ patient.address }}</td>
             <td>{{ patient.cardNumber }}</td>
-<!--            <td>-->
-<!--              <ul>-->
-<!--                <li v-for="condition in patient.conditions" :key="condition">{{ condition }}</li>-->
-<!--              </ul>-->
-<!--            </td>-->
             <td><button class="button is-link" type="button" @click="goToPatientProfile(patient._id)">Profile</button></td>
           </tr>
           </tbody>
@@ -153,13 +159,15 @@ export default {
       sex: '',
       cardNumber: '',
       patients: [],
-      conditions: ["Condition1", "Condition2", "Condition3"], // should be an array of conditions from db. Displaying can use condition.name
+      conditions: [], // should be an array of conditions from db. Displaying can use condition.name
       selectedConditions: [],
       filteredPatients: [],
       hasSearched: false,
       phoneNum: '',
       email: '',
-      emergencyContact: '',
+      emergencyContactName: '',
+      emergencyContactRelationship: '',
+      emergencyContactPhone: '',
       successMessage: '',
       errorMessage: ''
     };
@@ -173,7 +181,14 @@ export default {
         console.error(error);
       }
     },
-
+    async fetchConditions() {
+      try {
+        const response = await axios.get(`http://localhost:3000/conditions`);
+        this.conditions = response.data;
+      } catch (error) {
+        console.error(error);
+      }
+    },
     submitForm() {
       this.filteredPatients = this.patients.filter(patient => {
         const firstNameMatch = this.patientFirstName === '' || patient.firstName.toLowerCase().includes(this.patientFirstName.toLowerCase());
@@ -182,7 +197,7 @@ export default {
         const addressMatch = this.address === '' || patient.address.toLowerCase().includes(this.address.toLowerCase());
         const cardNumberMatch = this.cardNumber === '' || patient.cardNumber.toLowerCase().includes(this.cardNumber.toLowerCase());
         const sexMatch = this.sex === '' || patient.sex.toLowerCase().includes(this.sex.toLowerCase());
-        const conditionsMatch = this.selectedConditions.length === 0 || this.selectedConditions.every(condition => patient.conditions.includes(condition));
+        const conditionsMatch = this.selectedConditions.length === 0 || this.selectedConditions.every(condition => patient.conditions.includes(condition._id));
         return firstNameMatch && lastNameMatch && dateOfBirthMatch && addressMatch && cardNumberMatch && sexMatch && conditionsMatch;
       });
 
@@ -197,23 +212,21 @@ export default {
         cardNumber: this.cardNumber,
         phoneNum: this.phoneNum,
         email: this.email,
-        emergencyContact: this.emergencyContact,
+        emergencyContactName: this.emergencyContactName,
+        emergencyContactRelationship: this.emergencyContactRelationship,
+        emergencyContactPhone: this.emergencyContactPhone,
         selectedConditions: this.selectedConditions,
         hasSearched: this.hasSearched
       }));
     },
-
     showSearch() {
       this.hasSearched = false;
       localStorage.removeItem('searchResults');
       localStorage.removeItem('searchState');
     },
-
     goToPatientProfile(patient_id) {
-      console.log(patient_id);
       this.$router.push({ name: 'PatientProfile', params: { patient: patient_id } });
     },
-
     async createNewPatient() {
       let newPatient = {
         firstName: this.patientFirstName,
@@ -225,12 +238,16 @@ export default {
           phone: this.phoneNum,
           email: this.email,
         },
-        emergencyContact: this.emergencyContact,
+        emergencyContact: {
+          name: this.emergencyContactName,
+          relationship: this.emergencyContactRelationship,
+          phone: this.emergencyContactPhone
+        },
         cardNumber: this.cardNumber,
-        conditions: this.selectedConditions
+        conditions: this.selectedConditions.map(condition => condition._id)
       };
 
-      if (this.patientFirstName !== '' && this.lastName !== '' && this.dateOfBirth !== '' && this.sex !== '' && this.address !== '' && this.phoneNum !== '' && this.email !== '' && this.emergencyContact !== '' && this.cardNumber !== '') {
+      if (this.patientFirstName !== '' && this.lastName !== '' && this.dateOfBirth !== '' && this.sex !== '' && this.address !== '' && this.phoneNum !== '' && this.email !== '' && this.emergencyContactName !== '' && this.emergencyContactRelationship !== '' && this.emergencyContactPhone !== '' && this.cardNumber !== '') {
         try {
           await axios.post(`http://localhost:3000/patients`, newPatient);
           this.successMessage = 'New patient added successfully.';
@@ -246,7 +263,6 @@ export default {
         this.errorMessage = 'Please ensure you fill out all fields.';
       }
     },
-
     resetForm() {
       this.patientFirstName = '';
       this.lastName = '';
@@ -256,13 +272,15 @@ export default {
       this.cardNumber = '';
       this.phoneNum = '';
       this.email = '';
-      this.emergencyContact = '';
+      this.emergencyContactName = '';
+      this.emergencyContactRelationship = '';
+      this.emergencyContactPhone = '';
       this.selectedConditions = [];
     }
   },
-
   created() {
     this.fetchPatients();
+    this.fetchConditions();
     let storedResults = localStorage.getItem('searchResults');
     let storedState = localStorage.getItem('searchState');
     if (storedResults && storedState) {
