@@ -144,7 +144,7 @@
                     </div>
                   </div>
                   <div class="field">
-                    <label class="label">Date of Birth</label>
+                    <label class="label">End Date</label>
                     <div class="control">
                       <input class="input" type="date" v-model="newTreatment.endDate">
                     </div>
@@ -252,6 +252,30 @@ export default {
         console.error("Failed to fetch treatments data:", error);
       }
     },
+    async fetchAppointments(){
+      try {
+        const response = await axios.get(`http://localhost:3000/calendar/appointments`, {
+          params:{
+            date: date.toLocaleDateString()
+          }
+
+        });
+
+        
+        appointments.value = response.data;
+        appointments.value.forEach(async (a) =>{
+          let id = a.patient
+          a.patient = await axios.get(`http://localhost:3000/patients/${id}`)
+        })
+        console.log(appointments.value)
+        sortTimeEariliest();
+
+
+
+      } catch (error) {
+        console.error("Error getting data from getAppointments", error);
+      }
+    },
     openTreatmentForm(value) {
       this.windowOpen = value
       this.clearTreatmentForm()
@@ -270,40 +294,105 @@ export default {
     goBack() {
       this.$router.push('/patients');
     },
-    async addTreatment() {
-      console.log(this.newTreatment)
+    // async addTreatment() {
+    //   console.log(this.newTreatment)
 
-    if (this.newTreatment.condition !== '' && this.newTreatment.prescribingPhysician !== '') {
-      if(this.newTreatment.name == '') {
-        this.newTreatment.name == 'None'
-        this.newTreatment.dosage == 'N/A'
-        this.newTreatment.frequency == 'N/A'
-        this.newTreatment.route == 'N/A'
-        this.newTreatment.startDate == 'N/A'
-        this.newTreatment.endDate == 'N/A'
-      }  
-      console.log("After Filter Treatment : ")
-      console.log(this.newTreatment)
+    // if (this.newTreatment.condition !== '' && this.newTreatment.prescribingPhysician !== '') {
+    //   if(this.newTreatment.name == '') {
+    //     this.newTreatment.name == 'None'
+    //     this.newTreatment.dosage == 'N/A'
+    //     this.newTreatment.frequency == 'N/A'
+    //     this.newTreatment.route == 'N/A'
+    //     this.newTreatment.startDate == 'N/A'
+    //     this.newTreatment.endDate == 'N/A'
+    //   }  
+    //   console.log("After Filter Treatment : ")
+    //   console.log(this.newTreatment)
       
-      try {
-          await axios.post(`http://localhost:3000/treatments`, this.newTreatment);
-          this.successMessage = 'New patient added successfully.';
-          this.errorMessage = '';
-          this.resetForm();
-          await this.fetchPatients();
-        } catch (error) {
-          this.successMessage = '';
-          this.errorMessage = 'Failed to add new patient.';
+    //   try {
+    //       const response = await axios.post(`http://localhost:3000/treatments`, this.newTreatment);
+    //       this.successMessage = 'New patient added successfully.';
+    //       console.log(response.data)
+    //       let treatmentID = response.data._id;
+    //       console.log(treatmentID);
+    //       const data = {
+
+    //       }
+    //       try {
+    //         axios.get(`http://localhost:3000/patients/${$route.params.patient}`).then(response => {
+    //             const patient = response.data;
+    //             return axios.put(`http://localhost:3000/patients/${$route.params.patient}`, {
+    //                 ...patient,
+    //                 treatments: [...patient.treatments, treatmentID]
+    //             });
+    //         }).catch(error => {
+    //             console.log('Failed')
+    //         });
+    //       } catch {
+
+    //       }
+    //       this.errorMessage = '';
+    //       this.resetForm();
+    //       await this.fetchPatients();
+    //     } catch (error) {
+    //       this.successMessage = '';
+    //       this.errorMessage = 'Failed to add new patient.';
+    //     }
+    //   } else {
+    //     this.successMessage = '';
+    //     this.errorMessage = 'Please ensure you fill out all fields.';
+    // }
+    // }
+        async addTreatment() {
+        console.log(this.newTreatment);
+
+        if (this.newTreatment.condition !== '' && this.newTreatment.prescribingPhysician !== '') {
+            if (this.newTreatment.name === '') {
+                this.newTreatment.name = 'None';
+                this.newTreatment.dosage = 'N/A';
+                this.newTreatment.frequency = 'N/A';
+                this.newTreatment.route = 'N/A';
+                this.newTreatment.startDate = 'N/A';
+                this.newTreatment.endDate = 'N/A';
+            }
+            console.log("After Filter Treatment : ");
+            console.log(this.newTreatment);
+
+            try {
+                // Add new treatment
+                const response = await axios.post(`http://localhost:3000/treatments, this.newTreatment)`);
+                this.successMessage = 'New treatment added successfully.';
+                console.log(response.data);
+                let treatmentID = response.data._id;
+                console.log(treatmentID);
+
+                // Fetch patient data
+                const patientResponse = await axios.get(`http://localhost:3000/patients/${$route.params.patient}`);
+                const patient = patientResponse.data;
+
+                // Update treatments array and patient data
+                await axios.put(`http://localhost:3000/patients/${$route.params.patient}`, {
+                    ...patient,
+                    treatments: [...patient.treatments, treatmentID]
+                });
+
+                this.errorMessage = '';
+                this.resetForm();
+                await this.fetchPatients();
+            } catch (error) {
+                this.successMessage = '';
+                this.errorMessage = 'Failed to add new patient or update treatments.';
+                console.error(error);
+            }
+        } else {
+            this.successMessage = '';
+            this.errorMessage = 'Please ensure you fill out all fields.';
         }
-      } else {
-        this.successMessage = '';
-        this.errorMessage = 'Please ensure you fill out all fields.';
-      
-    }
     }
   },
   created() {
     this.fetchPatient();
+    this.fetchAppointments();
   }
 };
 </script>
