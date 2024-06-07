@@ -11,7 +11,7 @@
           <div v-if="errorMessage" class="notification is-danger">
             {{ errorMessage }}
           </div>
-          <form>
+          <form @submit.prevent="submitForm">
             <div class="columns">
               <div class="column">
                 <div class="field">
@@ -46,7 +46,7 @@
                 <div class="field">
                   <label class="label">Health Card</label>
                   <div class="control">
-                    <input class="input" type="text" v-model="healthCard">
+                    <input class="input" type="text" v-model="cardNumber">
                   </div>
                 </div>
                 <div class="field">
@@ -75,12 +75,18 @@
                 <input class="input" type="text" v-model="emergencyContact">
               </div>
             </div>
+            <div class="field">
+              <label class="label">Conditions</label>
+              <div class="control">
+                <multiselect v-model="selectedConditions" :options="conditions" multiple close-on-select="false" placeholder="Select conditions"></multiselect>
+              </div>
+            </div>
             <div class="field is-grouped">
               <div class="control">
                 <button class="button is-primary" @click="submitForm">Submit</button>
               </div>
               <div class="control">
-                <button class="button is-link" @click="resetForm">Reset</button>
+                <button type="button" class="button is-link" @click="resetForm">Reset</button>
               </div>
               <div class="control">
                 <button type="button" class="button is-info" @click="createNewPatient">Add New Patient</button>
@@ -105,6 +111,7 @@
             <th>Sex</th>
             <th>Address</th>
             <th>Health Card</th>
+<!--            <th>Conditions</th>-->
             <th>Go To Patient Profile</th>
           </tr>
           </thead>
@@ -116,7 +123,12 @@
             <td>{{ patient.sex }}</td>
             <td>{{ patient.address }}</td>
             <td>{{ patient.cardNumber }}</td>
-            <td><button class="button is-link" type="button" @click="goToPatientProfile(patient.cardNumber)">Profile</button></td>
+<!--            <td>-->
+<!--              <ul>-->
+<!--                <li v-for="condition in patient.conditions" :key="condition">{{ condition }}</li>-->
+<!--              </ul>-->
+<!--            </td>-->
+            <td><button class="button is-link" type="button" @click="goToPatientProfile(patient._id)">Profile</button></td>
           </tr>
           </tbody>
         </table>
@@ -127,8 +139,11 @@
 
 <script>
 import axios from "axios";
+import Multiselect from 'vue-multiselect';
+import 'vue-multiselect/dist/vue-multiselect.css';
 
 export default {
+  components: { Multiselect },
   data() {
     return {
       patientFirstName: '',
@@ -136,8 +151,10 @@ export default {
       dateOfBirth: '',
       address: '',
       sex: '',
-      healthCard: '',
-      healthCards: [],
+      cardNumber: '',
+      patients: [],
+      conditions: ["Condition1", "Condition2", "Condition3"],
+      selectedConditions: [],
       filteredPatients: [],
       hasSearched: false,
       phoneNum: '',
@@ -148,36 +165,57 @@ export default {
     };
   },
   methods: {
-    async fetchHealthCards() {
+    async fetchPatients() {
       try {
-        const response = await axios.get(`http://localhost:3000/healthcards`);
-        this.healthCards = response.data;
+        const response = await axios.get(`http://localhost:3000/patients`);
+        this.patients = response.data;
       } catch (error) {
         console.error(error);
       }
     },
 
     submitForm() {
-      this.filteredPatients = this.healthCards.filter(patient => {
+      this.filteredPatients = this.patients.filter(patient => {
         const firstNameMatch = this.patientFirstName === '' || patient.firstName.toLowerCase().includes(this.patientFirstName.toLowerCase());
         const lastNameMatch = this.lastName === '' || patient.lastName.toLowerCase().includes(this.lastName.toLowerCase());
         const dateOfBirthMatch = this.dateOfBirth === '' || patient.dateOfBirth === this.dateOfBirth;
         const addressMatch = this.address === '' || patient.address.toLowerCase().includes(this.address.toLowerCase());
-        const healthCardMatch = this.healthCard === '' || patient.cardNumber.toLowerCase().includes(this.healthCard.toLowerCase());
+        const cardNumberMatch = this.cardNumber === '' || patient.cardNumber.toLowerCase().includes(this.cardNumber.toLowerCase());
         const sexMatch = this.sex === '' || patient.sex.toLowerCase().includes(this.sex.toLowerCase());
-        return firstNameMatch && lastNameMatch && dateOfBirthMatch && addressMatch && healthCardMatch && sexMatch;
+        const conditionsMatch = this.selectedConditions.length === 0 || this.selectedConditions.every(condition => patient.conditions.includes(condition));
+        return firstNameMatch && lastNameMatch && dateOfBirthMatch && addressMatch && cardNumberMatch && sexMatch && conditionsMatch;
       });
 
       this.hasSearched = true;
+      localStorage.setItem('searchResults', JSON.stringify(this.filteredPatients));
+      localStorage.setItem('searchState', JSON.stringify({
+        patientFirstName: this.patientFirstName,
+        lastName: this.lastName,
+        dateOfBirth: this.dateOfBirth,
+        address: this.address,
+        sex: this.sex,
+        cardNumber: this.cardNumber,
+        phoneNum: this.phoneNum,
+        email: this.email,
+        emergencyContact: this.emergencyContact,
+        selectedConditions: this.selectedConditions,
+        hasSearched: this.hasSearched
+      }));
     },
+
     showSearch() {
       this.hasSearched = false;
+      localStorage.removeItem('searchResults');
+      localStorage.removeItem('searchState');
     },
-    goToPatientProfile(cardNum) {
-      this.$router.push({ name: 'PatientProfile', params: { cardNum } });
+
+    goToPatientProfile(patient_id) {
+      console.log(patient_id);
+      this.$router.push({ name: 'PatientProfile', params: { patient: patient_id } });
     },
+
     async createNewPatient() {
-      let newCard = {
+      let newPatient = {
         firstName: this.patientFirstName,
         lastName: this.lastName,
         dateOfBirth: this.dateOfBirth,
@@ -188,14 +226,17 @@ export default {
           email: this.email,
         },
         emergencyContact: this.emergencyContact,
-        cardNumber: this.healthCard
+        cardNumber: this.cardNumber,
+        conditions: this.selectedConditions
       };
 
-      if (this.firstName !== '' && this.lastName !== '' && this.dateOfBirth !== '' && this.sex !== '' && this.address !== '' && this.phoneNum !== '' && this.email !== '' && this.emergencyContact !== '' && this.healthCard !== '') {
+      if (this.patientFirstName !== '' && this.lastName !== '' && this.dateOfBirth !== '' && this.sex !== '' && this.address !== '' && this.phoneNum !== '' && this.email !== '' && this.emergencyContact !== '' && this.cardNumber !== '') {
         try {
-          const response = await axios.post(`http://localhost:3000/healthcards`, newCard);
+          await axios.post(`http://localhost:3000/patients`, newPatient);
           this.successMessage = 'New patient added successfully.';
           this.errorMessage = '';
+          this.resetForm();
+          await this.fetchPatients();
         } catch (error) {
           this.successMessage = '';
           this.errorMessage = 'Failed to add new patient.';
@@ -212,14 +253,22 @@ export default {
       this.dateOfBirth = '';
       this.address = '';
       this.sex = '';
-      this.healthCard = '';
+      this.cardNumber = '';
       this.phoneNum = '';
       this.email = '';
       this.emergencyContact = '';
+      this.selectedConditions = [];
     }
   },
+
   created() {
-    this.fetchHealthCards();
+    this.fetchPatients();
+    let storedResults = localStorage.getItem('searchResults');
+    let storedState = localStorage.getItem('searchState');
+    if (storedResults && storedState) {
+      this.filteredPatients = JSON.parse(storedResults);
+      Object.assign(this, JSON.parse(storedState));
+    }
   }
 };
 </script>
@@ -230,4 +279,3 @@ export default {
   overflow-y: hidden;
 }
 </style>
-

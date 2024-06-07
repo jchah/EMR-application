@@ -1,104 +1,120 @@
 <template>
-    
+  <section class="hero is-link">
+    <div class="hero-body is-flex is-justify-content-space-between is-align-items-center">
+      <p class="title" v-if="patient">Patient Profile : {{patient.firstName + " " + patient.lastName}}</p>
+      <button class="button is-light" @click="goBack">Back to Patients</button>
+    </div>
+  </section>
 
-      <section class="hero is-link">
-        <div class="hero-body">
-          <p class="title">Ethan McMullen - Patient Profile</p>
-        </div>
-      </section>
-      
-      <div class="columns has-background-link-light info">
-        <div class="column ">
-          <p class="title has-text-centered">Patient Info</p>
-            <div class="columns">
-              <div class="column">
-                <p class="subtitle">First Name : {{ selectedCard.firstName}}</p>
-                <p class="subtitle">Last Name : {{ selectedCard.lastName}}</p>
-              </div>
-              <div class="column">
-                <p class="subtitle">Sex : {{ selectedCard.sex}}</p>
-                <p class="subtitle">Health Card Number : {{ selectedCard.cardNumber}}</p>
-              </div>
-              <div class="column ">
-                <p class="subtitle">DOB : {{ selectedCard.dateOfBirth}}</p>
-                <p class="subtitle">Address : {{ selectedCard.address}}</p>
-              </div>
-              <div class="column ">
-                <p class="subtitle">Phone : {{ selectedCard.contact.phone}}</p>
-                <p class="subtitle">Email : {{ selectedCard.contact.phone}}</p>
-              </div>
-            </div>
-        </div>
-      </div>
-      <div class="columns has-background-warning-light info">
+  <div v-if="patient">
+    <div class="columns has-background-link-light info">
+      <div class="column">
+        <p class="title has-text-centered">Patient Info</p>
+        <div class="columns">
           <div class="column">
-            <p class="title has-text-centered">Appointments</p>
+            <p class="subtitle">First Name : {{ patient.firstName}}</p>
+            <p class="subtitle">Last Name : {{ patient.lastName}}</p>
           </div>
-          
+          <div class="column">
+            <p class="subtitle">Sex : {{ patient.sex}}</p>
+            <p class="subtitle">Health Card Number : {{ patient.cardNumber}}</p>
+          </div>
+          <div class="column">
+            <p class="subtitle">DOB : {{ patient.dateOfBirth}}</p>
+            <p class="subtitle">Address : {{ patient.address}}</p>
+          </div>
+          <div class="column">
+            <p class="subtitle">Phone : {{ patient.contact.phone}}</p>
+            <p class="subtitle">Email : {{ patient.contact.email}}</p>
+          </div>
+        </div>
       </div>
-      
-  </template>
-     
-    
-    <script>
-    import axios from "axios";
-    
-    export default {
-      data() {
-        return {
-          cardNumberFromParam : '',
-          healthCards: [],
-          selectedCard: null
-        };
-      },
-      methods: {
-      async fetchHealthCards() {
-          try {
-          const response = await axios.get(`http://localhost:3000/healthcards`, {
-            headers: {
-              'Content-Type': 'application/x-www-form-urlencoded'
-            }
-          });
-          this.healthCards = response.data
-          console.log(this.healthCards)
-        } catch (error) {
-          console.log(error)
-        }
+    </div>
 
-        this.healthCards.forEach(card => {
-          console.log(card.cardNumber)
-          console.log(this.cardNumberFromParam)
-          if(card.cardNumber == this.cardNumberFromParam) {
-            this.selectedCard = card
-            console.log(this.selectedCard)
-            return
-          }          
-        })
-      }    
-      },
-      created() {
-          console.log(this.$route.params.cardNum)
-          this.cardNumberFromParam = this.$route.params.cardNum;
-          this.fetchHealthCards()
+    <div class="columns has-background-info-light info">
+      <div class="column">
+        <p class="title has-text-centered">Conditions</p>
+        <ul>
+          <li v-for="condition in conditions" :key="condition._id">
+             <p><strong>Name:</strong>  {{ condition.name }}  </p>
+            <p><strong>Date of Diagnosis:</strong> {{ new Date(condition.dateOfDiagnosis).toLocaleDateString() }}</p>
+            <p v-if="condition.treatment"><strong>Treatment:</strong> {{ condition.treatment.name }}</p>
+          </li>
+        </ul>
+      </div>
+    </div>
 
-      
-      }
+    <div class="columns has-background-warning-light info">
+      <div class="column">
+        <p class="title has-text-centered">Appointments</p>
+      </div>
+    </div>
+  </div>
+</template>
+
+<script>
+import axios from "axios";
+
+export default {
+  data() {
+    return {
+      patient: null,
+      conditions: []
     };
-    </script>
-    
-    <style scoped>
-    .padding {
-      padding: 40px;
-      color: white;
-      font-size: 50px
-    }
-    
-    .columns {
-      padding: 20px;
-    }
+  },
+  methods: {
+    async fetchPatient() {
+      try {
+        const response = await axios.get(`http://localhost:3000/patients/${this.$route.params.patient}`);
+        this.patient = response.data;
+        console.log(this.patient);
+        await this.fetchConditions();
+      } catch (error) {
+        console.error("Failed to fetch patient data:", error);
+      }
+    },
+    async fetchConditions() {
+      try {
+        const conditionPromises = this.patient.conditions.map(id => axios.get(`http://localhost:3000/conditions/${id}`));
+        const conditionResponses = await Promise.all(conditionPromises);
+        this.conditions = conditionResponses.map(response => response.data);
 
-    .info {
-      padding-bottom: 50px;
-      padding-top: 50px;
+
+
+
+      } catch (error) {
+        console.error("Failed to fetch conditions data:", error);
+      }
+    },
+    goBack() {
+      this.$router.push('/patients');
     }
-    </style>
+  },
+  created() {
+    this.fetchPatient();
+  }
+};
+</script>
+
+<style scoped>
+.columns {
+  padding: 20px;
+}
+
+.info {
+  padding-bottom: 50px;
+  padding-top: 50px;
+}
+
+.is-flex {
+  display: flex;
+}
+
+.is-justify-content-space-between {
+  justify-content: space-between;
+}
+
+.is-align-items-center {
+  align-items: center;
+}
+</style>

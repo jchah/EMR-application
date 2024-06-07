@@ -19,7 +19,7 @@ const routes = [
     { path: '/test-dashboard', component: Tests },
     { path: '/login', component: Login },
     { path: '/register', component: Register },
-    { path: '/patients/:cardNum', name : 'PatientProfile', component: PatientProfile}
+    { path: '/patients/:patient', name : 'PatientProfile', component: PatientProfile}
     // { path: '/documentation', component: Documentation },
 ];
 
