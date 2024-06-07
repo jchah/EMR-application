@@ -68,7 +68,7 @@
 
     <div class="columns has-background-warning-light info">
       <div class="column">
-        <p class="title has-text-centered">Conditions</p>
+        <p class="title has-text-centered">Appointments</p>
         <table class="table is-fullwidth is-striped has-background-warning-light">
           <thead>
           <tr>
@@ -81,11 +81,11 @@
           </thead>
           <tbody>
           <tr v-for="appointment in appointments" :key="condition._id">
-            <td></td>
-            <td></td>
-            <td></td>
-            <td></td>
-            <td></td>
+            <td class="has-text-centered"></td>
+            <td class="has-text-centered"></td>
+            <td class="has-text-centered"></td>
+            <td class="has-text-centered"></td>
+            <td class="has-text-centered"></td>
           </tr>
           </tbody>
         </table>
