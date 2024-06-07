@@ -2,13 +2,14 @@
 
 <template>
       <div class="section">
-        <div class="columns is-centered">
-          <div class="column">
+        <h1 class="title">Appointments</h1>
+        <div class="is-centered">
+          <div class="">
             <DatePicker v-model="date" expanded/>
-            <button class="button is-primary is-centered" @click="isDoingForm(true)">Make Appointment</button>
+            <button style="margin-top: 20px; margin-bottom: 20px" class="button is-primary is-centered" @click="isDoingForm(true)">Make Appointment</button>
             </div>
-            <div class="column">
-            <table class="table">
+            <div class="">
+            <table class="table" v-if="!appointments || appointments.length > 0">
               <thead>
               <tr>
                 <th>Name</th>
@@ -31,6 +32,9 @@
               </tr>
               </tbody>
             </table>
+            <div v-else>
+              <p>No appointments scheduled for the selected date.</p>
+            </div>
           </div>
           
           <div class="overlay" v-if="isOn">
@@ -218,8 +222,6 @@ export default {
           console.log(emailForSending.data.contact.email)
 
           await sendEmail(emailForSending.data.contact.email, 'Appointment Confirmation', `Your appointment is scheduled for ${info.value.date} and ${info.value.startTime.toLocaleTimeString()}.`)
-
-          isDoingForm(false)
           
           } catch (error) {
             console.error(error)
@@ -296,6 +298,11 @@ export default {
       isOn.value = a;
     }
 
+    function hasAppointments() {
+      console.log('has appointments: ' + appointments.value.length)
+      return appointments.value.length > 0
+    }
+
     async function sendEmail(patientEmail, subject, message) {
       const templateParams = {
           to_email: patientEmail,
@@ -310,6 +317,8 @@ export default {
           .catch(error => {
               console.error('Failed to send email.', error);
           });
+
+      location.reload();
     }
 
     return {
@@ -327,7 +336,8 @@ export default {
       isOn,
       isDoingForm,
       hasErrorMessage,
-      sendEmail
+      sendEmail,
+      hasAppointments
 
     };
   },
