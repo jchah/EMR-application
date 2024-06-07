@@ -2,7 +2,7 @@
   <section class="hero is-link">
     <div class="hero-body is-flex is-justify-content-space-between is-align-items-center">
       <p class="title" v-if="patient">Patient Profile : {{patient.firstName + " " + patient.lastName}}</p>
-      <button class="button is-light" @click="goBack">Back to Patients</button>
+      <button class="button is-info" @click="goBack">Back to Patients</button>
     </div>
   </section>
 
@@ -31,35 +31,35 @@
       </div>
     </div>
 
-    <div class="columns has-background-info-light info">
+    <div class="columns has-background-danger-light info">
       <div class="column">
         <p class="title has-text-centered">Conditions</p>
-        <table class="table is-fullwidth is-striped has-background-info-light">
+        <table class="table is-fullwidth is-striped has-background-danger-light">
           <thead>
           <tr>
-            <th>Condition Name</th>
-            <th>Date of Diagnosis</th>
-            <th>Treatment Name</th>
-            <th>Frequency</th>
-            <th>Start Date</th>
-            <th>End Date</th>
-            <th>Route</th>
-            <th>Dosage</th>
-            <th>Prescribing Physician</th>
+            <th class="has-text-centered is-size-5">Condition Name</th>
+            <th class="has-text-centered is-size-4">Date of Diagnosis</th>
+            <th class="has-text-centered is-size-4">Treatment Name</th>
+            <th class="has-text-centered is-size-4">Frequency</th>
+            <th class="has-text-centered is-size-4">Start Date</th>
+            <th class="has-text-centered is-size-4">End Date</th>
+            <th class="has-text-centered is-size-4">Route</th>
+            <th class="has-text-centered is-size-4">Dosage</th>
+            <th class="has-text-centered is-size-4">Prescribing Physician</th>
           </tr>
           </thead>
           <tbody>
           <tr v-for="condition in conditions" :key="condition._id">
-            <td>{{ condition.name }}</td>
-            <td>{{ new Date(condition.dateOfDiagnosis).toLocaleDateString() }}</td>
-            <td v-if="condition.treatment">{{ condition.treatment.name }}</td>
-            <td v-if="condition.treatment">{{ condition.treatment.frequency }}</td>
-            <td v-if="condition.treatment">{{ new Date(condition.treatment.startDate).toLocaleDateString() }}</td>
-            <td v-if="condition.treatment">{{ new Date(condition.treatment.endDate).toLocaleDateString() }}</td>
-            <td v-if="condition.treatment">{{ condition.treatment.route }}</td>
-            <td v-if="condition.treatment">{{ condition.treatment.dosage }}</td>
-            <td v-if="condition.treatment">{{ condition.treatment.prescribingPhysician }}</td>
-            <td v-else colspan="7">No treatment available</td>
+            <td class="has-text-centered">{{ condition.name }}</td>
+            <td class="has-text-centered">{{ new Date(condition.dateOfDiagnosis).toLocaleDateString() }}</td>
+            <td class="has-text-centered" v-if="condition.treatment">{{ condition.treatment.name }}</td>
+            <td class="has-text-centered" v-if="condition.treatment">{{ condition.treatment.frequency }}</td>
+            <td class="has-text-centered" v-if="condition.treatment">{{ new Date(condition.treatment.startDate).toLocaleDateString() }}</td>
+            <td class="has-text-centered" v-if="condition.treatment">{{ new Date(condition.treatment.endDate).toLocaleDateString() }}</td>
+            <td class="has-text-centered" v-if="condition.treatment">{{ condition.treatment.route }}</td>
+            <td class="has-text-centered" v-if="condition.treatment">{{ condition.treatment.dosage }}</td>
+            <td class="has-text-centered" v-if="condition.treatment">{{ condition.treatment.prescribingPhysician }}</td>
+            <td class="has-text-centered" v-else colspan="7">No treatment available</td>
           </tr>
           </tbody>
         </table>
@@ -68,7 +68,27 @@
 
     <div class="columns has-background-warning-light info">
       <div class="column">
-        <p class="title has-text-centered">Appointments</p>
+        <p class="title has-text-centered">Conditions</p>
+        <table class="table is-fullwidth is-striped has-background-warning-light">
+          <thead>
+          <tr>
+            <th class="has-text-centered is-size-4">Notes</th>
+            <th class="has-text-centered is-size-4">Date</th>
+            <th class="has-text-centered is-size-4">Start Time</th>
+            <th class="has-text-centered is-size-4">End Time</th>
+            <th class="has-text-centered is-size-4">Doctor</th>
+          </tr>
+          </thead>
+          <tbody>
+          <tr v-for="appointment in appointments" :key="condition._id">
+            <td></td>
+            <td></td>
+            <td></td>
+            <td></td>
+            <td></td>
+          </tr>
+          </tbody>
+        </table>
       </div>
     </div>
   </div>
@@ -82,7 +102,8 @@ export default {
     return {
       patient: null,
       conditions: [],
-      treatments: []
+      treatments: [],
+      appoitnments: []
     };
   },
   methods: {
