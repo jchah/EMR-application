@@ -16,6 +16,7 @@
         <router-link class="navbar-item" to="/patients">Patients</router-link>
         <router-link class="navbar-item" to="/test-dashboard">Test Dashboard</router-link>
         <router-link class="navbar-item" to="/calendar">Appointments</router-link>
+        <router-link class="navbar-item" to="/conditions">Conditions</router-link>
 
         <div class="navbar-item has-dropdown is-hoverable">
           <a class="navbar-link">Settings</a>
