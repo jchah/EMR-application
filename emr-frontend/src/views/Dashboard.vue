@@ -13,7 +13,7 @@
               <div class="card has-text-centered">
                 <div class="card-image">
                   <figure class="image is-4by3">
-                    <img src="../img/doctor.jpg" style="object-fit: cover; width: 100%; height: 100%;" alt="Patients">
+                    <img src="../img/doctor.jpg" style="object-fit: cover;" alt="Patients">
                   </figure>
                 </div>
                 <header class="card-header">
@@ -31,7 +31,7 @@
               <div class="card has-text-centered">
                 <div class="card-image">
                   <figure class="image is-4by3">
-                    <img src="../img/appointment.jpg" style="object-fit: cover; width: 100%; height: 100%;" alt="Appointments">
+                    <img src="../img/appointment.jpg" style="object-fit: cover;" alt="Appointments">
                   </figure>
                 </div>
                 <header class="card-header">
@@ -49,7 +49,7 @@
               <div class="card has-text-centered">
                 <div class="card-image">
                   <figure class="image is-4by3">
-                    <img src="../img/test.jpeg" style="object-fit: cover; width: 100%; height: 100%;" alt="Tests">
+                    <img src="../img/test.jpeg" style="object-fit: cover;" alt="Tests">
                   </figure>
                 </div>
                 <header class="card-header">
@@ -88,5 +88,9 @@
 
 .container {
   overflow-x: hidden;
+}
+
+.card-image, .image {
+  margin: 0;
 }
 </style>
