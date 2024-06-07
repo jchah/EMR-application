@@ -2,7 +2,7 @@
   <nav class="navbar is-dark" role="navigation" aria-label="main navigation">
     <div class="navbar-brand">
       <a class="navbar-item" href="/">
-        <img src="src/img/LogoCropped.png" alt="Logo">
+        <img src="../img/LogoCropped.png" alt="Logo">
       </a>
       <a role="button" class="navbar-burger" :class="{'is-active': isActive}" aria-label="menu" aria-expanded="false" @click="toggleMenu">
         <span aria-hidden="true"></span>

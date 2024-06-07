@@ -7,7 +7,6 @@
       <div class="container">
         <h1 class="title has-text-centered animate__animated animate__fadeInDown">Welcome to the EMR Application</h1>
         <p class="subtitle has-text-centered animate__animated animate__fadeIn">Manage all your medical records in one place.</p>
-
         <div class="columns is-multiline is-centered is-variable is-8">
           <div class="column is-narrow animate__animated animate__fadeInLeft">
             <RouterLink :to="'/patients'">
