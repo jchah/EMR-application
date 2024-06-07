@@ -123,7 +123,7 @@
             <th>Sex</th>
             <th>Address</th>
             <th>Health Card</th>
-            <th>Go To Patient Profile</th>
+            <th>Actions</th>
           </tr>
           </thead>
           <tbody>
@@ -134,7 +134,10 @@
             <td>{{ patient.sex }}</td>
             <td>{{ patient.address }}</td>
             <td>{{ patient.cardNumber }}</td>
-            <td><button class="button is-link" type="button" @click="goToPatientProfile(patient._id)">Profile</button></td>
+            <td>
+              <button class="button is-link" @click="goToPatientProfile(patient._id)">Profile</button>
+              <button class="button is-danger" @click="deletePatient(patient._id)">Delete</button>
+            </td>
           </tr>
           </tbody>
         </table>
@@ -159,7 +162,7 @@ export default {
       sex: '',
       cardNumber: '',
       patients: [],
-      conditions: [], // should be an array of conditions from db. Displaying can use condition.name
+      conditions: [],
       selectedConditions: [],
       filteredPatients: [],
       hasSearched: false,
@@ -186,6 +189,16 @@ export default {
         const response = await axios.get(`http://localhost:3000/conditions`);
         this.conditions = response.data;
       } catch (error) {
+        console.error(error);
+      }
+    },
+    async deletePatient(patientId) {
+      try {
+        await axios.delete(`http://localhost:3000/patients/${patientId}`);
+        this.successMessage = 'Patient deleted successfully.';
+        this.filteredPatients = this.filteredPatients.filter(patient => patient._id !== patientId);
+      } catch (error) {
+        this.errorMessage = 'Failed to delete patient.';
         console.error(error);
       }
     },
