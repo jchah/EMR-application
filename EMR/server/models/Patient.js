@@ -41,26 +41,49 @@ const patientSchema = new Schema({
     cardNumber: {
         type: String,
     },
-    conditions: [{
+    treatments: [{
         type: Schema.Types.ObjectId,
-        ref: 'Condition',
+        ref: 'Medicine',
         required: false
     }]
 });
 
-const Patient = mongoose.model("Patient", patientSchema);
-
-const conditionSchema = new Schema({
+const medicineSchema = new mongoose.Schema({
+    condition: {
+        type: String,
+        required: true,
+    },
     name: {
         type: String,
         required: true,
     },
-    dateOfDiagnosis: {
-        type: Date,
+    dosage: {
+        type: String,
         required: true,
-    }
+    },
+    frequency: {
+        type: String,
+        required: true,
+    },
+    route: {
+        type: String,
+        required: true,
+    },
+    startDate: {
+        type: Date,
+    },
+    endDate: {
+        type: Date,
+    },
+    prescribingPhysician: {
+        type: String,
+    },
+    notes: {
+        type: String,
+    },
 });
 
-const Condition = mongoose.model("Condition", conditionSchema);
+const Medicine = mongoose.model("Medicine", medicineSchema);
+const Patient = mongoose.model("Patient", patientSchema);
 
-module.exports = { Patient, Condition };
+module.exports = { Patient, Medicine };

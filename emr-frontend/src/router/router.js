@@ -10,7 +10,6 @@ import Login from '../views/LoginView.vue';
 import Register from '../views/RegisterView.vue';
 // import Documentation from '../views/DocumentationView.vue';
 import Tests from '../views/TestDashboard.vue'
-import Conditions from "../views/Conditions.vue";
 
 const routes = [
     { path: '/', component: Dashboard },
@@ -21,7 +20,6 @@ const routes = [
     { path: '/login', component: Login },
     { path: '/register', component: Register },
     { path: '/patients/:patient', name : 'PatientProfile', component: PatientProfile},
-    {path: '/conditions', name: 'Conditions', component: Conditions},
     // { path: '/documentation', component: Documentation },
 ];
 

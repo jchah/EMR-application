@@ -8,7 +8,7 @@ require('./db');
 
 const { Patient, Condition } = require("./models/Patient");
 const Appointment = require("./models/Appointment");
-const Medicine = require('./models/Medicine');
+const Medicine = require('./models/Condition');
 
 const UserRouter = require("./routes/user.js");
 
