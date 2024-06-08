@@ -22,11 +22,6 @@
                   <input type="password" class="input" id="password" v-model="account.password" required>
                 </div>
               </div>
-              <div class="field">
-                <label class="label" for="role">Role</label>
-                <div class="control">
-                </div>
-              </div>
               <!-- Success and Error Messages -->
               <div v-if="successMessage" class="notification is-success">{{ successMessage }}</div>
               <div v-if="errorMessage" class="notification is-danger">{{ errorMessage }}</div>
@@ -61,11 +56,6 @@
                 <label class="label" for="password">Password</label>
                 <div class="control">
                   <input type="password" class="input" id="password" v-model="account.password" required>
-                </div>
-              </div>
-              <div class="field">
-                <label class="label" for="role">Role</label>
-                <div class="control">
                 </div>
               </div>
               <!-- Success and Error Messages -->
