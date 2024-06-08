@@ -386,6 +386,7 @@ async function sendEmail(to, subject, text) {
 
 app.post('/send-email', async (req, res) => {
     const { to, subject, text } = req.body
+    console.log(process.env.EMAIL_USER, process.env.EMAIL_PASS)
     try {
         await sendEmail(to, subject, text)
         res.status(200).send({ message: 'Email sent successfully!' })
