@@ -54,12 +54,15 @@ export default {
     async login() {
       this.successMessage = '';
       this.errorMessage = '';
-      this.account.email = this.account.email.toLowerCase(); // Convert email to lowercase before sending
+      const accountData = {
+        ...this.account,
+        email: this.account.email.toLowerCase() // Ensure email is in lowercase before sending
+      };
       try {
         const response = await fetch('http://localhost:3000/user/signin', {
           method: 'POST',
           headers: { 'Content-Type': 'application/json' },
-          body: JSON.stringify(this.account)
+          body: JSON.stringify(accountData)
         });
         if (response.ok) {
           const data = await response.json();
