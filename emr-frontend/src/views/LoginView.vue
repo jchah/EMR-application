@@ -28,7 +28,6 @@
               <div class="control">
                 <button type="submit" class="button is-primary is-fullwidth">Login</button>
               </div>
-            
             </form>
           </div>
         </div>
@@ -55,11 +54,15 @@ export default {
     async login() {
       this.successMessage = '';
       this.errorMessage = '';
+      const accountData = {
+        ...this.account,
+        email: this.account.email.toLowerCase() // Ensure email is in lowercase before sending
+      };
       try {
         const response = await fetch('http://localhost:3000/user/signin', {
           method: 'POST',
           headers: { 'Content-Type': 'application/json' },
-          body: JSON.stringify(this.account)
+          body: JSON.stringify(accountData)
         });
         if (response.ok) {
           const data = await response.json();

@@ -6,39 +6,41 @@
     </div>
   </section>
 
-  <div class="columns has-background-info-light">
-    <div class="column has-text-centered">
-      <p class="title has-text-centered">Patient Info</p>
-    </div>
-  </div>
-
   <div v-if="patient">
-    <div class="columns has-background-info-light has-text-centered info">
-      <div class="column">
-        <div class="columns">
-          <div class="column">
-            <p class="subtitle">First Name : {{ patient.firstName }}</p>
-            <p class="subtitle">Last Name : {{ patient.lastName }}</p>
-          </div>
-          <div class="column">
-            <p class="subtitle">Sex : {{ patient.sex }}</p>
-            <p class="subtitle">Health Card Number : {{ patient.cardNumber }}</p>
-          </div>
-          <div class="column">
-            <p class="subtitle">DOB : {{ patient.dateOfBirth }}</p>
-            <p class="subtitle">Address : {{ patient.address }}</p>
-          </div>
-          <div class="column">
-            <p class="subtitle">Phone : {{ patient.contact.phone }}</p>
-            <p class="subtitle">Email : {{ patient.contact.email }}</p>
+    <div class="card my-4">
+      <div class="card-content">
+        <div class="columns is-mobile">
+          <div class="column has-text-centered">
+            <p class="title has-text-centered">Patient Info</p>
           </div>
         </div>
-      </div>
-    </div>
-
-    <div class="columns has-text-centered has-background-info-light">
-      <div class="column">
-        <button class="button is-info is-size-4" @click="openContactOverlay(true)">Change Contact Preference?</button>
+        <div class="columns has-text-centered info">
+          <div class="column">
+            <div class="columns">
+              <div class="column">
+                <p class="subtitle">First Name : {{ patient.firstName }}</p>
+                <p class="subtitle">Last Name : {{ patient.lastName }}</p>
+              </div>
+              <div class="column">
+                <p class="subtitle">Sex : {{ patient.sex }}</p>
+                <p class="subtitle">Health Card Number : {{ patient.cardNumber }}</p>
+              </div>
+              <div class="column">
+                <p class="subtitle">DOB : {{ patient.dateOfBirth }}</p>
+                <p class="subtitle">Address : {{ patient.address }}</p>
+              </div>
+              <div class="column">
+                <p class="subtitle">Phone : {{ patient.contact.phone }}</p>
+                <p class="subtitle">Email : {{ patient.contact.email }}</p>
+              </div>
+            </div>
+          </div>
+        </div>
+        <div class="columns has-text-centered">
+          <div class="column">
+            <button class="button is-info is-size-5 mt-3" @click="openContactOverlay(true)">Change Contact Preference?</button>
+          </div>
+        </div>
       </div>
     </div>
 
@@ -86,41 +88,44 @@
       </div>
     </div>
 
-    <div class="columns has-background-warning-light">
-      <div class="column has-text-centered">
-        <p class="title has-text-centered">Appointments</p>
-      </div>
-    </div>
-
-    <div class="columns has-background-warning-light info">
-      <div class="column">
-        <p class="title has-text-centered"></p>
-        <table class="table is-fullwidth has-background-warning-light">
-          <thead>
-            <tr>
-              <th></th>
-              <th class="has-text-centered is-size-4">Notes</th>
-              <th class="has-text-centered is-size-4">Date</th>
-              <th class="has-text-centered is-size-4">Start Time</th>
-              <th class="has-text-centered is-size-4">End Time</th>
-            </tr>
-          </thead>
-          <tbody>
-            <tr v-for="appointment in appointments" :key="appointment._id">
-              <td><button class="button is-danger" @click="deleteAppointment(appointment._id)">X</button></td>
-              <td class="has-text-centered">{{ appointment.notes }}</td>
-              <td class="has-text-centered">{{ appointment.date }}</td>
-              <td class="has-text-centered">{{ appointment.startTime }}</td>
-              <td class="has-text-centered">{{ appointment.endTime }}</td>
-            </tr>
-          </tbody>
-        </table>
-        <div  class="has-text-centered">
-          <button class="button is-warning" @click="sendToAppointmentPage()">Create Appointment?</button>
+    <div class="card my-4">
+      <div class="card-content">
+        <div class="columns is-mobile">
+          <div class="column has-text-centered">
+            <p class="title has-text-centered">Appointments</p>
+          </div>
+        </div>
+        <div class="columns info">
+          <div class="column">
+            <p class="title has-text-centered"></p>
+            <table class="table is-fullwidth">
+              <thead>
+                <tr>
+                  <th></th>
+                  <th class="has-text-centered is-size-5">Notes</th>
+                  <th class="has-text-centered is-size-5">Date</th>
+                  <th class="has-text-centered is-size-5">Start Time</th>
+                  <th class="has-text-centered is-size-5">End Time</th>
+                </tr>
+              </thead>
+              <tbody>
+                <tr v-for="appointment in appointments" :key="appointment._id">
+                  <td><button class="button is-danger is-small" @click="deleteAppointment(appointment._id)">X</button></td>
+                  <td class="has-text-centered">{{ appointment.notes }}</td>
+                  <td class="has-text-centered">{{ appointment.date }}</td>
+                  <td class="has-text-centered">{{ appointment.startTime }}</td>
+                  <td class="has-text-centered">{{ appointment.endTime }}</td>
+                </tr>
+              </tbody>
+            </table>
+            <div class="has-text-centered">
+              <button class="button is-warning is-size-5 mt-3" @click="sendToAppointmentPage()">Create Appointment?</button>
+            </div>
+          </div>
         </div>
       </div>
     </div>
-
+  </div>
     <div class="overlay" v-if="contactOpen">
       <div class="box">
         <form>
@@ -141,7 +146,6 @@
         </form>
       </div>
     </div>
-  </div>
 </template>
 
 <script>
@@ -319,5 +323,14 @@ export default {
 
 .is-align-items-center {
   align-items: center;
+}
+
+.card {
+  box-shadow: 0 2px 3px rgba(10, 10, 10, 0.1), 0 0 0 1px rgba(10, 10, 10, 0.1);
+  border-radius: 6px;
+}
+
+.card-content {
+  padding: 1.5rem 2rem;
 }
 </style>
