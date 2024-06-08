@@ -66,7 +66,7 @@
             </tr>
           </thead>
           <tbody>
-            <tr v-for="treatment in treatments" :key="treatment._id">
+            <tr v-for="treatment in patient.treatments" :key="treatment._id">
               <td><button class="button is-danger" @click="clearTreatment(treatment)">X</button></td>
               <td class="has-text-centered is-bold">{{ treatment.condition }}</td>
               <td class="has-text-centered">{{ treatment.name }}</td>
@@ -123,7 +123,7 @@
 
     <div class="overlay" v-if="contactOpen">
       <div class="box">
-        <form @submit.prevent="addTreatment()">
+        <form>
           <div class="has-text-centered">
             <p class="title">Current Preference : {{ patient.contactPreference }}</p>
             <p class="title">___________________________</p>
@@ -139,92 +139,6 @@
             </div>
           </div>
         </form>
-      </div>
-    </div>
-
-    <div class="overlay" v-if="windowOpen">
-      <div class="box">
-        <form @submit.prevent="addTreatment()">
-          <br />
-          <p class="title has-text-centered">Add New Treatment</p>
-          <div class="columns">
-            <div class="column">
-              <div class="field">
-                <label class="label">Condition Name</label>
-                <div class="control">
-                  <input class="input" type="text" v-model="newTreatment.condition" />
-                </div>
-              </div>
-              <div class="field">
-                <label class="label">Treatment Name</label>
-                <div class="control">
-                  <input class="input" type="text" v-model="newTreatment.name" />
-                </div>
-              </div>
-              <div class="field">
-                <label class="label">Dosage</label>
-                <div class="control">
-                  <input class="input" type="text" v-model="newTreatment.dosage" />
-                </div>
-              </div>
-              <div class="field">
-                <label class="label">Frequency</label>
-                <div class="control">
-                  <input class="input" type="text" v-model="newTreatment.frequency" />
-                </div>
-              </div>
-              <div class="field">
-                <label class="label">Route</label>
-                <div class="control">
-                  <input class="input" type="text" v-model="newTreatment.route" />
-                </div>
-              </div>
-            </div>
-
-            <div class="column">
-              <div class="field">
-                <label class="label">Start Date</label>
-                <div class="control">
-                  <input class="input" type="date" v-model="newTreatment.startDate" />
-                </div>
-              </div>
-              <div class="field">
-                <label class="label">End Date</label>
-                <div class="control">
-                  <input class="input" type="date" v-model="newTreatment.endDate" />
-                </div>
-              </div>
-              <div class="field">
-                <label class="label">Prescribing Physician</label>
-                <div class="control">
-                  <input class="input" type="text" v-model="newTreatment.prescribingPhysician" />
-                </div>
-              </div>
-              <div class="field">
-                <label class="label">Notes</label>
-                <div class="control">
-                  <input class="input" type="text" v-model="newTreatment.notes" />
-                </div>
-              </div>
-            </div>
-          </div>
-          <div class="columns has-text-centered">
-            <div class="column">
-              <div class="field is-grouped">
-                <div class="control">
-                  <button class="button is-primary" type="submit">Submit</button>
-                </div>
-              </div>
-            </div>
-            <div class="column">
-              <button class="button is-info" @click="clearTreatmentForm()">Clear Form</button>
-            </div>
-            <div class="column">
-              <button class="button is-danger" @click="openTreatmentForm(false)">Cancel</button>
-            </div>
-          </div>
-        </form>
-        <br />
       </div>
     </div>
   </div>
@@ -277,8 +191,7 @@ export default {
       }
     },
     openTreatmentForm(value) {
-      this.windowOpen = value;
-      this.clearTreatmentForm();
+      this.$router.push(`/patients/add-treatment/${this.$route.params.patient}`);
     },
     openContactOverlay(value) {
       this.contactOpen = value;
@@ -336,7 +249,7 @@ export default {
       const tempTreatments = [];
       const allTreatments = this.patient.treatments.map(async (treatment) => {
         try {
-          const response = await axios.get(`http://localhost:3000/treatments/${treatment}`);
+          const response = await axios.get(`${treatment}`);
           tempTreatments.push(response.data);
         } catch (error) {
           console.error(`Error fetching treatment ${treatment}`, error);

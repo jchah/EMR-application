@@ -59,7 +59,7 @@
         <div class="field">
           <label class="label">Dosage</label>
           <div class="control select">
-            <select name="route" id="route" v-model="newTreatment.dosage" v-if="selectedDrug">
+            <select name="route" id="dosage" v-model="newTreatment.dosage" v-if="selectedDrug">
               <option v-for="option in selectedDrug.dosage" :value="option.pharmaceutical_form_name" :key="option.pharmaceutical_form_name">{{ option.pharmaceutical_form_name }}</option>
             </select>
             <input class="input" type="text" disabled v-else>
@@ -198,9 +198,9 @@ export default {
           this.newTreatment.endDate = 'N/A';
         }
         try {
-          treatmentPost = this.newTreatment;
+          let treatmentPost = this.newTreatment;
           console.log(treatmentPost);
-          const response = await axios.post(`http://localhost:3000/treatments`, this.newTreatment);
+          const response = await axios.post(`http://localhost:3000/treatments`, treatmentPost);
           this.successMessage = 'New treatment added successfully.';
           let treatmentID = response.data._id;
           console.log("Treatment ID:")
@@ -208,6 +208,7 @@ export default {
           try {
             const response = await axios.get(`http://localhost:3000/patients/${this.$route.params.patient}`);
             const treatments = response.data.treatments;
+            treatments.push(treatmentID);
 
             const data = {
               treatments: treatments
@@ -225,6 +226,7 @@ export default {
          
           await this.fetchPatients();
         } catch (error) {
+          console.log(error)
             this.successMessage = '';
             this.errorMessage = 'Failed to add new patient.';
           }

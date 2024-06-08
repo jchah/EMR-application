@@ -54,7 +54,8 @@ app.get("/patients", async (req, res, next) => {
 // Read a single patient by ID
 app.get("/patients/:id", async (req, res, next) => {
     try {
-        const patient = await Patient.findById(req.params.id);
+        const patient = await Patient.findById(req.params.id)
+        .populate("treatments");
         if (!patient) {
             return res.status(404).send({ message: "Patient not found" });
         }
