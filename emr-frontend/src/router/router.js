@@ -15,7 +15,7 @@ import User from '../views/UserView.vue'
 const routes = [
     { path: '/', component: Dashboard },
     { path: '/patients', component: Patients },
-    { path: '/calendar', component: Calendar},
+    { path: '/calendar', component: Calendar, name : 'Calender'},
     { path: '/settings', component: Settings },
     { path: '/test-dashboard', component: Tests },
     { path: '/login', component: Login },

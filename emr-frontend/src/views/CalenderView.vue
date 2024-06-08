@@ -1,31 +1,33 @@
 <!-- IF YOU ARE ABOUT TO EDIT MY CODE TELL ME SO I CAN DO IT I NEED TO GET MARKS OFF THIS FUCKING PROJECT -->
 
 <template>
+    <section class="hero is-info is-fullheight-with-navbar">
+
       <div class="section">
         <h1 class="title">Appointments</h1>
         <div class="is-centered">
           <div class="">
-            <DatePicker v-model="date" expanded/>
+            <DatePicker class="has-background-info-light" v-model="date" expanded/>
             <button style="margin-top: 20px; margin-bottom: 20px" class="button is-primary is-centered" @click="isDoingForm(true)">Make Appointment</button>
             </div>
             <div class="">
-            <table class="table" v-if="!appointments || appointments.length > 0">
+            <table class="table has-background-info" v-if="!appointments || appointments.length > 0">
               <thead>
               <tr>
-                <th>Name</th>
-                <th>Start Time</th>
-                <th>End Time</th>
-                <th>Notes</th>
+                <th class="has-text-white">Name</th>
+                <th class="has-text-white">Start Time</th>
+                <th class="has-text-white">End Time</th>
+                <th class="has-text-white">Notes</th>
               </tr>
               </thead>
               <tbody>
               <tr v-for="app in appointments" :key="app.id">
-                <td><router-link :to="`/patients/${app.patient.data._id}`">{{ app.patient.data.firstName + " " +
+                <td class="has-text-white"><router-link :to="`/patients/${app.patient.data._id}`">{{ app.patient.data.firstName + " " +
                  app.patient.data.lastName}}</router-link></td>
-                <td>{{ app.startTime }}</td>
-                <td>{{ app.endTime }}</td>
-                <td>{{ app.notes }}</td>
-                <td>
+                <td class="has-text-white">{{ app.startTime }}</td>
+                <td class="has-text-white">{{ app.endTime }}</td>
+                <td class="has-text-white">{{ app.notes }}</td>
+                <td class="has-text-white has-text-centered">
                   <button @click="deleteAppointment(app)" class="button is-danger"> Delete</button>
 
                 </td>
@@ -81,6 +83,7 @@
           </div>
         </div>
       </div>
+    </section>
 </template>
 
 <script>
