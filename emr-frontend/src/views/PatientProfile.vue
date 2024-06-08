@@ -126,7 +126,6 @@
       </div>
     </div>
   </div>
-
     <div class="overlay" v-if="contactOpen">
       <div class="box">
         <form>
@@ -147,7 +146,6 @@
         </form>
       </div>
     </div>
-  </div>
 </template>
 
 <script>

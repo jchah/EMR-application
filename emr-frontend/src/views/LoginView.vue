@@ -13,7 +13,7 @@
               <div class="field">
                 <label class="label" for="email">Email</label>
                 <div class="control">
-                  <input type="email" class="input" id="email" v-model="account.email" required>
+                  <input type="email" class="input" id="email" v-model="account.email" @input="toLowerCaseEmail" required>
                 </div>
               </div>
               <div class="field">
@@ -28,7 +28,6 @@
               <div class="control">
                 <button type="submit" class="button is-primary is-fullwidth">Login</button>
               </div>
-            
             </form>
           </div>
         </div>
@@ -52,6 +51,9 @@ export default {
     };
   },
   methods: {
+    toLowerCaseEmail() {
+      this.account.email = this.account.email.toLowerCase();
+    },
     async login() {
       this.successMessage = '';
       this.errorMessage = '';
