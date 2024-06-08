@@ -6,10 +6,15 @@
     </div>
   </section>
 
-  <div v-if="patient">
-    <div class="columns has-background-link-light info">
-      <div class="column">
+  <div class="columns has-background-info">
+      <div class="column has-text-centered">
         <p class="title has-text-centered">Patient Info</p>
+      </div>
+    </div>
+
+  <div v-if="patient">
+    <div class="columns has-background-link-light has-text-centered info">
+      <div class="column">
         <div class="columns">
           <div class="column">
             <p class="subtitle">First Name : {{ patient.firstName}}</p>
@@ -31,9 +36,14 @@
       </div>
     </div>
 
+    <div class="columns has-background-danger">
+      <div class="column has-text-centered">
+        <p class="title has-text-centered">Conditions</p>
+      </div>
+    </div>
+
     <div class="columns has-background-danger-light info">
       <div class="column">
-        <p class="title has-text-centered">Conditions</p>     
         <table class="table is-fullwidth has-background-danger-light">
           <thead>
           <tr>
@@ -69,31 +79,41 @@
       </div>
     </div>
 
+    <div class="columns has-background-warning">
+      <div class="column has-text-centered">
+        <p class="title has-text-centered">Appointments</p>
+      </div>
+    </div>
+
     <div class="columns has-background-warning-light info">
       <div class="column">
-        <p class="title has-text-centered">Appointments</p>
-        <table class="table is-fullwidth is-striped has-background-warning-light">
+        <p class="title has-text-centered"></p>
+        <table class="table is-fullwidth has-background-warning-light">
           <thead>
           <tr>
+            <th></th>
             <th class="has-text-centered is-size-4">Notes</th>
             <th class="has-text-centered is-size-4">Date</th>
             <th class="has-text-centered is-size-4">Start Time</th>
             <th class="has-text-centered is-size-4">End Time</th>
-            <th class="has-text-centered is-size-4">Doctor</th>
+            
           </tr>
           </thead>
           <tbody>
-<!--          <tr v-for="appointment in appointments" :key="condition._id">-->
-<!--            <td class="has-text-centered"></td>-->
-<!--            <td class="has-text-centered"></td>-->
-<!--            <td class="has-text-centered"></td>-->
-<!--            <td class="has-text-centered"></td>-->
-<!--            <td class="has-text-centered"></td>-->
-<!--          </tr>-->
+            <tr v-for="appointment in appointments" :key="appointments._id">
+              <td><button class="button is-danger">X</button></td>
+              <td class="has-text-centered">{{ appointment.notes }}</td>
+              <td class="has-text-centered">{{ appointment.date }}</td>
+              <td class="has-text-centered">{{ appointment.startTime }}</td>
+              <td class="has-text-centered">{{ appointment.endTime }}</td>
+            </tr>
           </tbody>
         </table>
+        <div class="has-text-centered"><button class="button is-warning" @click="sendToAppointmentPage()">Create Appointment?</button></div>
       </div>
+      
     </div>
+    
 
     <div class="overlay" v-if="windowOpen">
             <div class="box">
@@ -222,9 +242,12 @@ export default {
       try {
         const response = await axios.get(`http://localhost:3000/appointments`);
         console.log('response', response.data)
-        
-        this.appointments = response.data;
-        this.appointments.filter(appointment => {
+      
+
+        this.appointments = response.data.filter(appointment => {
+          console.log(appointment.patient)
+          console.log(this.$route.params.patient)
+          console.log(appointment.patient == this.$route.params.patient)
           return appointment.patient == this.$route.params.patient;
         })
         console.log('appointments', this.appointments)
@@ -284,11 +307,12 @@ export default {
             await axios.put(`http://localhost:3000/patients/${this.$route.params.patient}`, data)
             this.openTreatmentForm(false);
             this.clearTreatmentForm();
-            console.log("Successfully updated patient");
-            this.successMessage = 'Successfully updated patient';
+            console.log("Successfully updated treatments");
+            this.successMessage = 'Successfully updated treatments';
+            location.reload()
             
           } catch (e) {
-            console.log("Error updating patients: " + e);
+            console.log("Error updating treatment: " + e);
           }
          
           await this.fetchPatients();
@@ -301,6 +325,9 @@ export default {
         this.errorMessage = 'Please ensure you fill out all fields.';
       }
    
+    },
+    sendToAppointmentPage() {
+      this.$router.push({ name: 'Calender'})
     },
     async fillTreatments() {
       const tempTreatments = [];

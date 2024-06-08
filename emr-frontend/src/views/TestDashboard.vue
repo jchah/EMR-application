@@ -1,9 +1,11 @@
 <template>
-  <div id="test-dashboard" class="has-background-white-ter">
+<section class="hero is-fullheight-with-navbar has-background-danger">
+
+  <div id="test-dashboard" class="">
     <div class="section" id="test-forms">
-      <h1 class="title">Test</h1>
+      <h1 class="title has-text-white">Tests</h1>
       <div class="columns is-centered">
-        <div class="section column is-half has-background-white" id="order">
+        <div class="section column is-half has-background-danger-light" id="order">
           <h2 class="section-header">Order test</h2>
           <form @submit.prevent="submitOrder(this.orderData)">
             <div v-if="orderSuccess" class="notification is-success">
@@ -36,7 +38,7 @@
           </form>
         </div>
         <hr>
-        <div class="section column is-half has-background-white" id="results">
+        <div class="section column is-half has-background-danger-light" id="results">
           <h2 class="section-header">Submit test results</h2>
           <form @submit.prevent="submitResults(this.resultsData)">
             <div v-if="resultsSuccess" class="notification is-success">
@@ -80,6 +82,7 @@
       </div>
     </div>
   </div>
+  </section>
 </template>
 
 <script>

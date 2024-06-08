@@ -1,14 +1,16 @@
 <!-- IF YOU ARE ABOUT TO EDIT MY CODE TELL ME SO I CAN DO IT I NEED TO GET MARKS OFF THIS FUCKING PROJECT -->
 
 <template>
+    <section class="hero is-info is-fullheight-with-navbar">
+
       <div class="section">
         <h1 class="title">Appointments</h1>
         <div class="is-centered">
           <div class="">
-            <DatePicker v-model="date" expanded/>
+            <DatePicker class="has-background-info-light" v-model="date" expanded/>
             <button style="margin-top: 20px; margin-bottom: 20px" class="button is-primary is-centered" @click="isDoingForm(true)">Make Appointment</button>
             </div>
-            <div class="">
+            <div class="box">
             <table class="table" v-if="!appointments || appointments.length > 0">
               <thead>
               <tr>
@@ -25,7 +27,7 @@
                 <td>{{ app.startTime }}</td>
                 <td>{{ app.endTime }}</td>
                 <td>{{ app.notes }}</td>
-                <td>
+                <td class="has-text-white has-text-centered">
                   <button @click="deleteAppointment(app)" class="button is-danger"> Delete</button>
 
                 </td>
@@ -81,6 +83,7 @@
           </div>
         </div>
       </div>
+    </section>
 </template>
 
 <script>
