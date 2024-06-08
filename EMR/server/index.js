@@ -4,8 +4,9 @@ const bodyParser = require("body-parser");
 const morgan = require("morgan");
 const cors = require("cors");
 const dotenv = require("dotenv");
-// const nodemailer = require('nodemailer');
-// const cron = require('node-cron');
+const twilioClient = require('./controllers/twillio.js')
+const nodemailer = require('nodemailer');
+const cron = require('node-cron');
 require('./db');
 
 const { Patient, Medicine } = require("./models/Patient");
@@ -330,36 +331,97 @@ app.delete("/treatments/:id", async (req, res) => {
     }
 });
 
-// // node mailer and node cron
+// twillio notifications
 
-// let transporter = nodemailer.createTransport({
-//     service: 'gmail',
-//     auth: {
-//         user: process.env.EMAIL_USER,
-//         pass: process.env.EMAIL_PASS
-//     }
-// });
+async function sendSMS(to, message) {
+    console.log(message)
+    try {
+        const response = await twilioClient.messages.create({
+            body: message,
+            to: to,  // Text this number
+            from: '+13855577185' // From a valid Twilio number
+        });
+        console.log('SMS sent successfully!', response.sid);
+    } catch (error) {
+        console.error('Failed to send SMS.', error);
+    }
+}
 
-// // Step 2: Define the email options
-// let mailOptions = {
-//     from: process.env.EMAIL_USER,
-//     to: 'recipient-email@example.com',
-//     subject: 'Scheduled Email from Node.js',
-//     text: 'This is a test email sent at a scheduled time.',
-// };
+app.post('/send-sms', async (req, res) => {
+    const { to, message } = req.body;
+    try {
+        await sendSMS(to, message);
+        res.status(200).send({ message: 'SMS sent successfully!' });
+    } catch (error) {
+        res.status(500).send({ message: error.message });
+    }
+});
 
-// // Step 3: Define the cron job
-// cron.schedule('0 9 * * *', () => { // This cron job will run every day at 9:00 AM
-//     transporter.sendMail(mailOptions, function(error, info){
-//         if (error) {
-//             console.log('Error occurred: ' + error.message);
-//         } else {
-//             console.log('Email sent successfully: ' + info.response);
-//         }
-//     });
-// }, {
-//     scheduled: true,
-//     timezone: "America/New_York" // Set the desired timezone
-// });
+// node mailer and node cron
 
-// console.log('Cron job scheduled to send email at 9:00 AM every day');
+let transporter = nodemailer.createTransport({
+    service: 'gmail',
+    auth: {
+        user: process.env.EMAIL_USER,
+        pass: process.env.EMAIL_PASS
+    }
+});
+
+async function sendEmail(to, subject, text) {
+    let mailOptions = {
+        from: process.env.EMAIL_USER,
+        to: to,
+        subject: subject,
+        text: text
+    }
+
+    transporter.sendMail(mailOptions, function(error, info) {
+        if(error)
+            console.log('error occured with sending email', error.message)
+        else {
+            console.log('email sent successfully', info.response)
+        }
+    })
+}
+
+app.post('/send-email', async (req, res) => {
+    const { to, subject, text } = req.body
+    console.log(process.env.EMAIL_USER, process.env.EMAIL_PASS)
+    try {
+        await sendEmail(to, subject, text)
+        res.status(200).send({ message: 'Email sent successfully!' })
+    } catch (e) {
+        res.status(500).send({ message: e.message })
+    }
+})
+
+cron.schedule('0 3 * * *', async () => { // runs at 3 am every day
+    try {
+        let date = (new Date()).toLocaleDateString()
+        const appointments = await Appointment.find({ date: date });
+
+        let mailOptions = {
+            from: process.env.EMAIL_USER,
+            to: '',
+            subject: 'Appointment Reminder!',
+            text: 'Your Appointment is scheduled for today.\nRegards,\nEMR Team'
+        }
+
+        appointments.forEach(async a => {
+            mailOptions.to = a.patient.contact.email
+
+            transporter.sendMail(mailOptions, function(error, info){
+                if (error) {
+                    console.log('Error occurred: ' + error.message);
+                } else {
+                    console.log('Email sent successfully: ' + info.response);
+                }
+            });
+        })
+    } catch(e) {
+        console.error(e)
+    }
+}, {
+    scheduled: true,
+    timezone: "America/New_York" // Set the desired timezone
+});
