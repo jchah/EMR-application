@@ -119,7 +119,7 @@
               </tbody>
             </table>
             <div class="has-text-centered">
-              <button class="button is-warning is-size-5 mt-3" @click="sendToAppointmentPage()">Create Appointment?</button>
+              <button v-if="token" class="button is-warning is-size-5 mt-3" @click="sendToAppointmentPage()">Create Appointment?</button>
             </div>
           </div>
         </div>

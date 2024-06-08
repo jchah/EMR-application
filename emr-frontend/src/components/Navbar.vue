@@ -17,25 +17,13 @@
         <router-link v-if="!token" class="navbar-item" to="/search-patient">Patient Login</router-link>
         <router-link v-if="token" class="navbar-item" to="/patients">Patients</router-link>
         <router-link v-if="token" class="navbar-item" to="/calendar">Appointments</router-link>
-
-        <div class="navbar-item has-dropdown is-hoverable">
-          <a v-if="token" class="navbar-link">Settings</a>
-          <div class="navbar-dropdown">
-            <a class="dropdown-item">
-              <router-link to="/user">User</router-link>
-            </a>
-            <a class="dropdown-item">Theme</a>
-            <hr class="navbar-divider">
-            <a class="dropdown-item">Report an issue</a>
-          </div>
-        </div>
       </div>
 
       <div class="navbar-end">
         <div class="navbar-item">
           <div class="buttons">
-            <router-link v-if="!token" class="button has-background-success" to="/register">Register</router-link>
-            <router-link v-if="!token" class="button has-background-warning" to="/login">Log in</router-link>
+            <router-link v-if="!token" class="button has-background-success" to="/register">Doctor Register</router-link>
+            <router-link v-if="!token" class="button has-background-warning" to="/login">Doctor Log in</router-link>
             <a @click="logout" v-if="token" class="button has-background-danger" to="/login">Log Out</a>
           </div>
         </div>
