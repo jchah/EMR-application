@@ -6,10 +6,15 @@
     </div>
   </section>
 
-  <div v-if="patient">
-    <div class="columns has-background-link-light info">
-      <div class="column">
+  <div class="columns has-background-info">
+      <div class="column has-text-centered">
         <p class="title has-text-centered">Patient Info</p>
+      </div>
+    </div>
+
+  <div v-if="patient">
+    <div class="columns has-background-link-light has-text-centered info">
+      <div class="column">
         <div class="columns">
           <div class="column">
             <p class="subtitle">First Name : {{ patient.firstName}}</p>
@@ -31,9 +36,14 @@
       </div>
     </div>
 
+    <div class="columns has-background-danger">
+      <div class="column has-text-centered">
+        <p class="title has-text-centered">Conditions</p>
+      </div>
+    </div>
+
     <div class="columns has-background-danger-light info">
       <div class="column">
-        <p class="title has-text-centered">Conditions</p>     
         <table class="table is-fullwidth has-background-danger-light">
           <thead>
           <tr>
@@ -69,31 +79,41 @@
       </div>
     </div>
 
+    <div class="columns has-background-warning">
+      <div class="column has-text-centered">
+        <p class="title has-text-centered">Appointments</p>
+      </div>
+    </div>
+
     <div class="columns has-background-warning-light info">
       <div class="column">
-        <p class="title has-text-centered">Appointments</p>
-        <table class="table is-fullwidth is-striped has-background-warning-light">
+        <p class="title has-text-centered"></p>
+        <table class="table is-fullwidth has-background-warning-light">
           <thead>
           <tr>
+            <th></th>
             <th class="has-text-centered is-size-4">Notes</th>
             <th class="has-text-centered is-size-4">Date</th>
             <th class="has-text-centered is-size-4">Start Time</th>
             <th class="has-text-centered is-size-4">End Time</th>
-            <th class="has-text-centered is-size-4">Doctor</th>
+            
           </tr>
           </thead>
           <tbody>
-<!--          <tr v-for="appointment in appointments" :key="condition._id">-->
-<!--            <td class="has-text-centered"></td>-->
-<!--            <td class="has-text-centered"></td>-->
-<!--            <td class="has-text-centered"></td>-->
-<!--            <td class="has-text-centered"></td>-->
-<!--            <td class="has-text-centered"></td>-->
-<!--          </tr>-->
+            <tr v-for="appointment in appointments" :key="appointments._id">
+              <td><button class="button is-danger">X</button></td>
+              <td class="has-text-centered">{{ appointment.notes }}</td>
+              <td class="has-text-centered">{{ appointment.date }}</td>
+              <td class="has-text-centered">{{ appointment.startTime }}</td>
+              <td class="has-text-centered">{{ appointment.endTime }}</td>
+            </tr>
           </tbody>
         </table>
+        <div class="has-text-centered"><button class="button is-warning" @click="sendToAppointmentPage()">Create Appointment?</button></div>
       </div>
+      
     </div>
+    
 
     <div class="overlay" v-if="windowOpen">
             <div class="box">
@@ -191,7 +211,7 @@ export default {
     return {
       patient: null,
       treatments: [],
-      appoitnments: [],
+      appointments: [],
       windowOpen : false,
       newTreatment : {
         condition : '',
@@ -217,46 +237,24 @@ export default {
         console.error("Failed to fetch patient data:", error);
       }
     },
-    // async fetchTreatments() {
-    //   try {
-    //     const treatmentPromises = this.conditions
-    //         .filter(condition => condition.treatment)
-    //         .map(condition => axios.get(`http://localhost:3000/treatments/${condition.treatment}`));
-    //     const treatmentResponses = await Promise.all(treatmentPromises);
-    //     this.treatments = treatmentResponses.map(response => response.data);
+   
+    async fetchAppointments(){
+      try {
+        const response = await axios.get(`http://localhost:3000/appointments`);
+        console.log('response', response.data)
+      
 
-    //     // Map treatments back to conditions
-    //     this.conditions = this.conditions.map(condition => {
-    //       if (condition.treatment) {
-    //         condition.treatment = this.treatments.find(treatment => treatment._id === condition.treatment);
-    //       }
-    //       return condition;
-    //     });
-    //   } catch (error) {
-    //     console.error("Failed to fetch treatments data:", error);
-    //   }
-    // },
-    // async fetchAppointments(){
-    //   try {
-    //     const response = await axios.get(`http://localhost:3000/calendar/appointments`, {
-    //       params:{
-    //         date: date.toLocaleDateString()
-    //       }
-    //     });
-    //     appointments.value = response.data;
-    //     appointments.value.forEach(async (a) =>{
-    //       let id = a.patient;
-    //       a.patient = await axios.get(`http://localhost:3000/patients/${id}`);
-    //     })
-    //     console.log(appointments.value);
-    //     sortTimeEarliest();
-    //
-    //
-    //
-    //   } catch (error) {
-    //     console.error("Error getting data from getAppointments", error);
-    //   }
-    // },
+        this.appointments = response.data.filter(appointment => {
+          console.log(appointment.patient)
+          console.log(this.$route.params.patient)
+          console.log(appointment.patient == this.$route.params.patient)
+          return appointment.patient == this.$route.params.patient;
+        })
+        console.log('appointments', this.appointments)
+      } catch (error) {
+        console.error("Error getting data from getAppointments", error);
+      }
+    },
     openTreatmentForm(value) {
       this.windowOpen = value
       this.clearTreatmentForm()
@@ -312,11 +310,12 @@ export default {
             await axios.put(`http://localhost:3000/patients/${this.$route.params.patient}`, data)
             this.openTreatmentForm(false);
             this.clearTreatmentForm();
-            console.log("Successfully updated patient");
-            this.successMessage = 'Successfully updated patient';
+            console.log("Successfully updated treatments");
+            this.successMessage = 'Successfully updated treatments';
+            location.reload()
             
           } catch (e) {
-            console.log("Error updating patients: " + e);
+            console.log("Error updating treatment: " + e);
           }
          
           await this.fetchPatients();
@@ -329,6 +328,9 @@ export default {
         this.errorMessage = 'Please ensure you fill out all fields.';
       }
    
+    },
+    sendToAppointmentPage() {
+      this.$router.push({ name: 'Calender'})
     },
     async fillTreatments() {
       const tempTreatments = [];
@@ -351,13 +353,36 @@ export default {
     },
     async clearTreatment(treatment) {
       const deletedID = treatment._id
-      const response = await axios.delete(`http://localhost:3000/treatments/${deletedID}`)
+      console.log(deletedID)
+      try {
+        const response = await axios.delete(`http://localhost:3000/treatments/${deletedID}`)
+      } catch (error) {
+        console.log(error)
+      }
+
+      try {
+        const response = await axios.get(`http://localhost:3000/patients/${this.$route.params.patient}`);
+        const previousTreatments = response.data.treatments
+        console.log(previousTreatments)
+        const updatedTreatments = previousTreatments.filter(treatmentId => treatmentId !== deletedID) 
+        console.log(updatedTreatments)
+        const data = {
+          treatments : updatedTreatments
+        }
+      
+        await axios.put(`http://localhost:3000/patients/${this.$route.params.patient}`, data)
+        this.openTreatmentForm(false);
+        this.clearTreatmentForm
+        console.log("Successfully Updated Patient")
+      } catch (error) {
+        console.log(error)
+      }
       location.reload()
     }
   },
   created() {
     this.fetchPatient();
-    // this.fetchAppointments();
+    this.fetchAppointments();
   }
 };
 </script>

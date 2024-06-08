@@ -189,6 +189,15 @@ app.get('/calendar/appointments', async (req, res) => {
     }
 });
 
+app.get('/appointments', async (req, res) => {
+    try {
+        const appointments = await Appointment.find();
+        res.status(200).send(appointments)
+    } catch (error) {
+        res.status(500).send({ message : error.message})
+    }
+})
+
 // Get a single appointment by id
 app.get("/appointments/:id", async (req, res) => {
     try {

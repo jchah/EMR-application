@@ -1,14 +1,16 @@
 <!-- IF YOU ARE ABOUT TO EDIT MY CODE TELL ME SO I CAN DO IT I NEED TO GET MARKS OFF THIS FUCKING PROJECT -->
 
 <template>
+    <section class="hero is-info is-fullheight-with-navbar">
+
       <div class="section">
         <h1 class="title">Appointments</h1>
         <div class="is-centered">
           <div class="">
-            <DatePicker v-model="date" expanded/>
+            <DatePicker class="has-background-info-light" v-model="date" expanded/>
             <button style="margin-top: 20px; margin-bottom: 20px" class="button is-primary is-centered" @click="isDoingForm(true)">Make Appointment</button>
             </div>
-            <div class="">
+            <div class="box">
             <table class="table" v-if="!appointments || appointments.length > 0">
               <thead>
               <tr>
@@ -25,7 +27,7 @@
                 <td>{{ app.startTime }}</td>
                 <td>{{ app.endTime }}</td>
                 <td>{{ app.notes }}</td>
-                <td>
+                <td class="has-text-white has-text-centered">
                   <button @click="deleteAppointment(app)" class="button is-danger"> Delete</button>
 
                 </td>
@@ -41,7 +43,7 @@
             <div class="box">
               <form @submit.prevent="makeAppointment(date)">
                 <div class="field has-text-centered">
-                  <label class="title">Selected Date: {{ formatDate(date) }}</label>
+                  <label class="title has-text-dark">Selected Date: {{ formatDate(date) }}</label>
                 </div>
                 <label class="label">Patient Name</label>
                 <div class="control">
@@ -54,33 +56,56 @@
                     </div>
                   </div>
                 </div>
-                <div class="field">
-                  <div class="control beside">
-                    <label class="label">Start Time</label>
-                    <DatePicker mode="time" v-model="info.startTime"/>
-                    <label class="label">End Time</label>
-                    <DatePicker mode="time" v-model="info.endTime"/>
-                  </div>
-                </div>
+                <br>
+                <div class="columns has-text-centered">
+                      <div class="column">
+                        <div class="field">
+                          <label class="label ">Start Time</label>
+                          <DatePicker mode="time" v-model="info.startTime"/>
+                        </div>
+                      </div>
+                      
+
+                      <div class="column">
+                        <div class="field">
+                          <label class="label">End Time</label>
+                          <DatePicker mode="time" v-model="info.endTime"/>
+                        </div>
+                      </div>
+                  </div>  
                 <div class="field">
                   <label class="label">Notes</label>
                   <div class="control">
                     <input class="input" type="text" v-model="info.notes">
                   </div>
                 </div>
-                <div class="field is-grouped">
-                  <div class="control">
-                    <button class="button is-primary" type="submit">Submit</button>
+
+                <div class="columns has-text-centered">
+                  <div class="column">
+                    <div class="field">
+                      <div class="control">
+                        <button class="button is-primary is-fullwidth" type="submit">Submit</button>
+                      </div>
+                    </div>
+                  </div>
+                  <div class="column">
+                    <button class="button is-danger is-fullwidth" @click="isDoingForm(false)"> Cancel</button>
                   </div>
                 </div>
+
+
+
+
+
+                <
                 <div v-if="hasErrorMessage" class="notification is-danger">Please Enter Valid Patient Name</div>
               </form>
               <br>
-              <button class="button is-danger" @click="isDoingForm(false)"> Cancel</button>
             </div>
           </div>
         </div>
       </div>
+    </section>
 </template>
 
 <script>

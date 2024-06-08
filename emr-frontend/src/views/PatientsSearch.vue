@@ -1,10 +1,11 @@
 <template>
+<!-- <section class="hero is-primary is-fullheight-with-navbar"> --> 
   <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bulma@0.9.3/css/bulma.min.css">
-  <div class="container">
+  <section class="hero is-fullheight-with-navbar has-background-warning section">
     <div v-if="!hasSearched" class="columns is-centered">
       <div class="column is-half mt-5">
         <h1 class="title">Search For Patient</h1>
-        <div class="box">
+        <div class="box has-background-warning-light">
           <div v-if="successMessage" class="notification is-success">
             {{ successMessage }}
           </div>
@@ -110,11 +111,10 @@
     </div>
     <div v-if="hasSearched" class="columns is-centered">
       <div class="column is-full">
-        <div class="control">
-          <button class="button is-link" @click="showSearch">Go Back to Search</button>
-        </div>
+        <br>
         <h1 class="title">Filtered Patients</h1>
-        <table class="table is-fullwidth is-striped">
+        <div class="box has-background-warning-light">
+          <table class="table is-fullwidth has-text-centered has-background-warning-light">
           <thead>
           <tr>
             <th>First Name</th>
@@ -141,6 +141,7 @@
           </tr>
           </tbody>
         </table>
+        </div>
         <nav class="pagination is-centered" role="navigation" aria-label="pagination">
           <button class="pagination-previous" @click="prevPage" :disabled="currentPage === 1">Previous</button>
           <button class="pagination-next" @click="nextPage" :disabled="currentPage * pageSize >= filteredPatients.length">Next</button>
@@ -150,9 +151,13 @@
             </a></li>
           </ul>
         </nav>
+        <div class="control">
+          <button class="button is-link pl-4" @click="showSearch">Go Back to Search</button>
+        </div>
       </div>
     </div>
-  </div>
+  </section>
+
 </template>
 
 <script>
