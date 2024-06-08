@@ -194,6 +194,13 @@ export default {
       errorMessage: ''
     };
   },
+  setup() {
+    let token = localStorage.getItem('token') || null
+    
+    if(!token) {
+      window.location = ('/')
+    }
+  },
   computed: {
     paginatedPatients() { // List of the patients that should be displayed on the current page of pagination
       const start = (this.currentPage - 1) * this.pageSize;

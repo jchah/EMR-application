@@ -117,6 +117,7 @@ import emailjs, { send } from 'emailjs-com'
 emailjs.init('2aRoZGFYWXbozLSuh');
 
 const API_URL = "http://localhost:3000";
+
 export default {
   components: {
     DatePicker,
@@ -139,6 +140,11 @@ export default {
       notes:'',
     })
 
+    let token = localStorage.getItem('token') || null
+
+    if(!token) {
+      window.location = ('/')
+    }
 
     function showOptions(){
 
