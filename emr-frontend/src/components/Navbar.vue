@@ -13,22 +13,10 @@
     </div>
     <div class="navbar-menu" :class="{'is-active': isActive}" id="navMenu">
       <div class="navbar-start">
-        <router-link class="navbar-item" to="/" style="color: black;">Dashboard</router-link>
-        <router-link class="navbar-item" to="/patients" style="color: black;">Patients</router-link>
-        <router-link class="navbar-item" to="/calendar" style="color: black;">Appointments</router-link>
+        <router-link class="navbar-item" to="/" style="color: #1f1e1c;">Dashboard</router-link>
+        <router-link class="navbar-item" to="/patients" style="color: #1f1e1c;">Patients</router-link>
+        <router-link class="navbar-item" to="/calendar" style="color: #1f1e1c;">Appointments</router-link>
 
-
-        <div class="navbar-item has-dropdown is-hoverable">
-          <a class="navbar-link" style="color: black;">Settings</a>
-          <div class="navbar-dropdown">
-            <a class="dropdown-item">
-              <router-link to="/user">User</router-link>
-            </a>
-            <a class="dropdown-item">Theme</a>
-            <hr class="navbar-divider">
-            <a class="dropdown-item">Report an issue</a>
-          </div>
-        </div>
       </div>
 
       <div class="navbar-end">
