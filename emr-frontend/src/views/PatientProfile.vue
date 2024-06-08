@@ -2,7 +2,10 @@
   <section class="hero is-link">
     <div class="hero-body is-flex is-justify-content-space-between is-align-items-center">
       <p class="title" v-if="patient">Patient Profile : {{patient.firstName + " " + patient.lastName}}</p>
+      
+
       <button class="button is-info" @click="goBack">Back to Patients</button>
+      
     </div>
   </section>
 
@@ -34,8 +37,16 @@
           </div>
         </div>
       </div>
+      
+      
     </div>
 
+    <div class="columns has-text-centered has-background-info-light">
+      <div class="column">
+        <button class="button is-info is-size-4" @click="openContactOverlay(true)">Change Contact Preference</button>
+      </div>
+    </div>  
+    
     <div class="columns has-background-danger">
       <div class="column has-text-centered">
         <p class="title has-text-centered">Conditions</p>
@@ -114,6 +125,28 @@
       
     </div>
     
+    <div class="overlay" v-if="contactOpen">
+      <div class="box">
+        <form @submit.prevent="addTreatment()">
+          <div class="has-text-centered">
+            <p class="title">Current Preference : {{ patient.contactPreference }}</p>
+            <p class="title">___________________________</p>
+            <br>
+            <p class="title">Select New Preference:</p>
+            
+          </div>
+          <div class="columns has-text-centered">
+            
+            <div class="column">
+              <button class="button is-info is-size-3" @click="selectPreference('email')">Email</button>
+            </div>
+            <div class="column">
+              <button class="button is-info is-size-3" @click="selectPreference('sms')">SMS</button>
+            </div>
+          </div>
+        </form>
+      </div>  
+    </div>
 
     <div class="overlay" v-if="windowOpen">
             <div class="box">
@@ -213,6 +246,7 @@ export default {
       treatments: [],
       appointments: [],
       windowOpen : false,
+      contactOpen : false,
       newTreatment : {
         condition : '',
         name : '',
@@ -231,7 +265,8 @@ export default {
       try {
         const response = await axios.get(`http://localhost:3000/patients/${this.$route.params.patient}`);
         this.patient = response.data;
-        console.log(this.patient);
+        console.log('patient', this.patient);
+        console.log('preference', this.patient.patientPreference)
         await this.fillTreatments();
       } catch (error) {
         console.error("Failed to fetch patient data:", error);
@@ -258,6 +293,9 @@ export default {
     openTreatmentForm(value) {
       this.windowOpen = value
       this.clearTreatmentForm()
+    },
+    openContactOverlay(value) {
+      this.contactOpen = value
     },
     clearTreatmentForm() {
       this.newTreatment.condition = ''
@@ -347,6 +385,18 @@ export default {
 
       await console.log(tempTreatments)
       this.treatments = tempTreatments
+    },
+    async selectPreference(value) {
+      this.contactOpen = false
+      const data = {
+        contactPreference : value
+      }
+      try {
+        const response = await axios.put(`http://localhost:3000/patients/${this.$route.params.patient}`, data)
+        console.log(response.data)
+      } catch (error) {
+        console.log(error)
+      }
     },
     async clearTreatment(treatment) {
       const deletedID = treatment._id
