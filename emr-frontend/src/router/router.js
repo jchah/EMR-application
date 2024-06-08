@@ -7,6 +7,7 @@ import Settings from '../views/Settings.vue';
 import Calendar from '../views/CalenderView.vue'
 import Login from '../views/LoginView.vue';
 import Register from '../views/DoctorRegisterView.vue';
+// import Documentation from '../views/DocumentationView.vue';
 import User from '../views/UserView.vue'
 
 const routes = [
