@@ -43,7 +43,7 @@
 
     <div class="columns has-text-centered has-background-info-light">
       <div class="column">
-        <button class="button is-info" @click="openContactOverlay(true)">Change Contact Preference?</button>
+        <button class="button is-info" @click="openContactOverlay(true)">Change Contact Preference</button>
       </div>
     </div>
 
@@ -64,8 +64,8 @@
             <th class="has-text-centered is-size-4">Frequency</th>
             <th class="has-text-centered is-size-4">Start Date</th>
             <th class="has-text-centered is-size-4">End Date</th>
-            <th class="has-text-centered is-size-4">Route</th>
-            <th class="has-text-centered is-size-4">Dosage</th>
+            <th class="has-text-centered is-size-4">Route of Administration</th>
+            <th class="has-text-centered is-size-4">Dosage Form</th>
             <th class="has-text-centered is-size-4">Prescribing Physician</th>
             <th></th>
 
@@ -86,7 +86,7 @@
           </tr>
           </tbody>
         </table>
-        <div class="has-text-centered"><button class="button is-danger has-text-centered" @click="openTreatmentForm(true)">Add Treatment?</button></div>
+        <div class="has-text-centered"><button class="button is-danger has-text-centered" @click="openTreatmentForm(true)">Add Treatment</button></div>
       </div>
     </div>
 
@@ -120,7 +120,7 @@
           </tr>
           </tbody>
         </table>
-        <div class="has-text-centered"><button class="button is-warning" @click="sendToAppointmentPage()">Create Appointment?</button></div>
+        <div class="has-text-centered"><button class="button is-warning" @click="sendToAppointmentPage()">Create Appointment</button></div>
       </div>
 
     </div>
@@ -147,92 +147,6 @@
         </form>
       </div>
     </div>
-
-    <div class="overlay" v-if="windowOpen">
-      <div class="box">
-        <form @submit.prevent="addTreatment()">
-          <br>
-          <p class="title has-text-centered">Add New Treatment</p>
-          <div class="columns">
-            <div class="column">
-              <div class="field">
-                <label class="label">Condition Name</label>
-                <div class="control">
-                  <input class="input" type="text" v-model="newTreatment.condition">
-                </div>
-              </div>
-              <div class="field">
-                <label class="label">Treatment Name</label>
-                <div class="control">
-                  <input class="input" type="text" v-model="newTreatment.name">
-                </div>
-              </div>
-              <div class="field">
-                <label class="label">Dosage</label>
-                <div class="control">
-                  <input class="input" type="text" v-model="newTreatment.dosage">
-                </div>
-              </div>
-              <div class="field">
-                <label class="label">Frequency</label>
-                <div class="control">
-                  <input class="input" type="text" v-model="newTreatment.frequency">
-                </div>
-              </div>
-              <div class="field">
-                <label class="label">Route</label>
-                <div class="control">
-                  <input class="input" type="text" v-model="newTreatment.route">
-                </div>
-              </div>
-            </div>
-
-            <div class="column">
-              <div class="field">
-                <label class="label">Start Date</label>
-                <div class="control">
-                  <input class="input" type="date" v-model="newTreatment.startDate">
-                </div>
-              </div>
-              <div class="field">
-                <label class="label">End Date</label>
-                <div class="control">
-                  <input class="input" type="date" v-model="newTreatment.endDate">
-                </div>
-              </div>
-              <div class="field">
-                <label class="label">Prescribing Physician</label>
-                <div class="control">
-                  <input class="input" type="text" v-model="newTreatment.prescribingPhysician">
-                </div>
-              </div>
-              <div class="field">
-                <label class="label">Notes</label>
-                <div class="control">
-                  <input class="input" type="text" v-model="newTreatment.notes">
-                </div>
-              </div>
-            </div>
-          </div>
-          <div class="columns has-text-centered">
-            <div class="column">
-              <div class="field is-grouped">
-                <div class="control">
-                  <button class="button is-primary" type="submit">Submit</button>
-                </div>
-              </div>
-            </div>
-            <div class="column">
-              <button class="button is-info" @click="clearTreatmentForm()"> Clear Form</button>
-            </div>
-            <div class="column">
-              <button class="button is-danger" @click="openTreatmentForm(false)"> Cancel</button>
-            </div>
-          </div>
-        </form>
-        <br>
-      </div>
-    </div>
   </div>
 </template>
 
@@ -245,7 +159,6 @@ export default { // Data
       patient: null,
       treatments: [],
       appointments: [],
-      windowOpen : false,
       contactOpen : false,
       newTreatment : { // For creating treatments
         condition : '',
@@ -290,23 +203,11 @@ export default { // Data
         console.error("Error getting data from getAppointments", error);
       }
     },
-    openTreatmentForm(value) { // Opens the popup for treatments
-      this.windowOpen = value
-      this.clearTreatmentForm()
+    openTreatmentForm(value) { // Redirects to the page to add treatments
+      this.$router.push(`/patients/add-treatment/${this.$route.params.patient}`);
     },
     openContactOverlay(value) { // Opens/Closes the popup for changing preferred contact information 
       this.contactOpen = value
-    },
-    clearTreatmentForm() { // Clears the form for adding treatments
-      this.newTreatment.condition = ''
-      this.newTreatment.name = ''
-      this.newTreatment.dosage = ''
-      this.newTreatment.frequency = ''
-      this.newTreatment.route = ''
-      this.newTreatment.startDate = ''
-      this.newTreatment.endDate = ''
-      this.newTreatment.prescribingPhysician = ''
-      this.newTreatment.notes= ''
     },
     goBack() { // Goes back to the patients search page
       this.$router.push('/patients');

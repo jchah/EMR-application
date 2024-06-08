@@ -60,9 +60,15 @@
           <label class="label">Dosage</label>
           <div class="control select">
             <select name="route" id="route" v-model="newTreatment.dosage" v-if="selectedDrug">
-              <option v-for="options in selectedDrug.dosage" :value="options.pharmaceutical_form_name" :key="option.pharmaceutical_form_name">{{ option.pharmaceutical_form_name }}</option>
+              <option v-for="option in selectedDrug.dosage" :value="option.pharmaceutical_form_name" :key="option.pharmaceutical_form_name">{{ option.pharmaceutical_form_name }}</option>
             </select>
             <input class="input" type="text" disabled v-else>
+          </div>
+        </div>
+        <div class="field">
+          <label class="label">Frequency</label>
+          <div class="control">
+            <input class="input" type="text" v-model="newTreatment.frequency" required>
           </div>
         </div>
       </div>
@@ -83,7 +89,7 @@
           <label class="label">Route</label>
           <div class="control select">
             <select v-if="selectedDrug" name="route" id="route" v-model="newTreatment.route">
-              <option v-for="options in selectedDrug.routes" :value="options.route_of_administration_name" :key="option.route_of_administration_code">{{ option.route_of_administration_name }}</option>
+              <option v-for="option in selectedDrug.routes" :value="option.route_of_administration_name" :key="option.route_of_administration_code">{{ option.route_of_administration_name }}</option>
             </select>
             <input class="input" type="text" disabled v-else>
           </div>
@@ -102,7 +108,7 @@
         <button class="button is-info" @click="clearTreatmentForm()">Clear Form</button>
       </div>
       <div class="column">
-        <button class="button is-danger" @click="openTreatmentForm(false)">Cancel</button>
+        <button class="button is-danger" @click="goBack()">Cancel</button>
       </div>
     </div>
   </form>
@@ -192,6 +198,8 @@ export default {
           this.newTreatment.endDate = 'N/A';
         }
         try {
+          treatmentPost = this.newTreatment;
+          console.log(treatmentPost);
           const response = await axios.post(`http://localhost:3000/treatments`, this.newTreatment);
           this.successMessage = 'New treatment added successfully.';
           let treatmentID = response.data._id;
@@ -201,12 +209,6 @@ export default {
             const response = await axios.get(`http://localhost:3000/patients/${this.$route.params.patient}`);
             const treatments = response.data.treatments;
 
-            console.log("Before:")
-            console.log(treatments);
-            treatments.push(treatmentID);
-            console.log("After:")
-            console.log(treatments)
-
             const data = {
               treatments: treatments
             };
@@ -215,7 +217,7 @@ export default {
             this.clearTreatmentForm();
             console.log("Successfully updated treatments");
             this.successMessage = 'Successfully updated treatments';
-            location.reload()
+            this.goBack();
             
           } catch (e) {
             console.log("Error updating treatment: " + e);
