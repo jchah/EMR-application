@@ -2,18 +2,18 @@
   <section class="hero is-link">
     <div class="hero-body is-flex is-justify-content-space-between is-align-items-center">
       <p class="title" v-if="patient">Patient Profile : {{patient.firstName + " " + patient.lastName}}</p>
-      
+
 
       <button class="button is-info" @click="goBack">Back to Patients</button>
-      
+
     </div>
   </section>
 
   <div class="columns has-background-info-light">
-      <div class="column has-text-centered">
-        <p class="title has-text-centered">Patient Info</p>
-      </div>
+    <div class="column has-text-centered">
+      <p class="title has-text-centered">Patient Info</p>
     </div>
+  </div>
 
   <div v-if="patient">
     <div class="columns has-background-info-light has-text-centered info">
@@ -37,16 +37,16 @@
           </div>
         </div>
       </div>
-      
-      
+
+
     </div>
 
     <div class="columns has-text-centered has-background-info-light">
       <div class="column">
         <button class="button is-info is-size-4" @click="openContactOverlay(true)">Change Contact Preference?</button>
       </div>
-    </div>  
-    
+    </div>
+
     <div class="columns has-background-danger-light">
       <div class="column has-text-centered">
         <p class="title has-text-centered">Conditions</p>
@@ -68,7 +68,7 @@
             <th class="has-text-centered is-size-4">Dosage</th>
             <th class="has-text-centered is-size-4">Prescribing Physician</th>
             <th></th>
-            
+
           </tr>
           </thead>
           <tbody>
@@ -107,24 +107,24 @@
             <th class="has-text-centered is-size-4">Date</th>
             <th class="has-text-centered is-size-4">Start Time</th>
             <th class="has-text-centered is-size-4">End Time</th>
-            
+
           </tr>
           </thead>
           <tbody>
-            <tr v-for="appointment in appointments" :key="appointments._id">
-              <td><button class="button is-danger" @click="deleteAppointment(appointment._id)">X</button></td>
-              <td class="has-text-centered">{{ appointment.notes }}</td>
-              <td class="has-text-centered">{{ appointment.date }}</td>
-              <td class="has-text-centered">{{ appointment.startTime }}</td>
-              <td class="has-text-centered">{{ appointment.endTime }}</td>
-            </tr>
+          <tr v-for="appointment in appointments" :key="appointments._id">
+            <td><button class="button is-danger" @click="deleteAppointment(appointment._id)">X</button></td>
+            <td class="has-text-centered">{{ appointment.notes }}</td>
+            <td class="has-text-centered">{{ appointment.date }}</td>
+            <td class="has-text-centered">{{ appointment.startTime }}</td>
+            <td class="has-text-centered">{{ appointment.endTime }}</td>
+          </tr>
           </tbody>
         </table>
         <div class="has-text-centered"><button class="button is-warning" @click="sendToAppointmentPage()">Create Appointment?</button></div>
       </div>
-      
+
     </div>
-    
+
     <div class="overlay" v-if="contactOpen">
       <div class="box">
         <form @submit.prevent="addTreatment()">
@@ -133,10 +133,10 @@
             <p class="title">___________________________</p>
             <br>
             <p class="title">Select New Preference:</p>
-            
+
           </div>
           <div class="columns has-text-centered">
-            
+
             <div class="column">
               <button class="button is-info is-size-3" @click="selectPreference('email')">Email</button>
             </div>
@@ -145,95 +145,95 @@
             </div>
           </div>
         </form>
-      </div>  
+      </div>
     </div>
 
     <div class="overlay" v-if="windowOpen">
-            <div class="box">
-              <form @submit.prevent="addTreatment()">
-                <br>
-                <p class="title has-text-centered">Add New Treatment</p>
-                  <div class="columns">
-                    <div class="column">
-                      <div class="field">
-                        <label class="label">Condition Name</label>
-                        <div class="control">
-                          <input class="input" type="text" v-model="newTreatment.condition">
-                        </div>
-                      </div>
-                      <div class="field">
-                        <label class="label">Treatment Name</label>
-                        <div class="control">
-                          <input class="input" type="text" v-model="newTreatment.name">
-                        </div>
-                      </div>
-                      <div class="field">
-                        <label class="label">Dosage</label>
-                        <div class="control">
-                          <input class="input" type="text" v-model="newTreatment.dosage">
-                        </div>
-                      </div>
-                      <div class="field">
-                        <label class="label">Frequency</label>
-                        <div class="control">
-                          <input class="input" type="text" v-model="newTreatment.frequency">
-                        </div>
-                      </div>
-                      <div class="field">
-                        <label class="label">Route</label>
-                        <div class="control">
-                          <input class="input" type="text" v-model="newTreatment.route">
-                        </div>
-                      </div>
-                    </div>
+      <div class="box">
+        <form @submit.prevent="addTreatment()">
+          <br>
+          <p class="title has-text-centered">Add New Treatment</p>
+          <div class="columns">
+            <div class="column">
+              <div class="field">
+                <label class="label">Condition Name</label>
+                <div class="control">
+                  <input class="input" type="text" v-model="newTreatment.condition">
+                </div>
+              </div>
+              <div class="field">
+                <label class="label">Treatment Name</label>
+                <div class="control">
+                  <input class="input" type="text" v-model="newTreatment.name">
+                </div>
+              </div>
+              <div class="field">
+                <label class="label">Dosage</label>
+                <div class="control">
+                  <input class="input" type="text" v-model="newTreatment.dosage">
+                </div>
+              </div>
+              <div class="field">
+                <label class="label">Frequency</label>
+                <div class="control">
+                  <input class="input" type="text" v-model="newTreatment.frequency">
+                </div>
+              </div>
+              <div class="field">
+                <label class="label">Route</label>
+                <div class="control">
+                  <input class="input" type="text" v-model="newTreatment.route">
+                </div>
+              </div>
+            </div>
 
-                  <div class="column">
-                  <div class="field">
-                    <label class="label">Start Date</label>
-                    <div class="control">
-                      <input class="input" type="date" v-model="newTreatment.startDate">
-                    </div>
-                  </div>
-                  <div class="field">
-                    <label class="label">End Date</label>
-                    <div class="control">
-                      <input class="input" type="date" v-model="newTreatment.endDate">
-                    </div>
-                  </div>
-                  <div class="field">
-                    <label class="label">Prescribing Physician</label>
-                    <div class="control">
-                      <input class="input" type="text" v-model="newTreatment.prescribingPhysician">
-                    </div>
-                  </div>
-                  <div class="field">
-                    <label class="label">Notes</label>
-                    <div class="control">
-                      <input class="input" type="text" v-model="newTreatment.notes">
-                    </div>
-                  </div>
+            <div class="column">
+              <div class="field">
+                <label class="label">Start Date</label>
+                <div class="control">
+                  <input class="input" type="date" v-model="newTreatment.startDate">
                 </div>
+              </div>
+              <div class="field">
+                <label class="label">End Date</label>
+                <div class="control">
+                  <input class="input" type="date" v-model="newTreatment.endDate">
                 </div>
-                <div class="columns has-text-centered">
-                  <div class="column">
-                    <div class="field is-grouped">
-                      <div class="control">
-                        <button class="button is-primary" type="submit">Submit</button>
-                      </div>
-                    </div>
-                  </div>
-                  <div class="column">
-                    <button class="button is-info" @click="clearTreatmentForm()"> Clear Form</button>
-                  </div>
-                  <div class="column">
-                    <button class="button is-danger" @click="openTreatmentForm(false)"> Cancel</button>
-                  </div>
+              </div>
+              <div class="field">
+                <label class="label">Prescribing Physician</label>
+                <div class="control">
+                  <input class="input" type="text" v-model="newTreatment.prescribingPhysician">
                 </div>
-              </form>
-              <br>
+              </div>
+              <div class="field">
+                <label class="label">Notes</label>
+                <div class="control">
+                  <input class="input" type="text" v-model="newTreatment.notes">
+                </div>
+              </div>
             </div>
           </div>
+          <div class="columns has-text-centered">
+            <div class="column">
+              <div class="field is-grouped">
+                <div class="control">
+                  <button class="button is-primary" type="submit">Submit</button>
+                </div>
+              </div>
+            </div>
+            <div class="column">
+              <button class="button is-info" @click="clearTreatmentForm()"> Clear Form</button>
+            </div>
+            <div class="column">
+              <button class="button is-danger" @click="openTreatmentForm(false)"> Cancel</button>
+            </div>
+          </div>
+        </form>
+        <br>
+      </div>
     </div>
+  </div>
 </template>
 
 <script>
@@ -251,7 +251,7 @@ export default {
         condition : '',
         name : '',
         dosage : '',
-        frequency : '', 
+        frequency : '',
         route : '',
         startDate : '',
         endDate : '',
@@ -272,18 +272,18 @@ export default {
         console.error("Failed to fetch patient data:", error);
       }
     },
-   
+
     async fetchAppointments(){
       try {
         const response = await axios.get(`http://localhost:3000/appointments`);
         console.log('response', response.data)
-      
+
 
         this.appointments = response.data.filter(appointment => {
           console.log(appointment.patient)
           console.log(this.$route.params.patient)
-          console.log(appointment.patient == this.$route.params.patient)
-          return appointment.patient == this.$route.params.patient;
+          console.log(appointment.patient === this.$route.params.patient)
+          return appointment.patient === this.$route.params.patient;
         })
         console.log('appointments', this.appointments)
       } catch (error) {
@@ -348,21 +348,21 @@ export default {
             console.log("Successfully updated treatments");
             this.successMessage = 'Successfully updated treatments';
             location.reload()
-            
+
           } catch (e) {
             console.log("Error updating treatment: " + e);
           }
-         
+
           await this.fetchPatients();
         } catch (error) {
-            this.successMessage = '';
-            this.errorMessage = 'Failed to add new patient.';
-          }
-        } else {
+          this.successMessage = '';
+          this.errorMessage = 'Failed to add new patient.';
+        }
+      } else {
         this.successMessage = '';
         this.errorMessage = 'Please ensure you fill out all fields.';
       }
-   
+
     },
     sendToAppointmentPage() {
       this.$router.push({ name: 'Calender'})
@@ -421,12 +421,12 @@ export default {
         const response = await axios.get(`http://localhost:3000/patients/${this.$route.params.patient}`);
         const previousTreatments = response.data.treatments
         console.log(previousTreatments)
-        const updatedTreatments = previousTreatments.filter(treatmentId => treatmentId !== deletedID) 
+        const updatedTreatments = previousTreatments.filter(treatmentId => treatmentId !== deletedID)
         console.log(updatedTreatments)
         const data = {
           treatments : updatedTreatments
         }
-      
+
         await axios.put(`http://localhost:3000/patients/${this.$route.params.patient}`, data)
         this.openTreatmentForm(false);
         this.clearTreatmentForm
