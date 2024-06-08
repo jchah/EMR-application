@@ -5,7 +5,7 @@ const morgan = require("morgan");
 const cors = require("cors");
 const dotenv = require("dotenv");
 const twilioClient = require('./controllers/twillio.js')
-// const nodemailer = require('nodemailer');
+const nodemailer = require('nodemailer');
 // const cron = require('node-cron');
 require('./db');
 
