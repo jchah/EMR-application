@@ -5,7 +5,7 @@
     <div v-if="!hasSearched" class="columns is-centered">
       <div class="column is-half mt-5">
         <h1 class="title">Search For Patient</h1>
-        <div class="box">
+        <div class="box has-background-warning-light">
           <div v-if="successMessage" class="notification is-success">
             {{ successMessage }}
           </div>
@@ -113,8 +113,8 @@
       <div class="column is-full">
         <br>
         <h1 class="title">Filtered Patients</h1>
-        <div class="box">
-          <table class="table is-fullwidth has-text-centered">
+        <div class="box has-background-warning-light">
+          <table class="table is-fullwidth has-text-centered has-background-warning-light">
           <thead>
           <tr>
             <th>First Name</th>
