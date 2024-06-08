@@ -4,7 +4,7 @@
   <section class="hero is-fullheight-with-navbar section has-background-info-light">
     <div v-if="!hasSearched" class="columns is-centered">
       <div class="column is-half mt-5">
-        <h1 class="title">Search For Patient</h1>
+        <h1 class="title">Patient Search</h1>
         <div class="box">
           <div v-if="successMessage" class="notification is-success">
             {{ successMessage }}

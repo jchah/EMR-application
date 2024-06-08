@@ -14,7 +14,7 @@
     <div class="navbar-menu" :class="{'is-active': isActive}" id="navMenu">
       <div class="navbar-start">
         <router-link v-if="token" class="navbar-item" to="/">Dashboard</router-link>
-        <router-link v-if="!token" class="navbar-item" to="/search-patient">Search Patient</router-link>
+        <router-link v-if="!token" class="navbar-item" to="/search-patient">Patient Login</router-link>
         <router-link v-if="token" class="navbar-item" to="/patients">Patients</router-link>
         <router-link v-if="token" class="navbar-item" to="/calendar">Appointments</router-link>
 
