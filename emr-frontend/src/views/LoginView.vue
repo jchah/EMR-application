@@ -22,17 +22,6 @@
                   <input type="password" class="input" id="password" v-model="account.password" required>
                 </div>
               </div>
-              <div class="field">
-                <label class="label" for="role">Role</label>
-                <div class="control">
-                  <div class="select">
-                    <select id="role" v-model="account.role" required>
-                      <option value="user">User</option>
-                      <option value="admin">Admin</option>
-                    </select>
-                  </div>
-                </div>
-              </div>
               <!-- Success and Error Messages -->
               <div v-if="successMessage" class="notification is-success">{{ successMessage }}</div>
               <div v-if="errorMessage" class="notification is-danger">{{ errorMessage }}</div>
@@ -58,7 +47,7 @@
           <div class="card-content">
             <form @submit.prevent="login">
               <div class="field">
-                <label class="label" for="email">Email</label>
+                <label class="label" for="email">Healthcard ID</label>
                 <div class="control">
                   <input type="email" class="input" id="email" v-model="account.email" required>
                 </div>
@@ -67,17 +56,6 @@
                 <label class="label" for="password">Password</label>
                 <div class="control">
                   <input type="password" class="input" id="password" v-model="account.password" required>
-                </div>
-              </div>
-              <div class="field">
-                <label class="label" for="role">Role</label>
-                <div class="control">
-                  <div class="select">
-                    <select id="role" v-model="account.role" required>
-                      <option value="user">User</option>
-                      <option value="admin">Admin</option>
-                    </select>
-                  </div>
                 </div>
               </div>
               <!-- Success and Error Messages -->

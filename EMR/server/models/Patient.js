@@ -41,6 +41,9 @@ const patientSchema = new Schema({
     cardNumber: {
         type: String,
     },
+    contactPreference: {
+        type: String
+    },
     treatments: [{
         type: Schema.Types.ObjectId,
         ref: 'Medicine',

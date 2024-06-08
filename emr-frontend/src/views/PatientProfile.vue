@@ -2,18 +2,21 @@
   <section class="hero is-link">
     <div class="hero-body is-flex is-justify-content-space-between is-align-items-center">
       <p class="title" v-if="patient">Patient Profile : {{patient.firstName + " " + patient.lastName}}</p>
+
+
       <button class="button is-info" @click="goBack">Back to Patients</button>
+
     </div>
   </section>
 
-  <div class="columns has-background-info">
-      <div class="column has-text-centered">
-        <p class="title has-text-centered">Patient Info</p>
-      </div>
+  <div class="columns has-background-info-light">
+    <div class="column has-text-centered">
+      <p class="title has-text-centered">Patient Info</p>
     </div>
+  </div>
 
   <div v-if="patient">
-    <div class="columns has-background-link-light has-text-centered info">
+    <div class="columns has-background-info-light has-text-centered info">
       <div class="column">
         <div class="columns">
           <div class="column">
@@ -34,9 +37,17 @@
           </div>
         </div>
       </div>
+
+
     </div>
 
-    <div class="columns has-background-danger">
+    <div class="columns has-text-centered has-background-info-light">
+      <div class="column">
+        <button class="button is-info" @click="openContactOverlay(true)">Change Contact Preference?</button>
+      </div>
+    </div>
+
+    <div class="columns has-background-danger-light">
       <div class="column has-text-centered">
         <p class="title has-text-centered">Conditions</p>
       </div>
@@ -57,7 +68,7 @@
             <th class="has-text-centered is-size-4">Dosage</th>
             <th class="has-text-centered is-size-4">Prescribing Physician</th>
             <th></th>
-            
+
           </tr>
           </thead>
           <tbody>
@@ -79,7 +90,7 @@
       </div>
     </div>
 
-    <div class="columns has-background-warning">
+    <div class="columns has-background-warning-light">
       <div class="column has-text-centered">
         <p class="title has-text-centered">Appointments</p>
       </div>
@@ -96,22 +107,131 @@
             <th class="has-text-centered is-size-4">Date</th>
             <th class="has-text-centered is-size-4">Start Time</th>
             <th class="has-text-centered is-size-4">End Time</th>
-            
+
           </tr>
           </thead>
           <tbody>
-            <tr v-for="appointment in appointments" :key="appointments._id">
-              <td><button class="button is-danger">X</button></td>
-              <td class="has-text-centered">{{ appointment.notes }}</td>
-              <td class="has-text-centered">{{ appointment.date }}</td>
-              <td class="has-text-centered">{{ appointment.startTime }}</td>
-              <td class="has-text-centered">{{ appointment.endTime }}</td>
-            </tr>
+          <tr v-for="appointment in appointments" :key="appointments._id">
+            <td><button class="button is-danger" @click="deleteAppointment(appointment._id)">X</button></td>
+            <td class="has-text-centered">{{ appointment.notes }}</td>
+            <td class="has-text-centered">{{ appointment.date }}</td>
+            <td class="has-text-centered">{{ appointment.startTime }}</td>
+            <td class="has-text-centered">{{ appointment.endTime }}</td>
+          </tr>
           </tbody>
         </table>
         <div class="has-text-centered"><button class="button is-warning" @click="sendToAppointmentPage()">Create Appointment?</button></div>
       </div>
-      
+
+    </div>
+
+    <div class="overlay" v-if="contactOpen">
+      <div class="box">
+        <form @submit.prevent="addTreatment()">
+          <div class="has-text-centered">
+            <p class="title">Current Preference : {{ patient.contactPreference }}</p>
+            <p class="title">___________________________</p>
+            <br>
+            <p class="title">Select New Preference:</p>
+
+          </div>
+          <div class="columns has-text-centered">
+
+            <div class="column">
+              <button class="button is-info is-size-3" @click="selectPreference('email')">Email</button>
+            </div>
+            <div class="column">
+              <button class="button is-info is-size-3" @click="selectPreference('sms')">SMS</button>
+            </div>
+          </div>
+        </form>
+      </div>
+    </div>
+
+    <div class="overlay" v-if="windowOpen">
+      <div class="box">
+        <form @submit.prevent="addTreatment()">
+          <br>
+          <p class="title has-text-centered">Add New Treatment</p>
+          <div class="columns">
+            <div class="column">
+              <div class="field">
+                <label class="label">Condition Name</label>
+                <div class="control">
+                  <input class="input" type="text" v-model="newTreatment.condition">
+                </div>
+              </div>
+              <div class="field">
+                <label class="label">Treatment Name</label>
+                <div class="control">
+                  <input class="input" type="text" v-model="newTreatment.name">
+                </div>
+              </div>
+              <div class="field">
+                <label class="label">Dosage</label>
+                <div class="control">
+                  <input class="input" type="text" v-model="newTreatment.dosage">
+                </div>
+              </div>
+              <div class="field">
+                <label class="label">Frequency</label>
+                <div class="control">
+                  <input class="input" type="text" v-model="newTreatment.frequency">
+                </div>
+              </div>
+              <div class="field">
+                <label class="label">Route</label>
+                <div class="control">
+                  <input class="input" type="text" v-model="newTreatment.route">
+                </div>
+              </div>
+            </div>
+
+            <div class="column">
+              <div class="field">
+                <label class="label">Start Date</label>
+                <div class="control">
+                  <input class="input" type="date" v-model="newTreatment.startDate">
+                </div>
+              </div>
+              <div class="field">
+                <label class="label">End Date</label>
+                <div class="control">
+                  <input class="input" type="date" v-model="newTreatment.endDate">
+                </div>
+              </div>
+              <div class="field">
+                <label class="label">Prescribing Physician</label>
+                <div class="control">
+                  <input class="input" type="text" v-model="newTreatment.prescribingPhysician">
+                </div>
+              </div>
+              <div class="field">
+                <label class="label">Notes</label>
+                <div class="control">
+                  <input class="input" type="text" v-model="newTreatment.notes">
+                </div>
+              </div>
+            </div>
+          </div>
+          <div class="columns has-text-centered">
+            <div class="column">
+              <div class="field is-grouped">
+                <div class="control">
+                  <button class="button is-primary" type="submit">Submit</button>
+                </div>
+              </div>
+            </div>
+            <div class="column">
+              <button class="button is-info" @click="clearTreatmentForm()"> Clear Form</button>
+            </div>
+            <div class="column">
+              <button class="button is-danger" @click="openTreatmentForm(false)"> Cancel</button>
+            </div>
+          </div>
+        </form>
+        <br>
+      </div>
     </div>
   </div>
 </template>
@@ -119,18 +239,19 @@
 <script>
 import axios from "axios";
 
-export default {
+export default { // Data
   data() {
     return {
       patient: null,
       treatments: [],
       appointments: [],
       windowOpen : false,
-      newTreatment : {
+      contactOpen : false,
+      newTreatment : { // For creating treatments
         condition : '',
         name : '',
         dosage : '',
-        frequency : '', 
+        frequency : '',
         route : '',
         startDate : '',
         endDate : '',
@@ -140,44 +261,60 @@ export default {
     };
   },
   methods: {
-    async fetchPatient() {
+    async fetchPatient() { // Loads the patient information using the ID passed into this file
       try {
         const response = await axios.get(`http://localhost:3000/patients/${this.$route.params.patient}`);
         this.patient = response.data;
-        console.log(this.patient);
+        console.log('patient', this.patient);
+        console.log('preference', this.patient.patientPreference)
         await this.fillTreatments();
       } catch (error) {
         console.error("Failed to fetch patient data:", error);
       }
     },
-    async fetchAppointments(){
+   
+    async fetchAppointments(){ // Gets the appointments from the database and store them in this.appointments
       try {
         const response = await axios.get(`http://localhost:3000/appointments`);
         console.log('response', response.data)
-      
+
 
         this.appointments = response.data.filter(appointment => {
           console.log(appointment.patient)
           console.log(this.$route.params.patient)
-          console.log(appointment.patient == this.$route.params.patient)
-          return appointment.patient == this.$route.params.patient;
+          console.log(appointment.patient === this.$route.params.patient)
+          return appointment.patient === this.$route.params.patient;
         })
         console.log('appointments', this.appointments)
       } catch (error) {
         console.error("Error getting data from getAppointments", error);
       }
     },
-    openTreatmentForm(value) {
-      this.$router
+    openTreatmentForm(value) { // Opens the popup for treatments
+      this.windowOpen = value
       this.clearTreatmentForm()
     },
-    goBack() {
+    openContactOverlay(value) { // Opens/Closes the popup for changing preferred contact information 
+      this.contactOpen = value
+    },
+    clearTreatmentForm() { // Clears the form for adding treatments
+      this.newTreatment.condition = ''
+      this.newTreatment.name = ''
+      this.newTreatment.dosage = ''
+      this.newTreatment.frequency = ''
+      this.newTreatment.route = ''
+      this.newTreatment.startDate = ''
+      this.newTreatment.endDate = ''
+      this.newTreatment.prescribingPhysician = ''
+      this.newTreatment.notes= ''
+    },
+    goBack() { // Goes back to the patients search page
       this.$router.push('/patients');
     },
     sendToAppointmentPage() {
       this.$router.push({ name: 'Calender'})
     },
-    async fillTreatments() {
+    async fillTreatments() { // Updates the treatments array and adds all the treatments that the patient has
       const tempTreatments = [];
 
       const allTreatments = this.patient.treatments.map(async (treatment) => {
@@ -196,7 +333,29 @@ export default {
       await console.log(tempTreatments)
       this.treatments = tempTreatments
     },
-    async clearTreatment(treatment) {
+    async selectPreference(value) { // Sets the patients contact preference and updates it in mongo
+      this.contactOpen = false
+      const data = {
+        contactPreference : value
+      }
+      try {
+        const response = await axios.put(`http://localhost:3000/patients/${this.$route.params.patient}`, data)
+        console.log(response.data)
+        location.reload()
+      } catch (error) {
+        console.log(error)
+      }
+    },
+    async deleteAppointment(treatmentID) { // Deletes a selected patient
+      console.log(treatmentID)
+      try {
+        const response = await axios.delete(`http://localhost:3000/appointments/${treatmentID}`)
+      } catch (error) {
+        console.log(error)
+      }
+      location.reload()
+    },
+    async clearTreatment(treatment) { // Deletes a selected Treatment
       const deletedID = treatment._id
       console.log(deletedID)
       try {
@@ -205,16 +364,16 @@ export default {
         console.log(error)
       }
 
-      try {
+      try { // Deletes the reference of the treatment from the patient
         const response = await axios.get(`http://localhost:3000/patients/${this.$route.params.patient}`);
         const previousTreatments = response.data.treatments
         console.log(previousTreatments)
-        const updatedTreatments = previousTreatments.filter(treatmentId => treatmentId !== deletedID) 
+        const updatedTreatments = previousTreatments.filter(treatmentId => treatmentId !== deletedID)
         console.log(updatedTreatments)
         const data = {
           treatments : updatedTreatments
         }
-      
+
         await axios.put(`http://localhost:3000/patients/${this.$route.params.patient}`, data)
         this.openTreatmentForm(false);
         this.clearTreatmentForm

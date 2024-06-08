@@ -34,17 +34,6 @@
                   <input type="text" class="input" id="lastName" v-model="account.lastName" required>
                 </div>
               </div>
-              <div class="field">
-                <label class="label" for="role">Role</label>
-                <div class="control">
-                  <div class="select">
-                    <select id="role" v-model="account.role" required>
-                      <option value="user">User</option>
-                      <option value="admin">Admin</option>
-                    </select>
-                  </div>
-                </div>
-              </div>
               <!-- Success and Error Messages -->
               <div v-if="successMessage" class="notification is-success">{{ successMessage }}</div>
               <div v-if="errorMessage" class="notification is-danger">{{ errorMessage }}</div>
@@ -60,6 +49,8 @@
 </template>
 
 <script>
+const API_URL = 'http://localhost:3000'
+
 export default {
   name: 'AccountForm',
   data() {
@@ -69,7 +60,6 @@ export default {
         password: '',
         firstName: '',
         lastName: '',
-        role: 'user'
       },
       successMessage: '',
       errorMessage: ''
@@ -80,7 +70,7 @@ export default {
       this.successMessage = '';
       this.errorMessage = '';
       try {
-        const response = await fetch('http://localhost:3000/user/signup', {
+        const response = await fetch(`${API_URL}/user/signup`, {
           method: 'POST',
           headers: { 'Content-Type': 'application/json' },
           body: JSON.stringify(this.account)

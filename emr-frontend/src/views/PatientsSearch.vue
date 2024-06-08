@@ -1,15 +1,16 @@
 <template>
-<!-- <section class="hero is-primary is-fullheight-with-navbar"> --> 
+<!-- <section class="hero is-primary is-fullheight-with-navbar"> -->
   <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bulma@0.9.3/css/bulma.min.css">
-  <section class="hero is-fullheight-with-navbar section">
+  <section class="hero is-fullheight-with-navbar section has-background-info-light">
     <div v-if="!hasSearched" class="columns is-centered">
       <div class="column is-half mt-5">
         <h1 class="title">Search For Patient</h1>
-        <div class="box has-background-warning-light">
+        <div class="box">
           <div v-if="successMessage" class="notification is-success">
             {{ successMessage }}
           </div>
           <div v-if="errorMessage" class="notification is-danger">
+            {{ errorMessage }}
             {{ errorMessage }}
           </div>
           <form @submit.prevent="submitForm">
@@ -96,7 +97,7 @@
 <!--            </div>-->
             <div class="field is-grouped">
               <div class="control">
-                <button class="button is-primary" @click="submitForm">Submit</button>
+                <button class="button is-primary" @click="submitForm">Search</button>
               </div>
               <div class="control">
                 <button type="button" class="button is-link" @click="resetForm">Reset</button>
@@ -113,8 +114,8 @@
       <div class="column is-full">
         <br>
         <h1 class="title">Filtered Patients</h1>
-        <div class="box has-background-info-light">
-          <table class="table is-fullwidth has-text-centered has-background-info-light">
+        <div class="box">
+          <table class="table is-fullwidth has-text-centered ">
           <thead>
           <tr>
             <th>First Name</th>
@@ -165,9 +166,11 @@ import axios from "axios";
 import Multiselect from 'vue-multiselect';
 import 'vue-multiselect/dist/vue-multiselect.css';
 
+const API_URL = 'http://localhost:3000'
+
 export default {
   components: { Multiselect },
-  data() {
+  data() { // data
     return {
       currentPage: 1,
       pageSize: 10,
@@ -192,35 +195,35 @@ export default {
     };
   },
   computed: {
-    paginatedPatients() {
+    paginatedPatients() { // List of the patients that should be displayed on the current page of pagination
       const start = (this.currentPage - 1) * this.pageSize;
       const end = start + this.pageSize;
       return this.filteredPatients.slice(start, end);
     }
   },
   methods: {
-    nextPage() {
+    nextPage() { // Goes to the next page of pagination
       if ((this.currentPage * this.pageSize) < this.filteredPatients.length) {
         this.currentPage++;
       }
     },
-    prevPage() {
+    prevPage() { // goes to the previous page of pagination
       if (this.currentPage > 1) {
         this.currentPage--;
       }
     },
-    async fetchPatients() {
+    async fetchPatients() { // Fetches an array of all the patients from the database
       try {
-        const response = await axios.get(`http://localhost:3000/patients`);
+        const response = await axios.get(`${API_URL}/patients`);
         this.patients = response.data;
       } catch (error) {
         console.error(error);
       }
     },
-    async deletePatient(patientId) {
+    async deletePatient(patientId) { // Deletes a selected patient and all things tied to that patient
       try {
-        await axios.delete(`http://localhost:3000/patients/${patientId}`);
-        await axios.delete(`http://localhost:3000/appointments/patient/${patientId}`)
+        await axios.delete(`${API_URL}/patients/${patientId}`);
+        await axios.delete(`${API_URL}/appointments/patient/${patientId}`)
 
         this.successMessage = 'Patient deleted successfully.';
         this.filteredPatients = this.filteredPatients.filter(patient => patient._id !== patientId);
@@ -229,7 +232,7 @@ export default {
         console.error(error);
       }
     },
-    submitForm() {
+    submitForm() { // For each parameter in the search for patients page, find which patients match & add return an array (that is used in the table)
       this.filteredPatients = this.patients.filter(patient => {
         const firstNameMatch = this.patientFirstName === '' || patient.firstName.toLowerCase().includes(this.patientFirstName.toLowerCase());
         const lastNameMatch = this.lastName === '' || patient.lastName.toLowerCase().includes(this.lastName.toLowerCase());
@@ -259,15 +262,15 @@ export default {
         hasSearched: this.hasSearched
       }));
     },
-    showSearch() {
+    showSearch() { // Shows the two different pages (search & table)
       this.hasSearched = false;
       localStorage.removeItem('searchResults');
       localStorage.removeItem('searchState');
     },
-    goToPatientProfile(patient_id) {
+    goToPatientProfile(patient_id) { // Sends you to the patient profile page differentiated through the patiends id
       this.$router.push({ name: 'PatientProfile', params: { patient: patient_id } });
     },
-    async createNewPatient() {
+    async createNewPatient() { // Creates a patient using the information provided on the search page
       let newPatient = {
         firstName: this.patientFirstName,
         lastName: this.lastName,
@@ -284,12 +287,13 @@ export default {
           phone: this.emergencyContactPhone
         },
         cardNumber: this.cardNumber,
-        conditions: this.selectedConditions.map(condition => condition._id)
+        conditions: this.selectedConditions.map(condition => condition._id),
+        contactPreference: "email"
       };
 
       if (this.patientFirstName !== '' && this.lastName !== '' && this.dateOfBirth !== '' && this.sex !== '' && this.address !== '' && this.phoneNum !== '' && this.email !== '' && this.emergencyContactName !== '' && this.emergencyContactRelationship !== '' && this.emergencyContactPhone !== '' && this.cardNumber !== '') {
         try {
-          await axios.post(`http://localhost:3000/patients`, newPatient);
+          await axios.post(`${API_URL}/patients`, newPatient);
           this.successMessage = 'New patient added successfully.';
           this.errorMessage = '';
           this.resetForm();
@@ -303,7 +307,7 @@ export default {
         this.errorMessage = 'Please ensure you fill out all fields.';
       }
     },
-    resetForm() {
+    resetForm() { // Resets all the values on the form to ''
       this.patientFirstName = '';
       this.lastName = '';
       this.dateOfBirth = '';
@@ -318,7 +322,7 @@ export default {
       this.selectedConditions = [];
     }
   },
-  created() {
+  created() { // Fetches the patients 
     this.fetchPatients();
     let storedResults = localStorage.getItem('searchResults');
     let storedState = localStorage.getItem('searchState');
