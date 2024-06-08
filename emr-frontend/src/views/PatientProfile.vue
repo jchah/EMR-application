@@ -191,7 +191,7 @@ export default {
     return {
       patient: null,
       treatments: [],
-      appoitnments: [],
+      appointments: [],
       windowOpen : false,
       newTreatment : {
         condition : '',
@@ -217,46 +217,21 @@ export default {
         console.error("Failed to fetch patient data:", error);
       }
     },
-    // async fetchTreatments() {
-    //   try {
-    //     const treatmentPromises = this.conditions
-    //         .filter(condition => condition.treatment)
-    //         .map(condition => axios.get(`http://localhost:3000/treatments/${condition.treatment}`));
-    //     const treatmentResponses = await Promise.all(treatmentPromises);
-    //     this.treatments = treatmentResponses.map(response => response.data);
-
-    //     // Map treatments back to conditions
-    //     this.conditions = this.conditions.map(condition => {
-    //       if (condition.treatment) {
-    //         condition.treatment = this.treatments.find(treatment => treatment._id === condition.treatment);
-    //       }
-    //       return condition;
-    //     });
-    //   } catch (error) {
-    //     console.error("Failed to fetch treatments data:", error);
-    //   }
-    // },
-    // async fetchAppointments(){
-    //   try {
-    //     const response = await axios.get(`http://localhost:3000/calendar/appointments`, {
-    //       params:{
-    //         date: date.toLocaleDateString()
-    //       }
-    //     });
-    //     appointments.value = response.data;
-    //     appointments.value.forEach(async (a) =>{
-    //       let id = a.patient;
-    //       a.patient = await axios.get(`http://localhost:3000/patients/${id}`);
-    //     })
-    //     console.log(appointments.value);
-    //     sortTimeEarliest();
-    //
-    //
-    //
-    //   } catch (error) {
-    //     console.error("Error getting data from getAppointments", error);
-    //   }
-    // },
+   
+    async fetchAppointments(){
+      try {
+        const response = await axios.get(`http://localhost:3000/appointments`);
+        console.log('response', response.data)
+        
+        this.appointments = response.data;
+        this.appointments.filter(appointment => {
+          return appointment.patient == this.$route.params.patient;
+        })
+        console.log('appointments', this.appointments)
+      } catch (error) {
+        console.error("Error getting data from getAppointments", error);
+      }
+    },
     openTreatmentForm(value) {
       this.windowOpen = value
       this.clearTreatmentForm()
@@ -348,13 +323,36 @@ export default {
     },
     async clearTreatment(treatment) {
       const deletedID = treatment._id
-      const response = await axios.delete(`http://localhost:3000/treatments/${deletedID}`)
+      console.log(deletedID)
+      try {
+        const response = await axios.delete(`http://localhost:3000/treatments/${deletedID}`)
+      } catch (error) {
+        console.log(error)
+      }
+
+      try {
+        const response = await axios.get(`http://localhost:3000/patients/${this.$route.params.patient}`);
+        const previousTreatments = response.data.treatments
+        console.log(previousTreatments)
+        const updatedTreatments = previousTreatments.filter(treatmentId => treatmentId !== deletedID) 
+        console.log(updatedTreatments)
+        const data = {
+          treatments : updatedTreatments
+        }
+      
+        await axios.put(`http://localhost:3000/patients/${this.$route.params.patient}`, data)
+        this.openTreatmentForm(false);
+        this.clearTreatmentForm
+        console.log("Successfully Updated Patient")
+      } catch (error) {
+        console.log(error)
+      }
       location.reload()
     }
   },
   created() {
     this.fetchPatient();
-    // this.fetchAppointments();
+    this.fetchAppointments();
   }
 };
 </script>

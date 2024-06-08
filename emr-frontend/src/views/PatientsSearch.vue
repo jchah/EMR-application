@@ -110,9 +110,7 @@
     </div>
     <div v-if="hasSearched" class="columns is-centered">
       <div class="column is-full">
-        <div class="control">
-          <button class="button is-link" @click="showSearch">Go Back to Search</button>
-        </div>
+        <br>
         <h1 class="title">Filtered Patients</h1>
         <table class="table is-fullwidth is-striped">
           <thead>
@@ -150,6 +148,9 @@
             </a></li>
           </ul>
         </nav>
+        <div class="control">
+          <button class="button is-link" @click="showSearch">Go Back to Search</button>
+        </div>
       </div>
     </div>
   </div>
