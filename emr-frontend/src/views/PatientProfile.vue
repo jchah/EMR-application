@@ -44,49 +44,46 @@
       </div>
     </div>
 
-    <div class="card my-4">
-      <div class="card-content">
-        <div class="columns is-mobile">
-          <div class="column has-text-centered">
-            <p class="title has-text-centered">Conditions</p>
-          </div>
-        </div>
-        <div class="columns info">
-          <div class="column">
-            <table class="table is-fullwidth">
-              <thead>
-                <tr>
-                  <th></th>
-                  <th class="has-text-centered is-size-5">Condition Name</th>
-                  <th class="has-text-centered is-size-5">Treatment Name</th>
-                  <th class="has-text-centered is-size-5">Frequency</th>
-                  <th class="has-text-centered is-size-5">Start Date</th>
-                  <th class="has-text-centered is-size-5">End Date</th>
-                  <th class="has-text-centered is-size-5">Route</th>
-                  <th class="has-text-centered is-size-5">Dosage</th>
-                  <th class="has-text-centered is-size-5">Prescribing Physician</th>
-                  <th></th>
-                </tr>
-              </thead>
-              <tbody>
-                <tr v-for="treatment in treatments" :key="treatment._id">
-                  <td><button class="button is-danger is-small" @click="clearTreatment(treatment)">X</button></td>
-                  <td class="has-text-centered is-bold">{{ treatment.condition }}</td>
-                  <td class="has-text-centered">{{ treatment.name }}</td>
-                  <td class="has-text-centered">{{ treatment.frequency }}</td>
-                  <td class="has-text-centered">{{ new Date(treatment.startDate).toLocaleDateString() }}</td>
-                  <td class="has-text-centered">{{ new Date(treatment.endDate).toLocaleDateString() }}</td>
-                  <td class="has-text-centered">{{ treatment.route }}</td>
-                  <td class="has-text-centered">{{ treatment.dosage }}</td>
-                  <td class="has-text-centered">{{ treatment.prescribingPhysician }}</td>
-                  <td></td>
-                </tr>
-              </tbody>
-            </table>
-            <div v-if="token" class="has-text-centered">
-              <button class="button is-danger has-text-centered is-size-5 mt-3" @click="openTreatmentForm(true)">Add Treatment?</button>
-            </div>
-          </div>
+    <div class="columns has-background-danger-light">
+      <div class="column has-text-centered">
+        <p class="title has-text-centered">Conditions</p>
+      </div>
+    </div>
+
+    <div class="columns has-background-danger-light info">
+      <div class="column">
+        <table class="table is-fullwidth has-background-danger-light">
+          <thead>
+            <tr>
+              <th></th>
+              <th class="has-text-centered is-size-4">Condition Name</th>
+              <th class="has-text-centered is-size-4">Treatment Name</th>
+              <th class="has-text-centered is-size-4">Frequency</th>
+              <th class="has-text-centered is-size-4">Start Date</th>
+              <th class="has-text-centered is-size-4">End Date</th>
+              <th class="has-text-centered is-size-4">Route</th>
+              <th class="has-text-centered is-size-4">Dosage</th>
+              <th class="has-text-centered is-size-4">Prescribing Physician</th>
+              <th></th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr v-for="treatment in patient.treatments" :key="treatment._id">
+              <td><button class="button is-danger" @click="clearTreatment(treatment)">X</button></td>
+              <td class="has-text-centered is-bold">{{ treatment.condition }}</td>
+              <td class="has-text-centered">{{ treatment.name }}</td>
+              <td class="has-text-centered">{{ treatment.frequency }}</td>
+              <td class="has-text-centered">{{ new Date(treatment.startDate).toLocaleDateString() }}</td>
+              <td class="has-text-centered">{{ new Date(treatment.endDate).toLocaleDateString() }}</td>
+              <td class="has-text-centered">{{ treatment.route }}</td>
+              <td class="has-text-centered">{{ treatment.dosage }}</td>
+              <td class="has-text-centered">{{ treatment.prescribingPhysician }}</td>
+              <td></td>
+            </tr>
+          </tbody>
+        </table>
+        <div v-if="token" class="has-text-centered">
+          <button class="button is-danger has-text-centered" @click="openTreatmentForm(true)">Add Treatment?</button>
         </div>
       </div>
     </div>
@@ -130,110 +127,25 @@
     </div>
   </div>
 
-  <div class="overlay" v-if="contactOpen">
-    <div class="box">
-      <form @submit.prevent="addTreatment()">
-        <div class="has-text-centered">
-          <p class="title">Current Preference : {{ patient.contactPreference }}</p>
-          <p class="title">___________________________</p>
-          <br />
-          <p class="title">Select New Preference:</p>
-        </div>
-        <div class="columns has-text-centered">
-          <div class="column">
-            <button class="button is-info is-size-3" @click="selectPreference('email')">Email</button>
+    <div class="overlay" v-if="contactOpen">
+      <div class="box">
+        <form>
+          <div class="has-text-centered">
+            <p class="title">Current Preference : {{ patient.contactPreference }}</p>
+            <p class="title">___________________________</p>
+            <br />
+            <p class="title">Select New Preference:</p>
           </div>
-          <div class="column">
-            <button class="button is-info is-size-3" @click="selectPreference('sms')">SMS</button>
-          </div>
-        </div>
-      </form>
-    </div>
-  </div>
-
-  <div class="overlay" v-if="windowOpen">
-    <div class="box">
-      <form @submit.prevent="addTreatment()">
-        <br />
-        <p class="title has-text-centered">Add New Treatment</p>
-        <div class="columns">
-          <div class="column">
-            <div class="field">
-              <label class="label">Condition Name</label>
-              <div class="control">
-                <input class="input" type="text" v-model="newTreatment.condition" />
-              </div>
+          <div class="columns has-text-centered">
+            <div class="column">
+              <button class="button is-info is-size-3" @click="selectPreference('email')">Email</button>
             </div>
-            <div class="field">
-              <label class="label">Treatment Name</label>
-              <div class="control">
-                <input class="input" type="text" v-model="newTreatment.name" />
-              </div>
-            </div>
-            <div class="field">
-              <label class="label">Dosage</label>
-              <div class="control">
-                <input class="input" type="text" v-model="newTreatment.dosage" />
-              </div>
-            </div>
-            <div class="field">
-              <label class="label">Frequency</label>
-              <div class="control">
-                <input class="input" type="text" v-model="newTreatment.frequency" />
-              </div>
-            </div>
-            <div class="field">
-              <label class="label">Route</label>
-              <div class="control">
-                <input class="input" type="text" v-model="newTreatment.route" />
-              </div>
+            <div class="column">
+              <button class="button is-info is-size-3" @click="selectPreference('sms')">SMS</button>
             </div>
           </div>
-
-          <div class="column">
-            <div class="field">
-              <label class="label">Start Date</label>
-              <div class="control">
-                <input class="input" type="date" v-model="newTreatment.startDate" />
-              </div>
-            </div>
-            <div class="field">
-              <label class="label">End Date</label>
-              <div class="control">
-                <input class="input" type="date" v-model="newTreatment.endDate" />
-              </div>
-            </div>
-            <div class="field">
-              <label class="label">Prescribing Physician</label>
-              <div class="control">
-                <input class="input" type="text" v-model="newTreatment.prescribingPhysician" />
-              </div>
-            </div>
-            <div class="field">
-              <label class="label">Notes</label>
-              <div class="control">
-                <input class="input" type="text" v-model="newTreatment.notes" />
-              </div>
-            </div>
-          </div>
-        </div>
-        <div class="columns has-text-centered">
-          <div class="column">
-            <div class="field is-grouped">
-              <div class="control">
-                <button class="button is-primary" type="submit">Submit</button>
-              </div>
-            </div>
-          </div>
-          <div class="column">
-            <button class="button is-info" @click="clearTreatmentForm()">Clear Form</button>
-          </div>
-          <div class="column">
-            <button class="button is-danger" @click="openTreatmentForm(false)">Cancel</button>
-          </div>
-        </div>
-      </form>
-      <br />
+        </form>
+      </div>
     </div>
   </div>
 </template>
@@ -285,8 +197,7 @@ export default {
       }
     },
     openTreatmentForm(value) {
-      this.windowOpen = value;
-      this.clearTreatmentForm();
+      this.$router.push(`/patients/add-treatment/${this.$route.params.patient}`);
     },
     openContactOverlay(value) {
       this.contactOpen = value;
@@ -344,7 +255,7 @@ export default {
       const tempTreatments = [];
       const allTreatments = this.patient.treatments.map(async (treatment) => {
         try {
-          const response = await axios.get(`http://localhost:3000/treatments/${treatment}`);
+          const response = await axios.get(`${treatment}`);
           tempTreatments.push(response.data);
         } catch (error) {
           console.error(`Error fetching treatment ${treatment}`, error);
