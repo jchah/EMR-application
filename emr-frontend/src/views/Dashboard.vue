@@ -51,8 +51,22 @@
 
 <style scoped>
 .hero {
-  background-size: cover;
+  background: linear-gradient(270deg, #84fab0, #8fd3f4, #a18cd1);
+  background-size: 600% 600%;
+  animation: Gradient 15s ease infinite;
   background-position: center;
+}
+
+@keyframes Gradient {
+  0% {
+    background-position: 0% 50%;
+  }
+  50% {
+    background-position: 100% 50%;
+  }
+  100% {
+    background-position: 0% 50%;
+  }
 }
 
 .card {
