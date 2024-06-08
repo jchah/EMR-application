@@ -116,7 +116,8 @@ import emailjs, { send } from 'emailjs-com'
 
 emailjs.init('2aRoZGFYWXbozLSuh');
 
-const API_URL = "http://localhost:3000";
+const API_URL = "https://emr-application.onrender.com";
+console.log(API_URL)
 
 export default {
   components: {

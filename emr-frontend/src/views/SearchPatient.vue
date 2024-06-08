@@ -83,7 +83,7 @@ export default {
     methods: {
         async fetchPatients() {
             try {
-                const response = await axios.get(`http://localhost:3000/patients`);
+                const response = await axios.get(`https://emr-application.onrender.com/patients`);
                 this.patients = response.data;
             } catch (error) {
                 console.error(error);

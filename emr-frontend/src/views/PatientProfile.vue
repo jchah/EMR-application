@@ -144,6 +144,8 @@
 <script>
 import axios from "axios";
 
+const API_URL = 'https://emr-application.onrender.com'
+
 export default {
   name: "PatientProfile",
   data() {
@@ -170,7 +172,7 @@ export default {
   methods: {
     async fetchPatient() {
       try {
-        const response = await axios.get(`http://localhost:3000/patients/${this.$route.params.patient}`);
+        const response = await axios.get(`${API_URL}/patients/${this.$route.params.patient}`);
         this.patient = response.data;
         console.log("patient", this.patient);
         await this.fillTreatments();
@@ -180,7 +182,7 @@ export default {
     },
     async fetchAppointments() {
       try {
-        const response = await axios.get(`http://localhost:3000/appointments`);
+        const response = await axios.get(`${API_URL}/appointments`);
         this.appointments = response.data.filter((appointment) => appointment.patient == this.$route.params.patient);
         console.log("appointments", this.appointments);
       } catch (error) {
@@ -221,13 +223,13 @@ export default {
           this.newTreatment.endDate = "N/A";
         }
         try {
-          const response = await axios.post(`http://localhost:3000/treatments`, this.newTreatment);
+          const response = await axios.post(`${API_URL}/treatments`, this.newTreatment);
           const treatmentID = response.data._id;
-          const patientResponse = await axios.get(`http://localhost:3000/patients/${this.$route.params.patient}`);
+          const patientResponse = await axios.get(`${API_URL}/patients/${this.$route.params.patient}`);
           const treatments = patientResponse.data.treatments;
           treatments.push(treatmentID);
 
-          await axios.put(`http://localhost:3000/patients/${this.$route.params.patient}`, { treatments });
+          await axios.put(`${API_URL}/patients/${this.$route.params.patient}`, { treatments });
           this.openTreatmentForm(false);
           this.clearTreatmentForm();
           console.log("Successfully updated treatments");
@@ -258,7 +260,7 @@ export default {
     async selectPreference(value) {
       this.contactOpen = false;
       try {
-        await axios.put(`http://localhost:3000/patients/${this.$route.params.patient}`, { contactPreference: value });
+        await axios.put(`${API_URL}/patients/${this.$route.params.patient}`, { contactPreference: value });
         location.reload();
       } catch (error) {
         console.error(error);
@@ -266,7 +268,7 @@ export default {
     },
     async deleteAppointment(appointmentID) {
       try {
-        await axios.delete(`http://localhost:3000/appointments/${appointmentID}`);
+        await axios.delete(`${API_URL}/appointments/${appointmentID}`);
         location.reload();
       } catch (error) {
         console.error(error);
@@ -275,10 +277,10 @@ export default {
     async clearTreatment(treatment) {
       const deletedID = treatment._id;
       try {
-        await axios.delete(`http://localhost:3000/treatments/${deletedID}`);
-        const patientResponse = await axios.get(`http://localhost:3000/patients/${this.$route.params.patient}`);
+        await axios.delete(`${API_URL}/treatments/${deletedID}`);
+        const patientResponse = await axios.get(`${API_URL}/patients/${this.$route.params.patient}`);
         const updatedTreatments = patientResponse.data.treatments.filter((treatmentId) => treatmentId !== deletedID);
-        await axios.put(`http://localhost:3000/patients/${this.$route.params.patient}`, { treatments: updatedTreatments });
+        await axios.put(`${API_URL}/patients/${this.$route.params.patient}`, { treatments: updatedTreatments });
         this.openTreatmentForm(false);
         this.clearTreatmentForm();
         console.log("Successfully updated patient");

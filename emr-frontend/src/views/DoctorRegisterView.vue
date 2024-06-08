@@ -49,7 +49,7 @@
 </template>
 
 <script>
-const API_URL = 'http://localhost:3000'
+const API_URL = 'https://emr-application.onrender.com'
 
 export default {
   name: 'AccountForm',

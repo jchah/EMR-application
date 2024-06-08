@@ -129,6 +129,8 @@
 <script>
 import axios from 'axios'
 
+const API_URL = 'https://emr-application.onrender.com'
+
 export default {
   data() {
     return {
@@ -187,7 +189,7 @@ export default {
     },
     async getPatient() {
       try {
-        const response = await axios.get(`http://localhost:3000/patients/${this.$route.params.patient}`);
+        const response = await axios.get(`${API_URL}/patients/${this.$route.params.patient}`);
         this.patient = response.data;
       } catch (error) {
         console.error("Failed to fetch patient data:", error);
@@ -220,13 +222,13 @@ export default {
           this.newTreatment.endDate = 'N/A';
         }
         try {
-          const response = await axios.post(`http://localhost:3000/treatments`, this.newTreatment);
+          const response = await axios.post(`${API_URL}/treatments`, this.newTreatment);
           const treatmentID = response.data._id;
-          const patientResponse = await axios.get(`http://localhost:3000/patients/${this.$route.params.patient}`);
+          const patientResponse = await axios.get(`${API_URL}/patients/${this.$route.params.patient}`);
           const treatments = patientResponse.data.treatments;
           treatments.push(treatmentID);
 
-          await axios.put(`http://localhost:3000/patients/${this.$route.params.patient}`, { treatments });
+          await axios.put(`${API_URL}/patients/${this.$route.params.patient}`, { treatments });
           this.clearTreatmentForm();
           this.goBack();
         } catch (error) {

@@ -37,6 +37,8 @@
 </template>
 
 <script>
+const API_URL = 'https://emr-application.onrender.com'
+
 export default {
   name: 'AccountForm',
   data() {
@@ -59,7 +61,7 @@ export default {
         email: this.account.email.toLowerCase() // Ensure email is in lowercase before sending
       };
       try {
-        const response = await fetch('http://localhost:3000/user/signin', {
+        const response = await fetch(`${API_URL}/user/signin`, {
           method: 'POST',
           headers: { 'Content-Type': 'application/json' },
           body: JSON.stringify(accountData)
