@@ -311,60 +311,7 @@ export default { // Data
     goBack() { // Goes back to the patients search page
       this.$router.push('/patients');
     },
-    async addTreatment() { // adds a treatment, sets other perams to N/A if its an untreatable/doesnt need to be treated condition.
-      console.log(this.newTreatment)
-      if (this.newTreatment.condition !== '' && this.newTreatment.prescribingPhysician !== '') {
-        if(this.newTreatment.name === '') {
-          this.newTreatment.name = 'None';
-          this.newTreatment.dosage = 'N/A';
-          this.newTreatment.frequency = 'N/A';
-          this.newTreatment.route = 'N/A';
-          this.newTreatment.startDate = 'N/A';
-          this.newTreatment.endDate = 'N/A';
-        }
-        try { // Posts the new Treatment to Mongo
-          const response = await axios.post(`http://localhost:3000/treatments`, this.newTreatment);
-          this.successMessage = 'New treatment added successfully.';
-          let treatmentID = response.data._id;
-          console.log("Treatment ID:")
-          console.log(treatmentID);
-          try {
-            const response = await axios.get(`http://localhost:3000/patients/${this.$route.params.patient}`); // Gets the patient again to add the new treatment to it
-            const treatments = response.data.treatments;
-
-            console.log("Before:")
-            console.log(treatments);
-            treatments.push(treatmentID);
-            console.log("After:")
-            console.log(treatments)
-
-            const data = {
-              treatments: treatments
-            };
-
-            await axios.put(`http://localhost:3000/patients/${this.$route.params.patient}`, data) // Actually adds the new treatment to the patient 
-            this.openTreatmentForm(false);
-            this.clearTreatmentForm();
-            console.log("Successfully updated treatments");
-            this.successMessage = 'Successfully updated treatments';
-            location.reload()
-
-          } catch (e) {
-            console.log("Error updating treatment: " + e);
-          }
-
-          await this.fetchPatients();
-        } catch (error) {
-          this.successMessage = '';
-          this.errorMessage = 'Failed to add new patient.';
-        }
-      } else {
-        this.successMessage = '';
-        this.errorMessage = 'Please ensure you fill out all fields.';
-      }
-
-    },
-    sendToAppointmentPage() { // Reroutes you to the calender page
+    sendToAppointmentPage() {
       this.$router.push({ name: 'Calender'})
     },
     async fillTreatments() { // Updates the treatments array and adds all the treatments that the patient has
