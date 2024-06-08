@@ -43,7 +43,7 @@
 
     <div class="columns has-text-centered has-background-info-light">
       <div class="column">
-        <button class="button is-info is-size-4" @click="openContactOverlay(true)">Change Contact Preference?</button>
+        <button class="button is-info" @click="openContactOverlay(true)">Change Contact Preference?</button>
       </div>
     </div>  
     
@@ -239,7 +239,7 @@
 <script>
 import axios from "axios";
 
-export default {
+export default { // Data
   data() {
     return {
       patient: null,
@@ -247,7 +247,7 @@ export default {
       appointments: [],
       windowOpen : false,
       contactOpen : false,
-      newTreatment : {
+      newTreatment : { // For creating treatments
         condition : '',
         name : '',
         dosage : '',
@@ -261,7 +261,7 @@ export default {
     };
   },
   methods: {
-    async fetchPatient() {
+    async fetchPatient() { // Loads the patient information using the ID passed into this file
       try {
         const response = await axios.get(`http://localhost:3000/patients/${this.$route.params.patient}`);
         this.patient = response.data;
@@ -273,7 +273,7 @@ export default {
       }
     },
    
-    async fetchAppointments(){
+    async fetchAppointments(){ // Gets the appointments from the database and store them in this.appointments
       try {
         const response = await axios.get(`http://localhost:3000/appointments`);
         console.log('response', response.data)
@@ -290,14 +290,14 @@ export default {
         console.error("Error getting data from getAppointments", error);
       }
     },
-    openTreatmentForm(value) {
+    openTreatmentForm(value) { // Opens the popup for treatments
       this.windowOpen = value
       this.clearTreatmentForm()
     },
-    openContactOverlay(value) {
+    openContactOverlay(value) { // Opens/Closes the popup for changing preferred contact information 
       this.contactOpen = value
     },
-    clearTreatmentForm() {
+    clearTreatmentForm() { // Clears the form for adding treatments
       this.newTreatment.condition = ''
       this.newTreatment.name = ''
       this.newTreatment.dosage = ''
@@ -308,10 +308,10 @@ export default {
       this.newTreatment.prescribingPhysician = ''
       this.newTreatment.notes= ''
     },
-    goBack() {
+    goBack() { // Goes back to the patients search page
       this.$router.push('/patients');
     },
-    async addTreatment() {
+    async addTreatment() { // adds a treatment, sets other perams to N/A if its an untreatable/doesnt need to be treated condition.
       console.log(this.newTreatment)
       if (this.newTreatment.condition !== '' && this.newTreatment.prescribingPhysician !== '') {
         if(this.newTreatment.name === '') {
@@ -322,14 +322,14 @@ export default {
           this.newTreatment.startDate = 'N/A';
           this.newTreatment.endDate = 'N/A';
         }
-        try {
+        try { // Posts the new Treatment to Mongo
           const response = await axios.post(`http://localhost:3000/treatments`, this.newTreatment);
           this.successMessage = 'New treatment added successfully.';
           let treatmentID = response.data._id;
           console.log("Treatment ID:")
           console.log(treatmentID);
           try {
-            const response = await axios.get(`http://localhost:3000/patients/${this.$route.params.patient}`);
+            const response = await axios.get(`http://localhost:3000/patients/${this.$route.params.patient}`); // Gets the patient again to add the new treatment to it
             const treatments = response.data.treatments;
 
             console.log("Before:")
@@ -342,7 +342,7 @@ export default {
               treatments: treatments
             };
 
-            await axios.put(`http://localhost:3000/patients/${this.$route.params.patient}`, data)
+            await axios.put(`http://localhost:3000/patients/${this.$route.params.patient}`, data) // Actually adds the new treatment to the patient 
             this.openTreatmentForm(false);
             this.clearTreatmentForm();
             console.log("Successfully updated treatments");
@@ -364,10 +364,10 @@ export default {
       }
    
     },
-    sendToAppointmentPage() {
+    sendToAppointmentPage() { // Reroutes you to the calender page
       this.$router.push({ name: 'Calender'})
     },
-    async fillTreatments() {
+    async fillTreatments() { // Updates the treatments array and adds all the treatments that the patient has
       const tempTreatments = [];
 
       const allTreatments = this.patient.treatments.map(async (treatment) => {
@@ -386,7 +386,7 @@ export default {
       await console.log(tempTreatments)
       this.treatments = tempTreatments
     },
-    async selectPreference(value) {
+    async selectPreference(value) { // Sets the patients contact preference and updates it in mongo
       this.contactOpen = false
       const data = {
         contactPreference : value
@@ -399,7 +399,7 @@ export default {
         console.log(error)
       }
     },
-    async deleteAppointment(treatmentID) {
+    async deleteAppointment(treatmentID) { // Deletes a selected patient
       console.log(treatmentID)
       try {
         const response = await axios.delete(`http://localhost:3000/appointments/${treatmentID}`)
@@ -408,7 +408,7 @@ export default {
       }
       location.reload()
     },
-    async clearTreatment(treatment) {
+    async clearTreatment(treatment) { // Deletes a selected Treatment
       const deletedID = treatment._id
       console.log(deletedID)
       try {
@@ -417,7 +417,7 @@ export default {
         console.log(error)
       }
 
-      try {
+      try { // Deletes the reference of the treatment from the patient
         const response = await axios.get(`http://localhost:3000/patients/${this.$route.params.patient}`);
         const previousTreatments = response.data.treatments
         console.log(previousTreatments)

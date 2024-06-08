@@ -167,7 +167,7 @@ import 'vue-multiselect/dist/vue-multiselect.css';
 
 export default {
   components: { Multiselect },
-  data() {
+  data() { // data
     return {
       currentPage: 1,
       pageSize: 10,
@@ -192,24 +192,24 @@ export default {
     };
   },
   computed: {
-    paginatedPatients() {
+    paginatedPatients() { // List of the patients that should be displayed on the current page of pagination
       const start = (this.currentPage - 1) * this.pageSize;
       const end = start + this.pageSize;
       return this.filteredPatients.slice(start, end);
     }
   },
   methods: {
-    nextPage() {
+    nextPage() { // Goes to the next page of pagination
       if ((this.currentPage * this.pageSize) < this.filteredPatients.length) {
         this.currentPage++;
       }
     },
-    prevPage() {
+    prevPage() { // goes to the previous page of pagination
       if (this.currentPage > 1) {
         this.currentPage--;
       }
     },
-    async fetchPatients() {
+    async fetchPatients() { // Fetches an array of all the patients from the database
       try {
         const response = await axios.get(`http://localhost:3000/patients`);
         this.patients = response.data;
@@ -217,7 +217,7 @@ export default {
         console.error(error);
       }
     },
-    async deletePatient(patientId) {
+    async deletePatient(patientId) { // Deletes a selected patient and all things tied to that patient
       try {
         await axios.delete(`http://localhost:3000/patients/${patientId}`);
         await axios.delete(`http://localhost:3000/appointments/patient/${patientId}`)
@@ -229,7 +229,7 @@ export default {
         console.error(error);
       }
     },
-    submitForm() {
+    submitForm() { // For each parameter in the search for patients page, find which patients match & add return an array (that is used in the table)
       this.filteredPatients = this.patients.filter(patient => {
         const firstNameMatch = this.patientFirstName === '' || patient.firstName.toLowerCase().includes(this.patientFirstName.toLowerCase());
         const lastNameMatch = this.lastName === '' || patient.lastName.toLowerCase().includes(this.lastName.toLowerCase());
@@ -259,15 +259,15 @@ export default {
         hasSearched: this.hasSearched
       }));
     },
-    showSearch() {
+    showSearch() { // Shows the two different pages (search & table)
       this.hasSearched = false;
       localStorage.removeItem('searchResults');
       localStorage.removeItem('searchState');
     },
-    goToPatientProfile(patient_id) {
+    goToPatientProfile(patient_id) { // Sends you to the patient profile page differentiated through the patiends id
       this.$router.push({ name: 'PatientProfile', params: { patient: patient_id } });
     },
-    async createNewPatient() {
+    async createNewPatient() { // Creates a patient using the information provided on the search page
       let newPatient = {
         firstName: this.patientFirstName,
         lastName: this.lastName,
@@ -304,7 +304,7 @@ export default {
         this.errorMessage = 'Please ensure you fill out all fields.';
       }
     },
-    resetForm() {
+    resetForm() { // Resets all the values on the form to ''
       this.patientFirstName = '';
       this.lastName = '';
       this.dateOfBirth = '';
@@ -319,7 +319,7 @@ export default {
       this.selectedConditions = [];
     }
   },
-  created() {
+  created() { // Fetches the patients 
     this.fetchPatients();
     let storedResults = localStorage.getItem('searchResults');
     let storedState = localStorage.getItem('searchState');
