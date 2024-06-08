@@ -1,7 +1,7 @@
 <template>
   <nav class="navbar is-dark" role="navigation" aria-label="main navigation">
     <div class="navbar-brand">
-      <a class="navbar-item" href="/">
+      <a v-if="token" class="navbar-item" href="/">
         <img src="../img/LogoCropped.png" alt="Logo">
       </a>
       <a role="button" class="navbar-burger" :class="{'is-active': isActive}" aria-label="menu" aria-expanded="false" @click="toggleMenu">
@@ -12,12 +12,13 @@
     </div>
     <div class="navbar-menu" :class="{'is-active': isActive}" id="navMenu">
       <div class="navbar-start">
-        <router-link class="navbar-item" to="/">Dashboard</router-link>
-        <router-link class="navbar-item" to="/patients">Patients</router-link>
-        <router-link class="navbar-item" to="/calendar">Appointments</router-link>
+        <router-link v-if="token" class="navbar-item" to="/">Dashboard</router-link>
+        <router-link v-if="!token" class="navbar-item" to="/search-patient">Search Patient</router-link>
+        <router-link v-if="token" class="navbar-item" to="/patients">Patients</router-link>
+        <router-link v-if="token" class="navbar-item" to="/calendar">Appointments</router-link>
 
         <div class="navbar-item has-dropdown is-hoverable">
-          <a class="navbar-link">Settings</a>
+          <a v-if="token" class="navbar-link">Settings</a>
           <div class="navbar-dropdown">
             <a class="dropdown-item">
               <router-link to="/user">User</router-link>

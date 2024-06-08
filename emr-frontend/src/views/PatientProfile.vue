@@ -4,7 +4,7 @@
       <p class="title" v-if="patient">Patient Profile : {{patient.firstName + " " + patient.lastName}}</p>
       
 
-      <button class="button is-info" @click="goBack">Back to Patients</button>
+      <button v-if="token" class="button is-info" @click="goBack">Back to Patients</button>
       
     </div>
   </section>
@@ -86,7 +86,7 @@
           </tr>
           </tbody>
         </table>
-        <div class="has-text-centered"><button class="button is-danger has-text-centered" @click="openTreatmentForm(true)">Add Treatment?</button></div>
+        <div v-if="token" class="has-text-centered"><button class="button is-danger has-text-centered" @click="openTreatmentForm(true)">Add Treatment?</button></div>
       </div>
     </div>
 
@@ -120,7 +120,7 @@
             </tr>
           </tbody>
         </table>
-        <div class="has-text-centered"><button class="button is-warning" @click="sendToAppointmentPage()">Create Appointment?</button></div>
+        <div v-if="token" class="has-text-centered"><button class="button is-warning" @click="sendToAppointmentPage()">Create Appointment?</button></div>
       </div>
       
     </div>
