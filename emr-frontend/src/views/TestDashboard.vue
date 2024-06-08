@@ -5,7 +5,7 @@
     <div class="section" id="test-forms">
       <h1 class="title has-text-white">Tests</h1>
       <div class="columns is-centered">
-        <div class="section column is-half has-background-danger-light" id="order">
+        <div class="section column is-half has-background-danger-light box" id="order">
           <h2 class="section-header">Order test</h2>
           <form @submit.prevent="submitOrder(this.orderData)">
             <div v-if="orderSuccess" class="notification is-success">
@@ -38,7 +38,7 @@
           </form>
         </div>
         <hr>
-        <div class="section column is-half has-background-danger-light" id="results">
+        <div class="section column is-half has-background-danger-light box" id="results">
           <h2 class="section-header">Submit test results</h2>
           <form @submit.prevent="submitResults(this.resultsData)">
             <div v-if="resultsSuccess" class="notification is-success">
