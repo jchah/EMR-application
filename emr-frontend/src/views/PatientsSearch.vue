@@ -1,10 +1,10 @@
 <template>
 <!-- <section class="hero is-primary is-fullheight-with-navbar"> --> 
   <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bulma@0.9.3/css/bulma.min.css">
-  <section class="hero is-fullheight-with-navbar has-background-warning">
+  <section class="hero is-fullheight-with-navbar has-background-warning section">
     <div v-if="!hasSearched" class="columns is-centered">
       <div class="column is-half mt-5">
-        <h1 class="title has-text-centered">Search For Patient</h1>
+        <h1 class="title">Search For Patient</h1>
         <div class="box">
           <div v-if="successMessage" class="notification is-success">
             {{ successMessage }}
@@ -112,8 +112,9 @@
     <div v-if="hasSearched" class="columns is-centered">
       <div class="column is-full">
         <br>
-        <h1 class="title has-text-centered">Filtered Patients</h1>
-        <table class="table is-fullwidth has-text-centered">
+        <h1 class="title">Filtered Patients</h1>
+        <div class="box">
+          <table class="table is-fullwidth has-text-centered">
           <thead>
           <tr>
             <th>First Name</th>
@@ -140,6 +141,7 @@
           </tr>
           </tbody>
         </table>
+        </div>
         <nav class="pagination is-centered" role="navigation" aria-label="pagination">
           <button class="pagination-previous" @click="prevPage" :disabled="currentPage === 1">Previous</button>
           <button class="pagination-next" @click="nextPage" :disabled="currentPage * pageSize >= filteredPatients.length">Next</button>
