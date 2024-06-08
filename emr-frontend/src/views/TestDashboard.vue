@@ -1,7 +1,7 @@
 <template>
   <div id="test-dashboard" class="has-background-white-ter">
     <div class="section" id="test-forms">
-      <h1 class="title">Test Dashboard</h1>
+      <h1 class="title">Dashboard</h1>
       <div class="columns is-centered">
         <div class="section column is-half has-background-white" id="order">
           <h2 class="section-header">Order test</h2>
