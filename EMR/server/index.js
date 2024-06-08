@@ -6,7 +6,7 @@ const cors = require("cors");
 const dotenv = require("dotenv");
 const twilioClient = require('./controllers/twillio.js')
 const nodemailer = require('nodemailer');
-// const cron = require('node-cron');
+const cron = require('node-cron');
 require('./db');
 
 const { Patient, Medicine } = require("./models/Patient");
@@ -395,26 +395,33 @@ app.post('/send-email', async (req, res) => {
     }
 })
 
-// // Step 2: Define the email options
-// let mailOptions = {
-//     from: process.env.EMAIL_USER,
-//     to: 'recipient-email@example.com',
-//     subject: 'Scheduled Email from Node.js',
-//     text: 'This is a test email sent at a scheduled time.',
-// };
+cron.schedule('0 3 * * *', async () => { // runs at 3 am every day
+    try {
+        let date = (new Date()).toLocaleDateString()
+        const appointments = await Appointment.find({ date: date });
 
-// // Step 3: Define the cron job
-// cron.schedule('0 9 * * *', () => { // This cron job will run every day at 9:00 AM
-//     transporter.sendMail(mailOptions, function(error, info){
-//         if (error) {
-//             console.log('Error occurred: ' + error.message);
-//         } else {
-//             console.log('Email sent successfully: ' + info.response);
-//         }
-//     });
-// }, {
-//     scheduled: true,
-//     timezone: "America/New_York" // Set the desired timezone
-// });
+        let mailOptions = {
+            from: process.env.EMAIL_USER,
+            to: '',
+            subject: 'Appointment Reminder!',
+            text: 'Your Appointment is scheduled for today.\nRegards,\nEMR Team'
+        }
 
-// console.log('Cron job scheduled to send email at 9:00 AM every day');
+        appointments.forEach(async a => {
+            mailOptions.to = a.patient.contact.email
+
+            transporter.sendMail(mailOptions, function(error, info){
+                if (error) {
+                    console.log('Error occurred: ' + error.message);
+                } else {
+                    console.log('Email sent successfully: ' + info.response);
+                }
+            });
+        })
+    } catch(e) {
+        console.error(e)
+    }
+}, {
+    scheduled: true,
+    timezone: "America/New_York" // Set the desired timezone
+});

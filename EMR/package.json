@@ -18,6 +18,8 @@
     "jsonwebtoken": "^8.5.1",
     "mongoose": "^6.0.12",
     "morgan": "^1.10.0",
+    "node-cron": "^3.0.3",
+    "nodemailer": "^6.9.13",
     "twilio": "^5.1.1",
     "v-calendar": "^2.4.2",
     "vue-multiselect": "^3.0.0"
