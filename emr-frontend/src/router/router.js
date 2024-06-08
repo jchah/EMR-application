@@ -22,7 +22,6 @@ const routes = [
     { path: '/register', component: Register },
     { path: '/patients/:patient', name : 'PatientProfile', component: PatientProfile},
     { path: '/user', component: User }
-    // { path: '/documentation', component: Documentation },
 ];
 
 const router = createRouter({
