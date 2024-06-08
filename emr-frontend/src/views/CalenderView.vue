@@ -10,23 +10,23 @@
             <DatePicker class="has-background-info-light" v-model="date" expanded/>
             <button style="margin-top: 20px; margin-bottom: 20px" class="button is-primary is-centered" @click="isDoingForm(true)">Make Appointment</button>
             </div>
-            <div class="">
-            <table class="table has-background-info" v-if="!appointments || appointments.length > 0">
+            <div class="box">
+            <table class="table" v-if="!appointments || appointments.length > 0">
               <thead>
               <tr>
-                <th class="has-text-white">Name</th>
-                <th class="has-text-white">Start Time</th>
-                <th class="has-text-white">End Time</th>
-                <th class="has-text-white">Notes</th>
+                <th>Name</th>
+                <th>Start Time</th>
+                <th>End Time</th>
+                <th>Notes</th>
               </tr>
               </thead>
               <tbody>
               <tr v-for="app in appointments" :key="app.id">
-                <td class="has-text-white"><router-link :to="`/patients/${app.patient.data._id}`">{{ app.patient.data.firstName + " " +
+                <td><router-link :to="`/patients/${app.patient.data._id}`">{{ app.patient.data.firstName + " " +
                  app.patient.data.lastName}}</router-link></td>
-                <td class="has-text-white">{{ app.startTime }}</td>
-                <td class="has-text-white">{{ app.endTime }}</td>
-                <td class="has-text-white">{{ app.notes }}</td>
+                <td>{{ app.startTime }}</td>
+                <td>{{ app.endTime }}</td>
+                <td>{{ app.notes }}</td>
                 <td class="has-text-white has-text-centered">
                   <button @click="deleteAppointment(app)" class="button is-danger"> Delete</button>
 
