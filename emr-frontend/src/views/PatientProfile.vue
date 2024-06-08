@@ -199,8 +199,8 @@
               </form>
               <br>
             </div>
+          </div>
     </div>
-  </div>
 </template>
 
 <script>
@@ -258,6 +258,9 @@ export default {
     openTreatmentForm(value) {
       this.windowOpen = value
       this.clearTreatmentForm()
+    },
+    openModal() {
+
     },
     clearTreatmentForm() {
       this.newTreatment.condition = ''
