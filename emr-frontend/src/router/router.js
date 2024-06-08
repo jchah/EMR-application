@@ -7,7 +7,7 @@ import PatientProfile from '../views/PatientProfile.vue'
 import Settings from '../views/Settings.vue';
 import Calendar from '../views/CalenderView.vue'
 import Login from '../views/LoginView.vue';
-import Register from '../views/RegisterView.vue';
+import Register from '../views/DoctorRegisterView.vue';
 // import Documentation from '../views/DocumentationView.vue';
 import Tests from '../views/TestDashboard.vue'
 import User from '../views/UserView.vue'
@@ -15,7 +15,7 @@ import User from '../views/UserView.vue'
 const routes = [
     { path: '/', component: Dashboard },
     { path: '/patients', component: Patients },
-    { path: '/calendar', component: Calendar},
+    { path: '/calendar', component: Calendar, name : 'Calender'},
     { path: '/settings', component: Settings },
     { path: '/test-dashboard', component: Tests },
     { path: '/login', component: Login },
