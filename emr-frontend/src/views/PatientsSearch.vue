@@ -215,6 +215,8 @@ export default {
     async deletePatient(patientId) {
       try {
         await axios.delete(`http://localhost:3000/patients/${patientId}`);
+        await axios.delete(`http://localhost:3000/appointments/patient/${patientId}`)
+
         this.successMessage = 'Patient deleted successfully.';
         this.filteredPatients = this.filteredPatients.filter(patient => patient._id !== patientId);
       } catch (error) {
