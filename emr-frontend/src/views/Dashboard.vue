@@ -8,7 +8,7 @@
         <h1 class="title has-text-centered animate__animated animate__fadeInDown">Welcome to the EMR Application</h1>
         <p class="subtitle has-text-centered animate__animated animate__fadeIn">Manage all your medical records in one place.</p>
         <div class="columns is-multiline is-centered is-variable is-8">
-          <div class="column is-narrow animate__animated animate__fadeInLeft">
+          <div class="column is-narrow animate__animated animate__fadeInLeft" v-if="token">
             <RouterLink :to="'/patients'">
               <div class="card has-text-centered">
                 <div class="card-image">
@@ -26,7 +26,7 @@
             </RouterLink>
           </div>
 
-          <div class="column is-narrow animate__animated animate__fadeInUp">
+          <div class="column is-narrow animate__animated animate__fadeInUp" v-if="token">
             <RouterLink :to="'/calendar'">
               <div class="card has-text-centered">
                 <div class="card-image">
@@ -48,6 +48,19 @@
     </div>
   </section>
 </template>
+
+<script>
+export default {
+  data() {
+    return {
+      token: null,
+    };
+  },
+  created() {
+    this.token = localStorage.getItem("token");
+  },
+};
+</script>
 
 <style scoped>
 .hero {
