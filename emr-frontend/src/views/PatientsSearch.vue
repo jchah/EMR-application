@@ -111,7 +111,6 @@
     </div>
     <div v-if="hasSearched" class="columns is-centered">
       <div class="column is-full">
-        <br>
         <h1 class="title has-text-centered">Filtered Patients</h1>
         <table class="table is-fullwidth has-text-centered">
           <thead>
