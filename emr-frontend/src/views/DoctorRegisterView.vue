@@ -34,17 +34,6 @@
                   <input type="text" class="input" id="lastName" v-model="account.lastName" required>
                 </div>
               </div>
-              <div class="field">
-                <label class="label" for="role">Role</label>
-                <div class="control">
-                  <div class="select">
-                    <select id="role" v-model="account.role" required>
-                      <option value="user">User</option>
-                      <option value="admin">Admin</option>
-                    </select>
-                  </div>
-                </div>
-              </div>
               <!-- Success and Error Messages -->
               <div v-if="successMessage" class="notification is-success">{{ successMessage }}</div>
               <div v-if="errorMessage" class="notification is-danger">{{ errorMessage }}</div>
@@ -69,7 +58,6 @@ export default {
         password: '',
         firstName: '',
         lastName: '',
-        role: 'user'
       },
       successMessage: '',
       errorMessage: ''
