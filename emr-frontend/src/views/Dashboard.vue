@@ -43,24 +43,6 @@
               </div>
             </RouterLink>
           </div>
-
-          <div class="column is-narrow animate__animated animate__fadeInRight">
-            <RouterLink :to="'/test-dashboard'">
-              <div class="card has-text-centered">
-                <div class="card-image">
-                  <figure class="image is-4by3">
-                    <img src="../img/test.jpeg" style="object-fit: cover;" alt="Tests">
-                  </figure>
-                </div>
-                <header class="card-header">
-                  <p class="card-header-title is-centered">Tests</p>
-                </header>
-                <div class="card-content">
-                  <div class="content">View and manage tests</div>
-                </div>
-              </div>
-            </RouterLink>
-          </div>
         </div>
       </div>
     </div>
