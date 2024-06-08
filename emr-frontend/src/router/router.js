@@ -3,13 +3,10 @@ import { createRouter, createWebHistory } from 'vue-router';
 import Dashboard from '../views/Dashboard.vue';
 import Patients from '../views/PatientsSearch.vue';
 import PatientProfile from '../views/PatientProfile.vue'
-// import Appointments from './views/Appointments.vue';
 import Settings from '../views/Settings.vue';
 import Calendar from '../views/CalenderView.vue'
 import Login from '../views/LoginView.vue';
 import Register from '../views/DoctorRegisterView.vue';
-// import Documentation from '../views/DocumentationView.vue';
-import Tests from '../views/TestDashboard.vue'
 import User from '../views/UserView.vue'
 
 const routes = [
