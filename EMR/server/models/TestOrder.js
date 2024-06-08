@@ -3,15 +3,17 @@ const Schema = mongoose.Schema;
 
 const orderSchema = new Schema({
     test: {
-        type: String,
+        type: Schema.Types.ObjectId,
+        ref: 'Test',
         required: true,
     },
     patient: {
-        type: String,
+        type: Schema.Types.ObjectId,
+        ref: 'Patient',
         required: true
     },
     date: {
-        type: String,
+        type: Date,
         required: true
     }
 });
