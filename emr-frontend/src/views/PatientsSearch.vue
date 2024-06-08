@@ -1,7 +1,7 @@
 <template>
 <!-- <section class="hero is-primary is-fullheight-with-navbar"> --> 
   <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bulma@0.9.3/css/bulma.min.css">
-  <section class="hero is-fullheight-with-navbar has-background-warning section">
+  <section class="hero is-fullheight-with-navbar section">
     <div v-if="!hasSearched" class="columns is-centered">
       <div class="column is-half mt-5">
         <h1 class="title">Search For Patient</h1>
@@ -113,8 +113,8 @@
       <div class="column is-full">
         <br>
         <h1 class="title">Filtered Patients</h1>
-        <div class="box has-background-warning-light">
-          <table class="table is-fullwidth has-text-centered has-background-warning-light">
+        <div class="box has-background-info-light">
+          <table class="table is-fullwidth has-text-centered has-background-info-light">
           <thead>
           <tr>
             <th>First Name</th>

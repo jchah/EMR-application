@@ -232,8 +232,8 @@
               </form>
               <br>
             </div>
+          </div>
     </div>
-  </div>
 </template>
 
 <script>

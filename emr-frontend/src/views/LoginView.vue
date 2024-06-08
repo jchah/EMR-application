@@ -5,7 +5,7 @@
         <div class="card">
           <header class="card-header">
             <p class="card-header-title has-text-centered">
-              Login to EMR
+              Doctor Login to EMR
             </p>
           </header>
           <div class="card-content">
@@ -22,15 +22,40 @@
                   <input type="password" class="input" id="password" v-model="account.password" required>
                 </div>
               </div>
+              <!-- Success and Error Messages -->
+              <div v-if="successMessage" class="notification is-success">{{ successMessage }}</div>
+              <div v-if="errorMessage" class="notification is-danger">{{ errorMessage }}</div>
+              <div class="control">
+                <button type="submit" class="button is-primary is-fullwidth">Login</button>
+              </div>
+            
+            </form>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+  <div class="container mt-5">
+    <div class="columns is-centered">
+      <div class="column is-half">
+        <div class="card">
+          <header class="card-header">
+            <p class="card-header-title has-text-centered">
+              Patient Login to EMR
+            </p>
+          </header>
+          <div class="card-content">
+            <form @submit.prevent="login">
               <div class="field">
-                <label class="label" for="role">Role</label>
+                <label class="label" for="email">Healthcard ID</label>
                 <div class="control">
-                  <div class="select">
-                    <select id="role" v-model="account.role" required>
-                      <option value="user">User</option>
-                      <option value="admin">Admin</option>
-                    </select>
-                  </div>
+                  <input type="email" class="input" id="email" v-model="account.email" required>
+                </div>
+              </div>
+              <div class="field">
+                <label class="label" for="password">Password</label>
+                <div class="control">
+                  <input type="password" class="input" id="password" v-model="account.password" required>
                 </div>
               </div>
               <!-- Success and Error Messages -->
@@ -39,6 +64,7 @@
               <div class="control">
                 <button type="submit" class="button is-primary is-fullwidth">Login</button>
               </div>
+            
             </form>
           </div>
         </div>
