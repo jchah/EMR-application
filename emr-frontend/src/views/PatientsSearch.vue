@@ -166,6 +166,8 @@ import axios from "axios";
 import Multiselect from 'vue-multiselect';
 import 'vue-multiselect/dist/vue-multiselect.css';
 
+const API_URL = 'http://localhost:3000'
+
 export default {
   components: { Multiselect },
   data() { // data
@@ -212,7 +214,7 @@ export default {
     },
     async fetchPatients() { // Fetches an array of all the patients from the database
       try {
-        const response = await axios.get(`http://localhost:3000/patients`);
+        const response = await axios.get(`${API_URL}/patients`);
         this.patients = response.data;
       } catch (error) {
         console.error(error);
@@ -220,8 +222,8 @@ export default {
     },
     async deletePatient(patientId) { // Deletes a selected patient and all things tied to that patient
       try {
-        await axios.delete(`http://localhost:3000/patients/${patientId}`);
-        await axios.delete(`http://localhost:3000/appointments/patient/${patientId}`)
+        await axios.delete(`${API_URL}/patients/${patientId}`);
+        await axios.delete(`${API_URL}/appointments/patient/${patientId}`)
 
         this.successMessage = 'Patient deleted successfully.';
         this.filteredPatients = this.filteredPatients.filter(patient => patient._id !== patientId);
@@ -291,7 +293,7 @@ export default {
 
       if (this.patientFirstName !== '' && this.lastName !== '' && this.dateOfBirth !== '' && this.sex !== '' && this.address !== '' && this.phoneNum !== '' && this.email !== '' && this.emergencyContactName !== '' && this.emergencyContactRelationship !== '' && this.emergencyContactPhone !== '' && this.cardNumber !== '') {
         try {
-          await axios.post(`http://localhost:3000/patients`, newPatient);
+          await axios.post(`${API_URL}/patients`, newPatient);
           this.successMessage = 'New patient added successfully.';
           this.errorMessage = '';
           this.resetForm();

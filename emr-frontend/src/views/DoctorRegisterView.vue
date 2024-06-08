@@ -49,6 +49,8 @@
 </template>
 
 <script>
+const API_URL = 'http://localhost:3000'
+
 export default {
   name: 'AccountForm',
   data() {
@@ -68,7 +70,7 @@ export default {
       this.successMessage = '';
       this.errorMessage = '';
       try {
-        const response = await fetch('http://localhost:3000/user/signup', {
+        const response = await fetch(`${API_URL}/user/signup`, {
           method: 'POST',
           headers: { 'Content-Type': 'application/json' },
           body: JSON.stringify(this.account)
