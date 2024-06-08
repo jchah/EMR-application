@@ -1,6 +1,6 @@
 <template>
-  <div id="all" v-if="patient">
-    <p class="title has-text-centered">Add New Treatment</p>
+  <p class="title section" padding="10px">Add New Treatment</p>
+  <div id="all" class="box" style="margin: 20px" v-if="patient">
     <div id="treatment-list">
       <div class="columns">
         <div class="column">
@@ -20,7 +20,7 @@
           </div>
         </div>
       </div>
-      <table v-if="drugResults.length">
+      <table v-if="drugResults.length" class="box">
         <thead>
           <tr>
             <th>Drug Identification Number</th>
