@@ -112,7 +112,7 @@ import { DatePicker } from 'v-calendar';
 import 'v-calendar/style.css';
 import axios from 'axios';
 
-import emailjs from 'emailjs-com'
+import emailjs, { send } from 'emailjs-com'
 
 emailjs.init('2aRoZGFYWXbozLSuh');
 
@@ -233,18 +233,7 @@ export default {
             notes: info.value.notes,
           })
 
-          const idPatientForEmail = patientList.value.filter((a) => {
-              console.log('paitents name is ' + a.name, "appointment patients name is " + inSearchBar.value)
-              console.log(inSearchBar.value.toLowerCase().includes(a.name.toLowerCase()))
-              if(inSearchBar.value.toLowerCase().includes(a.name.toLowerCase()))
-                return a.name
-          })[0].patientID
-
-          const emailForSending = await axios.get(`${API_URL}/patients/${idPatientForEmail}`)
-          
-          console.log(emailForSending.data.contact.email)
-
-          await sendEmail(emailForSending.data.contact.email, 'Appointment Confirmation', `Your appointment is scheduled for ${info.value.date} and ${info.value.startTime.toLocaleTimeString()}.`)
+          checkPreference()
           
           } catch (error) {
             console.error(error)
@@ -255,6 +244,37 @@ export default {
         }
           
        
+    }
+
+    async function checkPreference() {
+      const pid = patientList.value.filter((a) => {
+          console.log('paitents name is ' + a.name, "appointment patients name is " + inSearchBar.value)
+          console.log(inSearchBar.value.toLowerCase().includes(a.name.toLowerCase()))
+          if(inSearchBar.value.toLowerCase().includes(a.name.toLowerCase()))
+            return a.name
+      })[0].patientID
+
+      const request = await axios.get(`${API_URL}/patients/${pid}`)
+
+      send([ request.data.contactPreference, request ])
+    }
+
+    async function send(arr) {
+      if(arr[0] == 'sms') {
+        await axios.post(`${API_URL}/send-sms`, {
+          to: arr[1].data.contact.phone,
+          message: `Your appointment is scheduled for ${info.value.date} and ${info.value.startTime.toLocaleTimeString()}.`
+        })
+      } else if (arr[0] == 'email') {
+        await axios.post(`${API_URL}/send-email`, {
+          to: arr[1].data.contact.email,
+          subject: 'Appointment Confirmation',
+          text: `Your appointment is scheduled for ${info.value.date} and ${info.value.startTime.toLocaleTimeString()}.\n 
+          If this was not you, please log into the EMR application and delete this appointment immediately. \n\nRegards, \nEMR Team`
+        })
+      }
+
+      location.reload()
     }
 
     async function deleteAppointment(date){
