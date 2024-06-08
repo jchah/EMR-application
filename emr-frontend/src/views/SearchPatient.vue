@@ -9,9 +9,8 @@
                     <div v-if="successMessage" class="notification is-success">
                         {{ successMessage }}
                     </div>
-                    <div v-if="errorMessage" class="notification is-danger">
-                        {{ errorMessage }}
-                        {{ errorMessage }}
+                    <div v-if="errorMessage === 'No result!'" class="notification is-danger">
+                        Error occured with loggin in. Make sure you input the correct name and health card number.
                     </div>
                     <form @submit.prevent="submitForm">
                         <div class="columns">
@@ -40,7 +39,7 @@
                         </div>
                         <div class="field is-grouped">
                             <div class="control">
-                                <button class="button is-primary" @click="submitForm">Search</button>
+                                <button class="button is-primary" type="submit">Search</button>
                             </div>
                         </div>
                     </form>
@@ -48,7 +47,6 @@
             </div>
         </div>
     </section>
-
 </template>
 
 <script>
@@ -93,19 +91,19 @@ export default {
         },
         submitForm() {
             this.filteredPatients = this.patients.filter(patient => {
-            console.log(patient.firstName.toLowerCase());
-            const firstNameMatch = patient.firstName.toLowerCase() === this.patientFirstName.toLowerCase();
-            const lastNameMatch = patient.lastName.toLowerCase() === this.lastName.toLowerCase();
-            const cardNumberMatch = patient.cardNumber.toLowerCase() === this.cardNumber.toLowerCase();
-            return firstNameMatch && lastNameMatch && cardNumberMatch;
+                const firstNameMatch = patient.firstName.toLowerCase() === this.patientFirstName.toLowerCase();
+                const lastNameMatch = patient.lastName.toLowerCase() === this.lastName.toLowerCase();
+                const cardNumberMatch = patient.cardNumber.toLowerCase() === this.cardNumber.toLowerCase();
+                return firstNameMatch && lastNameMatch && cardNumberMatch;
             });
 
-            console.log(this.filteredPatients.length);
-
-            if (this.filteredPatients.length == 0) {
-                console.log("No result!");
+            if (this.filteredPatients.length === 0) {
+                this.errorMessage = "No result!";
+                this.successMessage = "";
+            } else {
+                this.errorMessage = "";
+                this.$router.push({ name: 'PatientProfile', params: { patient: this.filteredPatients[0]._id } });
             }
-            this.$router.push({ name: 'PatientProfile', params: { patient: this.filteredPatients[0]._id } });
         },
     },
     created() {

@@ -5,7 +5,7 @@
         <div class="card">
           <header class="card-header">
             <p class="card-header-title has-text-centered">
-              Create Account
+              Create Doctor Account
             </p>
           </header>
           <div class="card-content">

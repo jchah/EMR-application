@@ -31,3 +31,5 @@ Patient Schema is going to have two things
 	Health Card Schema (information about patient)
 	Disease Schema(information about disease ( including treatment))
 
+	FINISHED
+
