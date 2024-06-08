@@ -13,7 +13,7 @@
               <div class="field">
                 <label class="label" for="email">Email</label>
                 <div class="control">
-                  <input type="email" class="input" id="email" v-model="account.email" @input="toLowerCaseEmail" required>
+                  <input type="email" class="input" id="email" v-model="account.email" required>
                 </div>
               </div>
               <div class="field">
@@ -51,12 +51,10 @@ export default {
     };
   },
   methods: {
-    toLowerCaseEmail() {
-      this.account.email = this.account.email.toLowerCase();
-    },
     async login() {
       this.successMessage = '';
       this.errorMessage = '';
+      this.account.email = this.account.email.toLowerCase(); // Convert email to lowercase before sending
       try {
         const response = await fetch('http://localhost:3000/user/signin', {
           method: 'POST',
