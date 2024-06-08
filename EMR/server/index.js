@@ -189,7 +189,7 @@ app.get('/calendar/appointments', async (req, res) => {
 
 app.get('/appointments', async (req, res) => {
     try {
-        const appointments = await Appointments.find();
+        const appointments = await Appointment.find();
         res.status(200).send(appointments)
     } catch (error) {
         res.status(500).send({ message : error.message})
