@@ -2,18 +2,21 @@
   <section class="hero is-link">
     <div class="hero-body is-flex is-justify-content-space-between is-align-items-center">
       <p class="title" v-if="patient">Patient Profile : {{patient.firstName + " " + patient.lastName}}</p>
+      
+
       <button class="button is-info" @click="goBack">Back to Patients</button>
+      
     </div>
   </section>
 
-  <div class="columns has-background-info">
+  <div class="columns has-background-info-light">
       <div class="column has-text-centered">
         <p class="title has-text-centered">Patient Info</p>
       </div>
     </div>
 
   <div v-if="patient">
-    <div class="columns has-background-link-light has-text-centered info">
+    <div class="columns has-background-info-light has-text-centered info">
       <div class="column">
         <div class="columns">
           <div class="column">
@@ -34,9 +37,17 @@
           </div>
         </div>
       </div>
+      
+      
     </div>
 
-    <div class="columns has-background-danger">
+    <div class="columns has-text-centered has-background-info-light">
+      <div class="column">
+        <button class="button is-info is-size-4" @click="openContactOverlay(true)">Change Contact Preference?</button>
+      </div>
+    </div>  
+    
+    <div class="columns has-background-danger-light">
       <div class="column has-text-centered">
         <p class="title has-text-centered">Conditions</p>
       </div>
@@ -79,7 +90,7 @@
       </div>
     </div>
 
-    <div class="columns has-background-warning">
+    <div class="columns has-background-warning-light">
       <div class="column has-text-centered">
         <p class="title has-text-centered">Appointments</p>
       </div>
@@ -101,7 +112,7 @@
           </thead>
           <tbody>
             <tr v-for="appointment in appointments" :key="appointments._id">
-              <td><button class="button is-danger">X</button></td>
+              <td><button class="button is-danger" @click="deleteAppointment(appointment._id)">X</button></td>
               <td class="has-text-centered">{{ appointment.notes }}</td>
               <td class="has-text-centered">{{ appointment.date }}</td>
               <td class="has-text-centered">{{ appointment.startTime }}</td>
@@ -114,6 +125,28 @@
       
     </div>
     
+    <div class="overlay" v-if="contactOpen">
+      <div class="box">
+        <form @submit.prevent="addTreatment()">
+          <div class="has-text-centered">
+            <p class="title">Current Preference : {{ patient.contactPreference }}</p>
+            <p class="title">___________________________</p>
+            <br>
+            <p class="title">Select New Preference:</p>
+            
+          </div>
+          <div class="columns has-text-centered">
+            
+            <div class="column">
+              <button class="button is-info is-size-3" @click="selectPreference('email')">Email</button>
+            </div>
+            <div class="column">
+              <button class="button is-info is-size-3" @click="selectPreference('sms')">SMS</button>
+            </div>
+          </div>
+        </form>
+      </div>  
+    </div>
 
     <div class="overlay" v-if="windowOpen">
             <div class="box">
@@ -213,6 +246,7 @@ export default {
       treatments: [],
       appointments: [],
       windowOpen : false,
+      contactOpen : false,
       newTreatment : {
         condition : '',
         name : '',
@@ -231,7 +265,8 @@ export default {
       try {
         const response = await axios.get(`http://localhost:3000/patients/${this.$route.params.patient}`);
         this.patient = response.data;
-        console.log(this.patient);
+        console.log('patient', this.patient);
+        console.log('preference', this.patient.patientPreference)
         await this.fillTreatments();
       } catch (error) {
         console.error("Failed to fetch patient data:", error);
@@ -259,8 +294,8 @@ export default {
       this.windowOpen = value
       this.clearTreatmentForm()
     },
-    openModal() {
-
+    openContactOverlay(value) {
+      this.contactOpen = value
     },
     clearTreatmentForm() {
       this.newTreatment.condition = ''
@@ -350,6 +385,28 @@ export default {
 
       await console.log(tempTreatments)
       this.treatments = tempTreatments
+    },
+    async selectPreference(value) {
+      this.contactOpen = false
+      const data = {
+        contactPreference : value
+      }
+      try {
+        const response = await axios.put(`http://localhost:3000/patients/${this.$route.params.patient}`, data)
+        console.log(response.data)
+        location.reload()
+      } catch (error) {
+        console.log(error)
+      }
+    },
+    async deleteAppointment(treatmentID) {
+      console.log(treatmentID)
+      try {
+        const response = await axios.delete(`http://localhost:3000/appointments/${treatmentID}`)
+      } catch (error) {
+        console.log(error)
+      }
+      location.reload()
     },
     async clearTreatment(treatment) {
       const deletedID = treatment._id

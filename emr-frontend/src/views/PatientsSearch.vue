@@ -97,7 +97,7 @@
 <!--            </div>-->
             <div class="field is-grouped">
               <div class="control">
-                <button class="button is-primary" @click="submitForm">Submit</button>
+                <button class="button is-primary" @click="submitForm">Search</button>
               </div>
               <div class="control">
                 <button type="button" class="button is-link" @click="resetForm">Reset</button>
@@ -285,7 +285,8 @@ export default {
           phone: this.emergencyContactPhone
         },
         cardNumber: this.cardNumber,
-        conditions: this.selectedConditions.map(condition => condition._id)
+        conditions: this.selectedConditions.map(condition => condition._id),
+        contactPreference: "email"
       };
 
       if (this.patientFirstName !== '' && this.lastName !== '' && this.dateOfBirth !== '' && this.sex !== '' && this.address !== '' && this.phoneNum !== '' && this.email !== '' && this.emergencyContactName !== '' && this.emergencyContactRelationship !== '' && this.emergencyContactPhone !== '' && this.cardNumber !== '') {
