@@ -1,9 +1,10 @@
 <template>
+<!-- <section class="hero is-primary is-fullheight-with-navbar"> --> 
   <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bulma@0.9.3/css/bulma.min.css">
-  <div class="container">
+  <section class="hero is-fullheight-with-navbar has-background-warning">
     <div v-if="!hasSearched" class="columns is-centered">
       <div class="column is-half mt-5">
-        <h1 class="title">Search For Patient</h1>
+        <h1 class="title has-text-centered">Search For Patient</h1>
         <div class="box">
           <div v-if="successMessage" class="notification is-success">
             {{ successMessage }}
@@ -111,8 +112,8 @@
     <div v-if="hasSearched" class="columns is-centered">
       <div class="column is-full">
         <br>
-        <h1 class="title">Filtered Patients</h1>
-        <table class="table is-fullwidth is-striped">
+        <h1 class="title has-text-centered">Filtered Patients</h1>
+        <table class="table is-fullwidth has-text-centered">
           <thead>
           <tr>
             <th>First Name</th>
@@ -149,11 +150,12 @@
           </ul>
         </nav>
         <div class="control">
-          <button class="button is-link" @click="showSearch">Go Back to Search</button>
+          <button class="button is-link pl-4" @click="showSearch">Go Back to Search</button>
         </div>
       </div>
     </div>
-  </div>
+  </section>
+
 </template>
 
 <script>
