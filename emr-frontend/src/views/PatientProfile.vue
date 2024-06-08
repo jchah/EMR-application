@@ -1,5 +1,5 @@
 <template>
-  <section class="hero is-link">
+  <section>
     <div class="hero-body is-flex is-justify-content-space-between is-align-items-center">
       <p class="title" v-if="patient">Patient Profile : {{ patient.firstName + " " + patient.lastName }}</p>
       <button v-if="token" class="button is-info" @click="goBack">Back to Patients</button>
@@ -7,8 +7,8 @@
   </section>
 
   <div v-if="patient">
-    <div class="card my-4">
-      <div class="card-content">
+    <div class="box my-4" style="margin: 20px">
+      <div class="">
         <div class="columns is-mobile">
           <div class="column has-text-centered">
             <p class="title has-text-centered">Patient Info</p>
@@ -44,15 +44,10 @@
       </div>
     </div>
 
-    <div class="columns has-background-danger-light">
-      <div class="column has-text-centered">
+    <div class="info" style="margin: 20px" v-if="patient.treatments && patient.treatments.length > 0 || token">
+      <div class="box">
         <p class="title has-text-centered">Conditions</p>
-      </div>
-    </div>
-
-    <div class="columns has-background-danger-light info">
-      <div class="column">
-        <table class="table is-fullwidth has-background-danger-light">
+        <table class="table is-fullwidth" v-if="patient.treatments && patient.treatments.length > 0">
           <thead>
             <tr>
               <th></th>
@@ -82,23 +77,20 @@
             </tr>
           </tbody>
         </table>
+        <p class="subtitle is-fullwidth has-text-centered section" v-else>There are no conditions for {{ patient.firstName + " " + patient.lastName }} currently.</p>
         <div v-if="token" class="has-text-centered">
           <button class="button is-danger has-text-centered" @click="openTreatmentForm(true)">Add Treatment?</button>
         </div>
       </div>
     </div>
 
-    <div class="card my-4">
-      <div class="card-content">
-        <div class="columns is-mobile">
-          <div class="column has-text-centered">
+    <div class="box my-4" v-if="appointments && appointments.length > 0 || token" style="margin: 20px">
+      <div class="">
             <p class="title has-text-centered">Appointments</p>
-          </div>
-        </div>
-        <div class="columns info">
+        <div class="columns">
           <div class="column">
             <p class="title has-text-centered"></p>
-            <table class="table is-fullwidth">
+            <table class="table is-fullwidth" v-if="appointments && appointments.length > 0">
               <thead>
                 <tr>
                   <th></th>
@@ -118,8 +110,9 @@
                 </tr>
               </tbody>
             </table>
-            <div class="has-text-centered">
-              <button v-if="token" class="button is-warning is-size-5 mt-3" @click="sendToAppointmentPage()">Create Appointment?</button>
+            <p v-else class="section subtitle is-fullwidth has-text-centered">There are no appointments for {{ patient.firstName + " " + patient.lastName }} currently.</p>
+            <div class="has-text-centered" v-if="token">
+              <button class="button is-warning is-size-5 mt-3" @click="sendToAppointmentPage()">Create Appointment?</button>
             </div>
           </div>
         </div>

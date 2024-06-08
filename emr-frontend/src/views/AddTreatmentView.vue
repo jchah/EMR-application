@@ -1,47 +1,56 @@
 <template>
-<div id="all" v-if="patient">
-  <p class="title has-text-centered">Add New Treatment</p>
-  <div id="treatment-list">
-    <div class="columns">
-      <div class="column">
-        <div class="field">
-          <label class="label">Drug Brand Name</label>
-          <div class="control">
-            <input type="text" class="input" id="drug-brand-name">
+  <p class="title section" padding="10px">Add New Treatment</p>
+  <div id="all" class="box" style="margin: 20px" v-if="patient">
+    <div id="treatment-list">
+      <div class="columns">
+        <div class="column">
+          <div class="field">
+            <label class="label">Drug Brand Name</label>
+            <div class="control">
+              <input type="text" class="input" id="drug-brand-name">
+            </div>
+          </div>
+        </div>
+        <div class="column">
+          <div class="field">
+            <label class="label">Search Health Canada</label>
+            <div class="control">
+              <button class="button is-success" @click="drugSearch()">Search</button>
+            </div>
           </div>
         </div>
       </div>
-      <div class="column">
-        <div class="field">
-          <label class="label">Search Health Canada</label>
-          <div class="control">
-            <button class="button is-success" @click="drugSearch()">Search</button>
-          </div>
-        </div>
-      </div>
+      <table v-if="drugResults.length" class="box">
+        <thead>
+          <tr>
+            <th>Drug Identification Number</th>
+            <th>Drug Brand Name</th>
+            <th>Last Updated</th>
+            <th>Select</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr v-for="drug in paginatedDrugResults" :key="drug.drug_identification_number">
+            <td>{{ drug.drug_identification_number }}</td>
+            <td>{{ drug.brand_name }}</td>
+            <td>{{ drug.last_update_date }}</td>
+            <td><button class="button is-success" @click="drugSelect(drug.drug_code)">Select</button></td>
+          </tr>
+        </tbody>
+      </table>
+      <nav class="pagination is-centered" role="navigation" aria-label="pagination" v-if="totalPages > 1">
+        <a class="pagination-previous" @click="changePage(currentPage - 1)" :disabled="currentPage === 1">Previous</a>
+        <a class="pagination-next" @click="changePage(currentPage + 1)" :disabled="currentPage === totalPages">Next</a>
+        <ul class="pagination-list">
+          <li v-for="page in totalPages" :key="page">
+            <a class="pagination-link" :class="{ 'is-current': page === currentPage }" @click="changePage(page)">{{ page }}</a>
+          </li>
+        </ul>
+      </nav>
     </div>
-    <table v-if="drugResults">
-      <thead>
-        <tr>
-          <th>Drug Identification Number</th>
-          <th>Drug Brand Name</th>
-          <th>Last Updated</th>
-          <th>Select</th>
-        </tr>
-      </thead>
-      <tbody>
-        <tr v-for="drug in drugResults">
-          <td>{{ drug.drug_identification_number }}</td>
-          <td>{{ drug.brand_name }}</td>
-          <td>{{ drug.last_update_date }}</td>
-          <td><button class="button is-success" @click="drugSelect(drug.drug_code)">Select</button></td>
-        </tr>
-      </tbody>
-    </table>
-  </div>
-  <hr>
-  <p v-if="selectedDrug">Selected drug: {{ selectedDrug.brand_name }}</p>
-  <form @submit.prevent="addTreatment()">
+    <hr>
+    <p v-if="selectedDrug">Selected drug: {{ selectedDrug.brand_name }}</p>
+    <form @submit.prevent="addTreatment()">
     <div class="columns">
       <div class="column">
         <div class="field">
@@ -112,7 +121,7 @@
       </div>
     </div>
   </form>
-</div>
+  </div>
 </template>
 
 <script>
@@ -130,14 +139,26 @@ export default {
         condition: '',
         name: '',
         dosage: '',
-        frequency: '', 
+        frequency: '',
         route: '',
         startDate: '',
         endDate: '',
         prescribingPhysician: '',
         notes: ''
-      }
+      },
+      currentPage: 1,
+      resultsPerPage: 10
     };
+  },
+  computed: {
+    paginatedDrugResults() {
+      const start = (this.currentPage - 1) * this.resultsPerPage;
+      const end = start + this.resultsPerPage;
+      return this.drugResults.slice(start, end);
+    },
+    totalPages() {
+      return Math.ceil(this.drugResults.length / this.resultsPerPage);
+    }
   },
   methods: {
     async allDrugs() {
@@ -146,11 +167,8 @@ export default {
     },
     drugSearch() {
       const drugName = document.getElementById('drug-brand-name').value.toUpperCase();
-      let initResults = [];
-      for (let i = 0; i < this.drugs.length; i++) {
-        if (this.drugs[i].brand_name.includes(drugName)) { initResults.push(this.drugs[i]); }
-      }
-      this.drugResults = initResults;
+      this.drugResults = this.drugs.filter(drug => drug.brand_name.includes(drugName));
+      this.currentPage = 1;  // Reset to the first page whenever a new search is made
       document.getElementById('drug-brand-name').value = '';
     },
     async drugSelect(code) {
@@ -162,6 +180,7 @@ export default {
       this.selectedDrug.routes = route.data;
       this.selectedDrug.dosage = dosage.data;
       this.newTreatment.name = drug.data.brand_name;
+      this.newTreatment.notes = drug.data.drug_code;
       console.log(this.selectedDrug)
     },
     async getPatient() {
@@ -173,23 +192,24 @@ export default {
       }
     },
     clearTreatmentForm() {
-      this.newTreatment.condition = ''
-      this.newTreatment.name = ''
-      this.newTreatment.dosage = ''
-      this.newTreatment.frequency = ''
-      this.newTreatment.route = ''
-      this.newTreatment.startDate = ''
-      this.newTreatment.endDate = ''
-      this.newTreatment.prescribingPhysician = ''
-      this.newTreatment.notes= ''
+      this.newTreatment = {
+        condition: '',
+        name: '',
+        dosage: '',
+        frequency: '',
+        route: '',
+        startDate: '',
+        endDate: '',
+        prescribingPhysician: '',
+        notes: ''
+      };
     },
     goBack() {
       this.$router.push(`/patients/${this.$route.params.patient}`);
     },
     async addTreatment() {
-      console.log(this.newTreatment)
       if (this.newTreatment.condition !== '' && this.newTreatment.prescribingPhysician !== '') {
-        if(this.newTreatment.name === '') {
+        if (this.newTreatment.name === '') {
           this.newTreatment.name = 'None';
           this.newTreatment.dosage = 'N/A';
           this.newTreatment.frequency = 'N/A';
@@ -198,43 +218,26 @@ export default {
           this.newTreatment.endDate = 'N/A';
         }
         try {
-          let treatmentPost = this.newTreatment;
-          console.log(treatmentPost);
-          const response = await axios.post(`http://localhost:3000/treatments`, treatmentPost);
-          this.successMessage = 'New treatment added successfully.';
-          let treatmentID = response.data._id;
-          console.log("Treatment ID:")
-          console.log(treatmentID);
-          try {
-            const response = await axios.get(`http://localhost:3000/patients/${this.$route.params.patient}`);
-            const treatments = response.data.treatments;
-            treatments.push(treatmentID);
+          const response = await axios.post(`http://localhost:3000/treatments`, this.newTreatment);
+          const treatmentID = response.data._id;
+          const patientResponse = await axios.get(`http://localhost:3000/patients/${this.$route.params.patient}`);
+          const treatments = patientResponse.data.treatments;
+          treatments.push(treatmentID);
 
-            const data = {
-              treatments: treatments
-            };
-
-            await axios.put(`http://localhost:3000/patients/${this.$route.params.patient}`, data)
-            this.clearTreatmentForm();
-            console.log("Successfully updated treatments");
-            this.successMessage = 'Successfully updated treatments';
-            this.goBack();
-            
-          } catch (e) {
-            console.log("Error updating treatment: " + e);
-          }
-         
-          await this.fetchPatients();
+          await axios.put(`http://localhost:3000/patients/${this.$route.params.patient}`, { treatments });
+          this.clearTreatmentForm();
+          this.goBack();
         } catch (error) {
-          console.log(error)
-            this.successMessage = '';
-            this.errorMessage = 'Failed to add new patient.';
-          }
-        } else {
-        this.successMessage = '';
-        this.errorMessage = 'Please ensure you fill out all fields.';
+          console.error('Failed to add new treatment:', error);
+        }
+      } else {
+        console.error('Please ensure you fill out all fields.');
       }
-   
+    },
+    changePage(page) {
+      if (page > 0 && page <= this.totalPages) {
+        this.currentPage = page;
+      }
     }
   },
   created() {
