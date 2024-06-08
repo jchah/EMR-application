@@ -1,7 +1,5 @@
-<!-- IF YOU ARE ABOUT TO EDIT MY CODE TELL ME SO I CAN DO IT I NEED TO GET MARKS OFF THIS FUCKING PROJECT -->
-
 <template>
-    <section class="hero is-info is-fullheight-with-navbar">
+    <section class="hero is-fullheight-with-navbar">
 
       <div class="section">
         <h1 class="title">Appointments</h1>

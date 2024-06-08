@@ -113,8 +113,8 @@
       <div class="column is-full">
         <br>
         <h1 class="title">Filtered Patients</h1>
-        <div class="box has-background-warning-light">
-          <table class="table is-fullwidth has-text-centered has-background-warning-light">
+        <div class="box has-background-info-light">
+          <table class="table is-fullwidth has-text-centered has-background-info-light">
           <thead>
           <tr>
             <th>First Name</th>
