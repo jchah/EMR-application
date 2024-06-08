@@ -1,15 +1,16 @@
 <template>
-<!-- <section class="hero is-primary is-fullheight-with-navbar"> --> 
+<!-- <section class="hero is-primary is-fullheight-with-navbar"> -->
   <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bulma@0.9.3/css/bulma.min.css">
-  <section class="hero is-fullheight-with-navbar section">
+  <section class="hero is-fullheight-with-navbar section has-background-info-light">
     <div v-if="!hasSearched" class="columns is-centered">
       <div class="column is-half mt-5">
         <h1 class="title">Search For Patient</h1>
-        <div class="box has-background-warning-light">
+        <div class="box">
           <div v-if="successMessage" class="notification is-success">
             {{ successMessage }}
           </div>
           <div v-if="errorMessage" class="notification is-danger">
+            {{ errorMessage }}
             {{ errorMessage }}
           </div>
           <form @submit.prevent="submitForm">
@@ -113,8 +114,8 @@
       <div class="column is-full">
         <br>
         <h1 class="title">Filtered Patients</h1>
-        <div class="box has-background-info-light">
-          <table class="table is-fullwidth has-text-centered has-background-info-light">
+        <div class="box">
+          <table class="table is-fullwidth has-text-centered ">
           <thead>
           <tr>
             <th>First Name</th>

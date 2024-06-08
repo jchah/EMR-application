@@ -1,11 +1,11 @@
 <template>
-    <section class="hero is-fullheight-with-navbar">
+    <section class="hero is-fullheight-with-navbar has-background-info-light">
 
       <div class="section">
         <h1 class="title">Appointments</h1>
         <div class="is-centered">
           <div class="">
-            <DatePicker class="has-background-info-light" v-model="date" expanded/>
+            <DatePicker class="" v-model="date" expanded/>
             <button style="margin-top: 20px; margin-bottom: 20px" class="button is-primary is-centered" @click="isDoingForm(true)">Make Appointment</button>
             </div>
             <div class="box">
