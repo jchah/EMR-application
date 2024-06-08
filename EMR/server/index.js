@@ -4,6 +4,8 @@ const bodyParser = require("body-parser");
 const morgan = require("morgan");
 const cors = require("cors");
 const dotenv = require("dotenv");
+// const nodemailer = require('nodemailer');
+// const cron = require('node-cron');
 require('./db');
 
 const { Patient, Medicine } = require("./models/Patient");
@@ -239,6 +241,18 @@ app.delete("/appointments/:id", async (req, res) => {
     }
 });
 
+// delete an appointment 
+app.delete("/appointments/patient/:patientId", async (req, res) => {
+    try {
+        const result = await Appointment.deleteMany({ patient: req.params.patientId });
+        if (result.deletedCount === 0) {
+            return res.status(404).send({ message: "No appointments found for this patient to delete" });
+        }
+        res.status(200).send({ message: "Appointments deleted successfully" });
+    } catch (error) {
+        res.status(500).send({ message: error.message });
+    }
+});
 
 // Error Handling Middleware
 app.use((err, req, res, next) => {
@@ -401,3 +415,37 @@ app.post('/tests/results', async (req, res) => {
         res.status(500).send({ error: error.message });
     }
 });
+
+// // node mailer and node cron
+
+// let transporter = nodemailer.createTransport({
+//     service: 'gmail',
+//     auth: {
+//         user: process.env.EMAIL_USER,
+//         pass: process.env.EMAIL_PASS
+//     }
+// });
+
+// // Step 2: Define the email options
+// let mailOptions = {
+//     from: process.env.EMAIL_USER,
+//     to: 'recipient-email@example.com',
+//     subject: 'Scheduled Email from Node.js',
+//     text: 'This is a test email sent at a scheduled time.',
+// };
+
+// // Step 3: Define the cron job
+// cron.schedule('0 9 * * *', () => { // This cron job will run every day at 9:00 AM
+//     transporter.sendMail(mailOptions, function(error, info){
+//         if (error) {
+//             console.log('Error occurred: ' + error.message);
+//         } else {
+//             console.log('Email sent successfully: ' + info.response);
+//         }
+//     });
+// }, {
+//     scheduled: true,
+//     timezone: "America/New_York" // Set the desired timezone
+// });
+
+// console.log('Cron job scheduled to send email at 9:00 AM every day');

@@ -17,7 +17,7 @@
               <div class="control">
                 <div class="select">
                   <select name="patient" id="order-patient-select" v-model="this.orderData.patient" required>
-                    <option v-for="patient in patients">{{ patient.healthCard.firstName }} {{ patient.healthCard.lastName }} - {{ patient.healthCard.cardNumber }}</option>
+                    <option v-for="patient in patients">{{ patient.firstName }} {{ patient.lastName }} - {{ patient.cardNumber }}</option>
                   </select>
                 </div>
               </div>
@@ -89,21 +89,9 @@ import axios from 'axios'
 export default {
   setup() {
     const patients = ref(null);
-    const healthCards = ref(null);
     const tests = ref(null);
     const orders = ref(null);
     onMounted(() => {
-      axios.get('http://localhost:3000/healthcards', {
-        header: {
-          'Content-Type': 'application/json'
-        }
-      })
-          .then((response) => {
-            healthCards.value = response.data;
-          })
-          .catch((error) => {
-            console.log(error)
-          }),
           axios.get('http://localhost:3000/patients', {
             headers: {
               'Content-Type': 'application/json'
@@ -111,12 +99,6 @@ export default {
           })
               .then((response) => {
                 patients.value = response.data;
-                patients.value.forEach((patient) => {
-                  healthCards.value.forEach((healthCardObj) => {
-                    if (healthCardObj._id === patient.healthCard) patient.healthCard = healthCardObj;
-                  })
-                })
-                console.log(patients.value);
               })
               .catch((error) => {
                 console.log(error);
@@ -133,7 +115,7 @@ export default {
                 console.log(error);
               }),
 
-          axios.get('http://localhost:3000/test/orders', {
+          axios.get('http://localhost:3000/tests/orders', {
             headers: {
               'Content-Type': 'application/json'
             }
@@ -157,6 +139,7 @@ export default {
       },
       resultsData: {
         order: '',
+        testDate: '',
         date: new Date(),
         results: '',
         comments: ''
