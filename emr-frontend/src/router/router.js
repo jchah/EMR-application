@@ -14,7 +14,6 @@ const routes = [
     { path: '/patients', component: Patients },
     { path: '/calendar', component: Calendar, name : 'Calender'},
     { path: '/settings', component: Settings },
-    { path: '/test-dashboard', component: Tests },
     { path: '/login', component: Login },
     { path: '/register', component: Register },
     { path: '/patients/:patient', name : 'PatientProfile', component: PatientProfile},

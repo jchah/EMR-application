@@ -1,7 +1,7 @@
 <template>
 <!-- <section class="hero is-primary is-fullheight-with-navbar"> --> 
   <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bulma@0.9.3/css/bulma.min.css">
-  <section class="hero is-fullheight-with-navbar has-background-warning section">
+  <section class="hero is-fullheight-with-navbar section">
     <div v-if="!hasSearched" class="columns is-centered">
       <div class="column is-half mt-5">
         <h1 class="title">Search For Patient</h1>
