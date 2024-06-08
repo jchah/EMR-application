@@ -113,94 +113,7 @@
       </div>
       
     </div>
-    
-
-    <div class="overlay" v-if="windowOpen">
-            <div class="box">
-              <form @submit.prevent="addTreatment()">
-                <br>
-                <p class="title has-text-centered">Add New Treatment</p>
-                  <div class="columns">
-                    <div class="column">
-                      <div class="field">
-                        <label class="label">Condition Name</label>
-                        <div class="control">
-                          <input class="input" type="text" v-model="newTreatment.condition">
-                        </div>
-                      </div>
-                      <div class="field">
-                        <label class="label">Treatment Name</label>
-                        <div class="control">
-                          <input class="input" type="text" v-model="newTreatment.name">
-                        </div>
-                      </div>
-                      <div class="field">
-                        <label class="label">Dosage</label>
-                        <div class="control">
-                          <input class="input" type="text" v-model="newTreatment.dosage">
-                        </div>
-                      </div>
-                      <div class="field">
-                        <label class="label">Frequency</label>
-                        <div class="control">
-                          <input class="input" type="text" v-model="newTreatment.frequency">
-                        </div>
-                      </div>
-                      <div class="field">
-                        <label class="label">Route</label>
-                        <div class="control">
-                          <input class="input" type="text" v-model="newTreatment.route">
-                        </div>
-                      </div>
-                    </div>
-
-                  <div class="column">
-                  <div class="field">
-                    <label class="label">Start Date</label>
-                    <div class="control">
-                      <input class="input" type="date" v-model="newTreatment.startDate">
-                    </div>
-                  </div>
-                  <div class="field">
-                    <label class="label">End Date</label>
-                    <div class="control">
-                      <input class="input" type="date" v-model="newTreatment.endDate">
-                    </div>
-                  </div>
-                  <div class="field">
-                    <label class="label">Prescribing Physician</label>
-                    <div class="control">
-                      <input class="input" type="text" v-model="newTreatment.prescribingPhysician">
-                    </div>
-                  </div>
-                  <div class="field">
-                    <label class="label">Notes</label>
-                    <div class="control">
-                      <input class="input" type="text" v-model="newTreatment.notes">
-                    </div>
-                  </div>
-                </div>
-                </div>
-                <div class="columns has-text-centered">
-                  <div class="column">
-                    <div class="field is-grouped">
-                      <div class="control">
-                        <button class="button is-primary" type="submit">Submit</button>
-                      </div>
-                    </div>
-                  </div>
-                  <div class="column">
-                    <button class="button is-info" @click="clearTreatmentForm()"> Clear Form</button>
-                  </div>
-                  <div class="column">
-                    <button class="button is-danger" @click="openTreatmentForm(false)"> Cancel</button>
-                  </div>
-                </div>
-              </form>
-              <br>
-            </div>
-          </div>
-    </div>
+  </div>
 </template>
 
 <script>
@@ -237,7 +150,6 @@ export default {
         console.error("Failed to fetch patient data:", error);
       }
     },
-   
     async fetchAppointments(){
       try {
         const response = await axios.get(`http://localhost:3000/appointments`);
@@ -256,78 +168,11 @@ export default {
       }
     },
     openTreatmentForm(value) {
-      this.windowOpen = value
+      this.$router
       this.clearTreatmentForm()
-    },
-    openModal() {
-
-    },
-    clearTreatmentForm() {
-      this.newTreatment.condition = ''
-      this.newTreatment.name = ''
-      this.newTreatment.dosage = ''
-      this.newTreatment.frequency = ''
-      this.newTreatment.route = ''
-      this.newTreatment.startDate = ''
-      this.newTreatment.endDate = ''
-      this.newTreatment.prescribingPhysician = ''
-      this.newTreatment.notes= ''
     },
     goBack() {
       this.$router.push('/patients');
-    },
-    async addTreatment() {
-      console.log(this.newTreatment)
-      if (this.newTreatment.condition !== '' && this.newTreatment.prescribingPhysician !== '') {
-        if(this.newTreatment.name === '') {
-          this.newTreatment.name = 'None';
-          this.newTreatment.dosage = 'N/A';
-          this.newTreatment.frequency = 'N/A';
-          this.newTreatment.route = 'N/A';
-          this.newTreatment.startDate = 'N/A';
-          this.newTreatment.endDate = 'N/A';
-        }
-        try {
-          const response = await axios.post(`http://localhost:3000/treatments`, this.newTreatment);
-          this.successMessage = 'New treatment added successfully.';
-          let treatmentID = response.data._id;
-          console.log("Treatment ID:")
-          console.log(treatmentID);
-          try {
-            const response = await axios.get(`http://localhost:3000/patients/${this.$route.params.patient}`);
-            const treatments = response.data.treatments;
-
-            console.log("Before:")
-            console.log(treatments);
-            treatments.push(treatmentID);
-            console.log("After:")
-            console.log(treatments)
-
-            const data = {
-              treatments: treatments
-            };
-
-            await axios.put(`http://localhost:3000/patients/${this.$route.params.patient}`, data)
-            this.openTreatmentForm(false);
-            this.clearTreatmentForm();
-            console.log("Successfully updated treatments");
-            this.successMessage = 'Successfully updated treatments';
-            location.reload()
-            
-          } catch (e) {
-            console.log("Error updating treatment: " + e);
-          }
-         
-          await this.fetchPatients();
-        } catch (error) {
-            this.successMessage = '';
-            this.errorMessage = 'Failed to add new patient.';
-          }
-        } else {
-        this.successMessage = '';
-        this.errorMessage = 'Please ensure you fill out all fields.';
-      }
-   
     },
     sendToAppointmentPage() {
       this.$router.push({ name: 'Calender'})
