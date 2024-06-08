@@ -138,6 +138,7 @@
             <td>
               <button class="button is-link" @click="goToPatientProfile(patient._id)">Profile</button>
               <button class="button is-danger" @click="deletePatient(patient._id)">Delete</button>
+
             </td>
           </tr>
           </tbody>
@@ -235,9 +236,10 @@ export default {
         this.successMessage = 'Patient deleted successfully.';
         this.filteredPatients = this.filteredPatients.filter(patient => patient._id !== patientId);
       } catch (error) {
-        this.errorMessage = 'Failed to delete patient.';
         console.error(error);
       }
+      this.showSearch()
+      location.reload()
     },
     submitForm() { // For each parameter in the search for patients page, find which patients match & add return an array (that is used in the table)
       this.filteredPatients = this.patients.filter(patient => {

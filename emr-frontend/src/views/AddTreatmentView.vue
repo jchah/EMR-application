@@ -1,127 +1,129 @@
 <template>
-  <p class="title section" padding="10px">Add New Treatment</p>
-  <div id="all" class="box" style="margin: 20px" v-if="patient">
-    <div id="treatment-list">
-      <div class="columns">
-        <div class="column">
-          <div class="field">
-            <label class="label">Drug Brand Name</label>
-            <div class="control">
-              <input type="text" class="input" id="drug-brand-name">
+  <section class="section">
+    <p class="title">Add New Treatment</p>
+    <div id="all" class="box m-5" v-if="patient">
+      <div id="treatment-list">
+        <div class="columns">
+          <div class="column">
+            <div class="field">
+              <label class="label">Drug Brand Name</label>
+              <div class="control">
+                <input class="input" type="text" id="drug-brand-name">
+              </div>
+            </div>
+          </div>
+          <div class="column">
+            <div class="field">
+              <label class="label">Search Health Canada</label>
+              <div class="control">
+                <button class="button is-success" @click="drugSearch">Search</button>
+              </div>
             </div>
           </div>
         </div>
-        <div class="column">
-          <div class="field">
-            <label class="label">Search Health Canada</label>
-            <div class="control">
-              <button class="button is-success" @click="drugSearch()">Search</button>
+        <table v-if="drugResults.length" class="table box is-fullwidth">
+          <thead>
+            <tr>
+              <th>Drug Identification Number</th>
+              <th>Drug Brand Name</th>
+              <th>Last Updated</th>
+              <th>Select</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr v-for="drug in paginatedDrugResults" :key="drug.drug_identification_number">
+              <td>{{ drug.drug_identification_number }}</td>
+              <td>{{ drug.brand_name }}</td>
+              <td>{{ drug.last_update_date }}</td>
+              <td><button class="button is-success" @click="drugSelect(drug.drug_code)">Select</button></td>
+            </tr>
+          </tbody>
+        </table>
+        <nav class="pagination is-centered" role="navigation" aria-label="pagination" v-if="totalPages > 1">
+          <a class="pagination-previous" @click="changePage(currentPage - 1)" :disabled="currentPage === 1">Previous</a>
+          <a class="pagination-next" @click="changePage(currentPage + 1)" :disabled="currentPage === totalPages">Next</a>
+          <ul class="pagination-list">
+            <li v-for="page in totalPages" :key="page">
+              <a class="pagination-link" :class="{ 'is-current': page === currentPage }" @click="changePage(page)">{{ page }}</a>
+            </li>
+          </ul>
+        </nav>
+      </div>
+      <hr>
+      <p v-if="selectedDrug">Selected drug: {{ selectedDrug.brand_name }}</p>
+      <form @submit.prevent="addTreatment">
+        <div class="columns">
+          <div class="column">
+            <div class="field">
+              <label class="label">Condition Name</label>
+              <div class="control">
+                <input class="input" type="text" v-model="newTreatment.condition" required>
+              </div>
+            </div>
+            <div class="field">
+              <label class="label">Start Date</label>
+              <div class="control">
+                <input class="input" type="date" v-model="newTreatment.startDate" required>
+              </div>
+            </div>
+            <div class="field">
+              <label class="label">Dosage</label>
+              <div class="control select">
+                <select name="dosage" id="dosage" v-model="newTreatment.dosage" v-if="selectedDrug">
+                  <option v-for="option in selectedDrug.dosage" :value="option.pharmaceutical_form_name" :key="option.pharmaceutical_form_name">{{ option.pharmaceutical_form_name }}</option>
+                </select>
+                <input class="input" type="text" disabled v-else>
+              </div>
+            </div>
+            <div class="field">
+              <label class="label">Frequency</label>
+              <div class="control">
+                <input class="input" type="text" v-model="newTreatment.frequency" required>
+              </div>
+            </div>
+          </div>
+          <div class="column">
+            <div class="field">
+              <label class="label">Prescribing Physician</label>
+              <div class="control">
+                <input class="input" type="text" v-model="newTreatment.prescribingPhysician" required>
+              </div>
+            </div>
+            <div class="field">
+              <label class="label">End Date</label>
+              <div class="control">
+                <input class="input" type="date" v-model="newTreatment.endDate" required>
+              </div>
+            </div>
+            <div class="field">
+              <label class="label">Route</label>
+              <div class="control select">
+                <select v-if="selectedDrug" name="route" id="route" v-model="newTreatment.route">
+                  <option v-for="option in selectedDrug.routes" :value="option.route_of_administration_name" :key="option.route_of_administration_code">{{ option.route_of_administration_name }}</option>
+                </select>
+                <input class="input" type="text" disabled v-else>
+              </div>
             </div>
           </div>
         </div>
-      </div>
-      <table v-if="drugResults.length" class="box">
-        <thead>
-          <tr>
-            <th>Drug Identification Number</th>
-            <th>Drug Brand Name</th>
-            <th>Last Updated</th>
-            <th>Select</th>
-          </tr>
-        </thead>
-        <tbody>
-          <tr v-for="drug in paginatedDrugResults" :key="drug.drug_identification_number">
-            <td>{{ drug.drug_identification_number }}</td>
-            <td>{{ drug.brand_name }}</td>
-            <td>{{ drug.last_update_date }}</td>
-            <td><button class="button is-success" @click="drugSelect(drug.drug_code)">Select</button></td>
-          </tr>
-        </tbody>
-      </table>
-      <nav class="pagination is-centered" role="navigation" aria-label="pagination" v-if="totalPages > 1">
-        <a class="pagination-previous" @click="changePage(currentPage - 1)" :disabled="currentPage === 1">Previous</a>
-        <a class="pagination-next" @click="changePage(currentPage + 1)" :disabled="currentPage === totalPages">Next</a>
-        <ul class="pagination-list">
-          <li v-for="page in totalPages" :key="page">
-            <a class="pagination-link" :class="{ 'is-current': page === currentPage }" @click="changePage(page)">{{ page }}</a>
-          </li>
-        </ul>
-      </nav>
+        <div class="columns has-text-centered">
+          <div class="column">
+            <div class="field is-grouped">
+              <div class="control">
+                <button class="button is-primary" type="submit">Submit</button>
+              </div>
+            </div>
+          </div>
+          <div class="column">
+            <button class="button is-info" @click="clearTreatmentForm">Clear Form</button>
+          </div>
+          <div class="column">
+            <button class="button is-danger" @click="goBack">Cancel</button>
+          </div>
+        </div>
+      </form>
     </div>
-    <hr>
-    <p v-if="selectedDrug">Selected drug: {{ selectedDrug.brand_name }}</p>
-    <form @submit.prevent="addTreatment()">
-    <div class="columns">
-      <div class="column">
-        <div class="field">
-          <label class="label">Condition Name</label>
-          <div class="control">
-            <input type="text" class="input" v-model="newTreatment.condition" required>
-          </div>
-        </div>
-        <div class="field">
-          <label class="label">Start Date</label>
-          <div class="control">
-            <input type="date" class="input" v-model="newTreatment.startDate" required>
-          </div>
-        </div>
-        <div class="field">
-          <label class="label">Dosage</label>
-          <div class="control select">
-            <select name="route" id="dosage" v-model="newTreatment.dosage" v-if="selectedDrug">
-              <option v-for="option in selectedDrug.dosage" :value="option.pharmaceutical_form_name" :key="option.pharmaceutical_form_name">{{ option.pharmaceutical_form_name }}</option>
-            </select>
-            <input class="input" type="text" disabled v-else>
-          </div>
-        </div>
-        <div class="field">
-          <label class="label">Frequency</label>
-          <div class="control">
-            <input class="input" type="text" v-model="newTreatment.frequency" required>
-          </div>
-        </div>
-      </div>
-      <div class="column">
-        <div class="field">
-          <label class="label">Prescribing Physician</label>
-          <div class="control">
-            <input type="text" class="input" v-model="newTreatment.prescribingPhysician" required>
-          </div>
-        </div>
-        <div class="field">
-          <label class="label">End Date</label>
-          <div class="control">
-            <input type="date" class="input" v-model="newTreatment.endDate" required>
-          </div>
-        </div>
-        <div class="field">
-          <label class="label">Route</label>
-          <div class="control select">
-            <select v-if="selectedDrug" name="route" id="route" v-model="newTreatment.route">
-              <option v-for="option in selectedDrug.routes" :value="option.route_of_administration_name" :key="option.route_of_administration_code">{{ option.route_of_administration_name }}</option>
-            </select>
-            <input class="input" type="text" disabled v-else>
-          </div>
-        </div>
-      </div>
-    </div>
-    <div class="columns has-text-centered">
-      <div class="column">
-        <div class="field is-grouped">
-          <div class="control">
-            <button class="button is-primary" type="submit">Submit</button>
-          </div>
-        </div>
-      </div>
-      <div class="column">
-        <button class="button is-info" @click="clearTreatmentForm()">Clear Form</button>
-      </div>
-      <div class="column">
-        <button class="button is-danger" @click="goBack()">Cancel</button>
-      </div>
-    </div>
-  </form>
-  </div>
+  </section>
 </template>
 
 <script>
@@ -247,7 +249,7 @@ export default {
 }
 </script>
 
-<style>
+<style scoped>
 #all {
   padding: 2%;
 }
