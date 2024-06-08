@@ -3,7 +3,6 @@ import { createRouter, createWebHistory } from 'vue-router';
 import Dashboard from '../views/Dashboard.vue';
 import Patients from '../views/PatientsSearch.vue';
 import PatientProfile from '../views/PatientProfile.vue'
-// import Appointments from './views/Appointments.vue';
 import Settings from '../views/Settings.vue';
 import Calendar from '../views/CalenderView.vue'
 import Login from '../views/LoginView.vue';
